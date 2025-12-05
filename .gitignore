@@ -1,0 +1,45 @@
+# Dependencies
+node_modules
+
+# Output
+out
+dist
+*.tgz
+.output
+.vercel
+.netlify
+.wrangler
+.svelte-kit
+build
+
+# Code Coverage
+coverage
+*.lcov
+
+# Logs
+logs
+*.log
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Environment Variables
+.env
+.env.*
+!.env.example
+!.env.test
+
+# Caches
+.eslintcache
+.cache
+*.tsbuildinfo
+
+# IDEs & Editors
+.idea
+.vscode
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
