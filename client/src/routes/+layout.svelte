@@ -1,12 +1,22 @@
 <script lang="ts">
-	import './layout.css';
-	import favicon from '$lib/assets/favicon.svg';
+  import "./layout.css";
+  import bgTile from "$lib/assets/empty_piece.jpg";
+  import redPiece from "$lib/assets/red_piece.jpg";
 
-	let { children } = $props();
+  let { children } = $props();
 </script>
 
 <svelte:head>
-	<link rel="icon" href={favicon} />
+  <link rel="icon" href={redPiece} />
 </svelte:head>
 
-{@render children()}
+<div class="app text-white/90" style="background-image: url({bgTile});">
+  {@render children()}
+</div>
+
+<style>
+  .app {
+    min-height: 100vh;
+    background-repeat: repeat;
+  }
+</style>
