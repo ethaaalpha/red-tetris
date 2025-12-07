@@ -3,11 +3,12 @@ import { createServer } from "node:http";
 import path from "node:path";
 import { Server, Socket } from "socket.io";
 import { fileURLToPath } from "node:url";
-import type { JoinRoomData, User } from "./types";
-import { validateJoinRoom } from "./socket";
-import { ROOM_MAX_USERS } from "./constants";
+import type { JoinRoomData } from "./src/types";
+import { ROOM_MAX_USERS } from "./src/constants";
+import { validateJoinRoom } from "./src/controllers/rooms";
+import type { User } from "./src/objects/User";
 
-type Callback = (err: any, response?: unknown) => void;
+type Callback = (err: unknown, response?: unknown) => void;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,7 +20,7 @@ const io = new Server(server);
 
 const port = 8080;
 
-let users: Record<string, User> = {};
+const users: Record<string, User> = {};
 
 app.use(express.static(frontendPath));
 

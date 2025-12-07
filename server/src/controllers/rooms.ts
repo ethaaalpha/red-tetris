@@ -1,7 +1,7 @@
 import * as z from "zod";
-import { USERNAME_MAX_LENGTH, ROOM_MAX_LENGTH, ROOM_MAX_USERS, ROOM_MAX } from "./constants";
-import type { JoinRoomData } from "./types";
+import { USERNAME_MAX_LENGTH, ROOM_MAX_LENGTH, ROOM_MAX_USERS, ROOM_MAX } from "../constants";
 import { Server, Socket } from "socket.io";
+import type { JoinRoomData } from "../types";
 
 const joinRoomSchema = z.object({
   username: z
