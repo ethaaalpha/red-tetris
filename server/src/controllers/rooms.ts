@@ -71,15 +71,17 @@ export function joinOrCreateRoom(room_id: string, user: User) {
 }
 
 export function leaveRoom(room_id: string, user: User) {
-  const room = rooms.get(room_id)!;
+  const room = rooms.get(room_id);
 
-  room.remove(user);
-  console.log(`User ${user.name} left room ${room_id}`);
+  if (room) {
+    room.remove(user);
+    console.log(`User ${user.name} left room ${room_id}`);
 
-  // deletion of empty room
-  if (room.users.size == 0) {
-    rooms.delete(room_id);
-  } else {
-    // game logic then (declare lose etc..)
+    // deletion of empty room
+    if (room.users.size == 0) {
+      rooms.delete(room_id);
+    } else {
+      // game logic then (declare lose etc..)
+    }
   }
 }

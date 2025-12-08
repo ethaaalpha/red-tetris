@@ -19,7 +19,7 @@ export function registerClientHandlers(socket: Socket) {
     joinOrCreateRoom(data.room, user);
     socket.join(data.room);
 
-    console.log(`User ${users[socket.id]!.name} joined room ${data.room} ${socket.rooms.size}`);
+    console.log(`User ${users[socket.id]?.name} joined room ${data.room} ${socket.rooms.size}`);
     callback(null, { success: true });
   });
 
@@ -34,8 +34,7 @@ export function registerClientHandlers(socket: Socket) {
       });
     });
 
-    console.log(rooms);
-    callback(null, { rooms });
+    callback(null, { rooms: result });
   });
 
   socket.on("disconnect", () => {
