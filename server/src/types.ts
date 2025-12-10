@@ -27,6 +27,11 @@ export interface ServerData {
   io: IoServer;
 }
 
+export interface KickData {
+  username: string;
+  room: string;
+}
+
 export interface TestSocket {
   client: ClientSocket;
   server: ServerSocket;

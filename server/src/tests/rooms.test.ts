@@ -4,7 +4,7 @@ import { afterEach, beforeEach, expect, it } from "vitest";
 import { init } from "../../app";
 import { ROOM_MAX_USERS } from "../constants";
 import { Room, rooms } from "../objects/Room";
-import { User } from "../objects/User";
+import { User, users } from "../objects/User";
 import type { Callback, RoomInfo, TestSocket } from "../types";
 import { createClient, emitAsync, onceAsync } from "./utils";
 
@@ -138,4 +138,97 @@ it("Host changed", async () => {
   await disconnectListener;
 
   expect(rooms.size).toEqual(0);
+});
+
+it("Kick", async () => {
+  const test2 = await createClient(address, io);
+  const kickListener = onceAsync(test2.client, "kick");
+  let roomListener = null;
+
+  // basic
+  roomListener = onceAsync(test1.client, "room");
+  await emitAsync(test1.client, "join room", {
+    username: "user1",
+    room: "example"
+  });
+  await emitAsync(test2.client, "join room", {
+    username: "user2",
+    room: "example"
+  });
+  await roomListener.then((data) => {
+    expect(data).toEqual(rooms.get("example")?.asInfo());
+  });
+
+  roomListener = onceAsync(test1.client, "room");
+  await emitAsync(test1.client, "kick", {
+    username: "user2",
+    room: "example"
+  }).then(({ res }) => {
+    // check the callback value
+    expect(res).toEqual({ success: true });
+  });
+  await roomListener.then((data) => {
+    // update of room trigered
+    expect(data).toEqual(rooms.get("example")?.asInfo());
+  });
+
+  // victim is warned
+  await kickListener.then((data) => {
+    expect(data).toEqual({ room: "example" });
+  });
+});
+
+it("Invalid kick", async () => {
+  // not in a room
+  await emitAsync(test1.client, "kick", {
+    username: "user2",
+    room: "example"
+  }).then(({ err, res }) => {
+    expect(err.kick).toContain("belong to");
+    expect(res).toEqual({ success: false });
+  });
+
+  await emitAsync(test1.client, "join room", {
+    username: "user1",
+    room: "example"
+  });
+
+  // inexisting room
+  await emitAsync(test1.client, "kick", {
+    username: "user2",
+    room: "example1"
+  }).then(({ err, res }) => {
+    expect(err.kick).toContain("does not exist!");
+    expect(res).toEqual({ success: false });
+  });
+
+  // not host
+  rooms.get("example")!.host = "someone";
+  await emitAsync(test1.client, "kick", {
+    username: "user2",
+    room: "example"
+  }).then(({ err, res }) => {
+    expect(err.kick).toContain("host of this");
+    expect(res).toEqual({ success: false });
+  });
+  rooms.get("example")!.host = "user1";
+
+  // him self
+  await emitAsync(test1.client, "kick", {
+    username: "user1",
+    room: "example"
+  }).then(({ err, res }) => {
+    expect(err.kick).toContain("yourself");
+    expect(res).toEqual({ success: false });
+  });
+
+  // an user not in the room
+  users["test"] = new User("test", "user3");
+  await emitAsync(test1.client, "kick", {
+    username: "user3",
+    room: "example"
+  }).then(({ err, res }) => {
+    expect(err.kick).toContain("is not in");
+    expect(res).toEqual({ success: false });
+  });
 });

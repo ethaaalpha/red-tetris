@@ -1,11 +1,12 @@
-import { Server, Socket } from "socket.io";
+import { Socket } from "socket.io";
 import * as z from "zod";
 import { ROOM_MAX, ROOM_MAX_LENGTH, ROOM_MAX_USERS, USERNAME_MAX_LENGTH } from "../constants";
 import { Room, rooms } from "../objects/Room";
-import type { User } from "../objects/User";
-import type { JoinRoomData } from "../types";
+import { users, type User } from "../objects/User";
+import type { JoinRoomData, KickData } from "../types";
+import { formatSchemeError } from "./utils";
 
-const joinRoomSchema = z.object({
+const roomSchema = z.object({
   username: z
     .string()
     .min(1, "Username cannot be empty")
@@ -20,16 +21,9 @@ export function validateJoinRoom(
   socket: Socket,
   data: JoinRoomData
 ): Record<string, string> | null {
-  const result = joinRoomSchema.safeParse(data);
+  const result = roomSchema.safeParse(data);
   if (!result.success) {
-    return result.error.issues.reduce(
-      (acc, issue) => {
-        const varName = issue.path.join(".");
-        acc[varName] = issue.message;
-        return acc;
-      },
-      {} as Record<string, string>
-    );
+    return formatSchemeError(result.error);
   }
   const room = rooms.get(data.room);
 
@@ -83,11 +77,14 @@ function setNextHost(room: Room) {
   room.host = next.value![0];
 }
 
-export function leaveRoom(server: Server, room_id: string, user: User) {
+export function leaveRoom(target: Socket, room_id: string) {
   const room = rooms.get(room_id);
+  const user = users[target.id]!;
 
   if (room) {
     room.remove(user);
+    target.leave(room_id);
+
     console.log(`User ${user.name} left room ${room_id}`);
 
     // deletion of empty room
@@ -98,9 +95,38 @@ export function leaveRoom(server: Server, room_id: string, user: User) {
       setNextHost(room);
 
       // update all people of the "situation" of the room
-      server.to(room.name).emit("room", room.asInfo());
+      target.to(room.name).emit("room", room.asInfo());
 
       // game logic then (declare lose etc..)
     }
   }
+}
+
+export function validateKick(
+  data: KickData,
+  current: User | undefined
+): Record<string, string> | null {
+  const result = roomSchema.safeParse(data);
+
+  if (!result.success) {
+    return formatSchemeError(result.error);
+  }
+  const room = rooms.get(data.room);
+
+  if (current === undefined) {
+    return { kick: "You do not belong to a room!" };
+  }
+  if (room === undefined) {
+    return { kick: `The room ${data.room} does not exist!` };
+  }
+  if (room.host != current.name) {
+    return { kick: "You are not the host of this room!" };
+  }
+  if (data.username === current.name) {
+    return { kick: "You can't kick yourself! " };
+  }
+  if (!room.users.has(data.username)) {
+    return { kick: `The user ${data.username} is not in the room!` };
+  }
+  return null;
 }

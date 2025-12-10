@@ -1,9 +1,15 @@
 import { Server, type Socket } from "socket.io";
 import { ROOM_MAX_USERS } from "./constants";
-import { getRoomId, joinOrCreateRoom, leaveRoom, validateJoinRoom } from "./controllers/rooms";
+import {
+  getRoomId,
+  joinOrCreateRoom,
+  leaveRoom,
+  validateJoinRoom,
+  validateKick
+} from "./controllers/rooms";
 import { rooms } from "./objects/Room";
-import { User, users } from "./objects/User";
-import type { Callback, GetRoomsData, JoinRoomData } from "./types";
+import { getByName, User, users } from "./objects/User";
+import type { Callback, GetRoomsData, JoinRoomData, KickData } from "./types";
 
 export function registerClientHandlers(io: Server, socket: Socket) {
   socket.on("join room", (data: JoinRoomData, callback: Callback) => {
@@ -37,12 +43,31 @@ export function registerClientHandlers(io: Server, socket: Socket) {
     callback(null, { rooms: result });
   });
 
+  socket.on("kick", (data: KickData, callback: Callback) => {
+    const current = users[socket.id]!;
+    const errors = validateKick(data, current);
+
+    if (errors) {
+      callback(errors, { success: false });
+      return;
+    }
+    // existance checked before
+    const id = getByName(data.username)?.id;
+    const target = io.sockets.sockets.get(id!)!;
+
+    leaveRoom(target, data.room);
+    target.emit("kick", { room: data.room });
+    console.log(`user ${data.username} have been kicked from ${data.room} room`);
+
+    callback(null, { success: true });
+  });
+
   socket.on("disconnecting", () => {
     const user = users[socket.id];
     const room_id = getRoomId(socket);
 
     if (user != undefined && room_id != undefined) {
-      leaveRoom(io, room_id, user);
+      leaveRoom(socket, room_id);
     }
     console.log("user disconnected");
   });
