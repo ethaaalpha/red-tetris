@@ -8,7 +8,7 @@ import {
   validateKick
 } from "./controllers/rooms";
 import { rooms } from "./objects/Room";
-import { getByName, User, users } from "./objects/User";
+import { User, users } from "./objects/User";
 import type { Callback, GetRoomsData, JoinRoomData, KickData } from "./types";
 
 export function registerClientHandlers(io: Server, socket: Socket) {
@@ -19,10 +19,10 @@ export function registerClientHandlers(io: Server, socket: Socket) {
       return;
     }
 
-    const user = new User(socket.id, data.username);
+    const user = new User(socket.id, data.username, socket);
     users[socket.id] = user;
 
-    const room = joinOrCreateRoom(socket, data.room, user);
+    const room = joinOrCreateRoom(user, data.room);
     socket.join(data.room);
 
     console.log(`User ${users[socket.id]?.name} joined room ${data.room} ${socket.rooms.size}`);
@@ -44,7 +44,7 @@ export function registerClientHandlers(io: Server, socket: Socket) {
   });
 
   socket.on("kick", (data: KickData, callback: Callback) => {
-    const current = users[socket.id]!;
+    const current = users[socket.id];
     const errors = validateKick(data, current);
 
     if (errors) {
@@ -52,14 +52,19 @@ export function registerClientHandlers(io: Server, socket: Socket) {
       return;
     }
     // existance checked before
-    const id = getByName(data.username)?.id;
-    const target = io.sockets.sockets.get(id!)!;
+    const target = rooms.get(data.room)?.get(data.username);
 
-    leaveRoom(target, data.room);
-    target.emit("kick", { room: data.room });
-    console.log(`user ${data.username} have been kicked from ${data.room} room`);
+    if (target) {
+      leaveRoom(target, data.room);
+      target.socket.emit("kick", { room: data.room });
+      console.log(`user ${data.username} have been kicked from ${data.room} room`);
 
-    callback(null, { success: true });
+      callback(null, { success: true });
+    } else {
+      // this should never happen since the existence is
+      // checked inside validateKick
+      callback({ kick: `The user ${data.username} is not in the room!` }, { success: false });
+    }
   });
 
   socket.on("disconnecting", () => {
@@ -67,7 +72,7 @@ export function registerClientHandlers(io: Server, socket: Socket) {
     const room_id = getRoomId(socket);
 
     if (user != undefined && room_id != undefined) {
-      leaveRoom(socket, room_id);
+      leaveRoom(user, room_id);
     }
     console.log("user disconnected");
   });

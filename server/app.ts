@@ -3,7 +3,7 @@ import express from "express";
 import { createServer } from "node:http";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { Server as IoServer, Server, Socket } from "socket.io";
+import { Server as IoServer, Socket } from "socket.io";
 import { SERVER_PORT } from "./src/constants";
 import { registerClientHandlers } from "./src/events";
 import type { ServerData } from "./src/types";
@@ -31,7 +31,7 @@ function configureSocket(io: IoServer) {
 export function init(): ServerData {
   const app = express();
   const server = createServer(app);
-  const io = new Server(server);
+  const io = new IoServer(server);
 
   configureHttp(app);
   configureSocket(io);

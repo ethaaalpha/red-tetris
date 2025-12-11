@@ -2,7 +2,7 @@ import { Socket } from "socket.io";
 import * as z from "zod";
 import { ROOM_MAX, ROOM_MAX_LENGTH, ROOM_MAX_USERS, USERNAME_MAX_LENGTH } from "../constants";
 import { Room, rooms } from "../objects/Room";
-import { users, type User } from "../objects/User";
+import { type User } from "../objects/User";
 import type { JoinRoomData, KickData } from "../types";
 import { formatSchemeError } from "./utils";
 
@@ -51,7 +51,7 @@ export function getRoomId(socket: Socket): string | undefined {
   return undefined;
 }
 
-export function joinOrCreateRoom(socket: Socket, room_id: string, user: User): Room {
+export function joinOrCreateRoom(user: User, room_id: string): Room {
   let room = rooms.get(room_id);
 
   if (room == undefined) {
@@ -67,25 +67,26 @@ export function joinOrCreateRoom(socket: Socket, room_id: string, user: User): R
   // the current socket will receive information with the callback
   // we can exclude him on this call
   // see: https://socket.io/docs/v4/rooms/
-  socket.to(room.name).emit("room", room.asInfo());
+  user.socket.to(room.name).emit("room", room.asInfo());
   return room;
 }
 
 function setNextHost(room: Room) {
   const next = room.users.entries().next();
 
-  room.host = next.value![0];
+  if (next.value) {
+    room.host = next.value[1].name;
+  }
 }
 
-export function leaveRoom(target: Socket, room_id: string) {
+export function leaveRoom(target: User, room_id: string) {
   const room = rooms.get(room_id);
-  const user = users[target.id]!;
 
   if (room) {
-    room.remove(user);
-    target.leave(room_id);
+    room.remove(target);
+    target.socket.leave(room_id);
 
-    console.log(`User ${user.name} left room ${room_id}`);
+    console.log(`User ${target.name} left room ${room_id}`);
 
     // deletion of empty room
     if (room.users.size == 0) {
@@ -95,7 +96,7 @@ export function leaveRoom(target: Socket, room_id: string) {
       setNextHost(room);
 
       // update all people of the "situation" of the room
-      target.to(room.name).emit("room", room.asInfo());
+      target.socket.to(room.name).emit("room", room.asInfo());
 
       // game logic then (declare lose etc..)
     }
@@ -125,7 +126,7 @@ export function validateKick(
   if (data.username === current.name) {
     return { kick: "You can't kick yourself! " };
   }
-  if (!room.users.has(data.username)) {
+  if (room.get(data.username) === undefined) {
     return { kick: `The user ${data.username} is not in the room!` };
   }
   return null;

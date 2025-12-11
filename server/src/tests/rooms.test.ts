@@ -46,7 +46,7 @@ it("Room is full", () => {
   const users = new Map<string, User>(
     Array.from({ length: ROOM_MAX_USERS }, (_, i) => [
       `example${i + 1}`,
-      new User("dumb_id", `example${i + 1}`)
+      new User("dumb_id", `example${i + 1}`, null)
     ])
   );
 
@@ -192,6 +192,8 @@ it("Invalid kick", async () => {
     username: "user1",
     room: "example"
   });
+  const room = rooms.get("example");
+  expect(room).toBeDefined();
 
   // inexisting room
   await emitAsync(test1.client, "kick", {
@@ -203,7 +205,7 @@ it("Invalid kick", async () => {
   });
 
   // not host
-  rooms.get("example")!.host = "someone";
+  room.host = "someone";
   await emitAsync(test1.client, "kick", {
     username: "user2",
     room: "example"
@@ -211,7 +213,7 @@ it("Invalid kick", async () => {
     expect(err.kick).toContain("host of this");
     expect(res).toEqual({ success: false });
   });
-  rooms.get("example")!.host = "user1";
+  room.host = "user1";
 
   // him self
   await emitAsync(test1.client, "kick", {
@@ -223,7 +225,7 @@ it("Invalid kick", async () => {
   });
 
   // an user not in the room
-  users["test"] = new User("test", "user3");
+  users["test"] = new User("test", "user3", null);
   await emitAsync(test1.client, "kick", {
     username: "user3",
     room: "example"
