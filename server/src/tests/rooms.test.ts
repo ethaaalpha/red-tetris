@@ -2,7 +2,7 @@ import { type AddressInfo } from "node:net";
 import { Server } from "socket.io";
 import { afterEach, beforeEach, expect, it } from "vitest";
 import { init } from "../../app";
-import { ROOM_MAX_USERS } from "../constants";
+import { ROOM_MAX, ROOM_MAX_USERS } from "../constants";
 import { Room, rooms } from "../objects/Room";
 import { User, users } from "../objects/User";
 import type { Callback, RoomInfo, TestSocket } from "../types";
@@ -41,30 +41,61 @@ it("Invalid scheme", () => {
   });
 });
 
-it("Room is full", () => {
-  const room = new Room("example", "example");
-  const users = new Map<string, User>(
-    Array.from({ length: ROOM_MAX_USERS }, (_, i) => [
-      `example${i + 1}`,
-      new User("dumb_id", `example${i + 1}`, null)
-    ])
-  );
+it("Invalid join", async () => {
+  const fakeUser = new User("id", "name", null);
 
-  room.users = users;
+  // room is full
+  const room = new Room("example", fakeUser);
+  for (let i = 1; i < ROOM_MAX_USERS; i++) {
+    room.add(new User(`a${i}`, `a${i}`, null));
+  }
   rooms.set("example", room);
 
-  return new Promise<void>((resolve) => {
-    const data = {
-      username: "example",
-      room: "example"
-    };
-
-    test1.client.emit("join room", data, ((err, response) => {
-      expect(response).toEqual({ success: false });
-
-      resolve();
-    }) as Callback);
+  await emitAsync(test1.client, "join room", {
+    username: "user1",
+    room: "example"
+  }).then(({ err, res }) => {
+    expect(err.room).toContain("is full");
+    expect(res).toEqual({ success: false });
   });
+  rooms.clear();
+
+  // maximum of rooms
+  for (let i = 0; i < ROOM_MAX; i++) {
+    rooms.set(i, new Room(`test${i}`, fakeUser));
+  }
+  await emitAsync(test1.client, "join room", {
+    username: "user1",
+    room: "example"
+  }).then(({ err, res }) => {
+    expect(err.room).toContain("number of rooms reached");
+    expect(res).toEqual({ success: false });
+  });
+  rooms.clear();
+
+  // username already taken
+  rooms.set("example", new Room("example", fakeUser));
+  await emitAsync(test1.client, "join room", {
+    username: "name",
+    room: "example"
+  }).then(({ err, res }) => {
+    expect(err.room).toContain("is already taken");
+    expect(res).toEqual({ success: false });
+  });
+
+  // already in a room
+  await emitAsync(test1.client, "join room", {
+    username: "user1",
+    room: "example"
+  });
+  await emitAsync(test1.client, "join room", {
+    username: "user1",
+    room: "example2"
+  }).then(({ err, res }) => {
+    expect(err.room).toContain("already in room example");
+    expect(res).toEqual({ success: false });
+  });
+  rooms.clear();
 });
 
 it("Valid join", () => {

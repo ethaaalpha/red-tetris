@@ -38,6 +38,9 @@ export function validateJoinRoom(
   if (rooms.size >= ROOM_MAX) {
     return { room: "Maximum number of rooms reached, please join an existing room" };
   }
+  if (room && room.get(data.username)) {
+    return { room: "This username is already taken in the room!" };
+  }
 
   return null;
 }
