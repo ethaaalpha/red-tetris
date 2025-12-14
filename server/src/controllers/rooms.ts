@@ -34,7 +34,6 @@ export function validateJoinRoom(
   if (room && room.users.size >= ROOM_MAX_USERS) {
     return { room: "Room is full" };
   }
-
   if (rooms.size >= ROOM_MAX) {
     return { room: "Maximum number of rooms reached, please join an existing room" };
   }
@@ -94,7 +93,9 @@ export function leaveRoom(target: User, room_id: string) {
       rooms.delete(room_id);
       console.log(`room ${room_id} deleted`);
     } else {
-      setNextHost(room);
+      if (target === room.host) {
+        setNextHost(room);
+      }
 
       // update all people of the "situation" of the room
       target.socket.to(room.name).emit("room", room.asInfo());
@@ -121,7 +122,7 @@ export function validateKick(
   if (room === undefined) {
     return { kick: `The room ${data.room} does not exist!` };
   }
-  if (room.host.name != current.name) {
+  if (room.host != current) {
     return { kick: "You are not the host of this room!" };
   }
   if (data.username === current.name) {

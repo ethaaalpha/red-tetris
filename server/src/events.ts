@@ -60,10 +60,6 @@ export function registerClientHandlers(io: Server, socket: Socket) {
       console.log(`user ${data.username} has been kicked from ${data.room} room`);
 
       callback(null, { success: true });
-    } else {
-      // this should never happen since the existence is
-      // checked inside validateKick
-      callback({ kick: `The user ${data.username} is not in the room!` }, { success: false });
     }
   });
 
