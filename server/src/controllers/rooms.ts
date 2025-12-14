@@ -1,11 +1,12 @@
-import * as z from "zod";
-import { USERNAME_MAX_LENGTH, ROOM_MAX_LENGTH, ROOM_MAX_USERS, ROOM_MAX } from "../constants";
 import { Socket } from "socket.io";
-import type { JoinRoomData } from "../types";
-import type { User } from "../objects/User";
+import * as z from "zod";
+import { ROOM_MAX, ROOM_MAX_LENGTH, ROOM_MAX_USERS, USERNAME_MAX_LENGTH } from "../constants";
 import { Room, rooms } from "../objects/Room";
+import { type User } from "../objects/User";
+import type { JoinRoomData, KickData } from "../types";
+import { formatSchemeError } from "./utils";
 
-const joinRoomSchema = z.object({
+const roomSchema = z.object({
   username: z
     .string()
     .min(1, "Username cannot be empty")
@@ -20,16 +21,9 @@ export function validateJoinRoom(
   socket: Socket,
   data: JoinRoomData
 ): Record<string, string> | null {
-  const result = joinRoomSchema.safeParse(data);
+  const result = roomSchema.safeParse(data);
   if (!result.success) {
-    return result.error.issues.reduce(
-      (acc, issue) => {
-        const varName = issue.path.join(".");
-        acc[varName] = issue.message;
-        return acc;
-      },
-      {} as Record<string, string>
-    );
+    return formatSchemeError(result.error);
   }
   const room = rooms.get(data.room);
 
@@ -40,9 +34,11 @@ export function validateJoinRoom(
   if (room && room.users.size >= ROOM_MAX_USERS) {
     return { room: "Room is full" };
   }
-
   if (rooms.size >= ROOM_MAX) {
     return { room: "Maximum number of rooms reached, please join an existing room" };
+  }
+  if (room && room.get(data.username)) {
+    return { room: "This username is already taken in the room!" };
   }
 
   return null;
@@ -57,31 +53,83 @@ export function getRoomId(socket: Socket): string | undefined {
   return undefined;
 }
 
-export function joinOrCreateRoom(room_id: string, user: User) {
+export function joinOrCreateRoom(user: User, room_id: string): Room {
   let room = rooms.get(room_id);
 
   if (room == undefined) {
-    room = new Room(room_id);
-    room.add(user);
+    room = new Room(room_id, user);
 
     rooms.set(room_id, room);
   } else {
     room.add(user);
   }
+
+  // the current socket will receive information with the callback
+  // we can exclude him on this call
+  // see: https://socket.io/docs/v4/rooms/
+  user.socket.to(room.name).emit("room", room.asInfo());
+  return room;
 }
 
-export function leaveRoom(room_id: string, user: User) {
+function setNextHost(room: Room) {
+  const next = room.users.entries().next();
+
+  if (next.value) {
+    room.host = next.value[1];
+  }
+}
+
+export function leaveRoom(target: User, room_id: string) {
   const room = rooms.get(room_id);
 
   if (room) {
-    room.remove(user);
-    console.log(`User ${user.name} left room ${room_id}`);
+    room.remove(target);
+    target.socket.leave(room_id);
+
+    console.log(`User ${target.name} left room ${room_id}`);
 
     // deletion of empty room
     if (room.users.size == 0) {
       rooms.delete(room_id);
+      console.log(`room ${room_id} deleted`);
     } else {
+      if (target === room.host) {
+        setNextHost(room);
+      }
+
+      // update all people of the "situation" of the room
+      target.socket.to(room.name).emit("room", room.asInfo());
+
       // game logic then (declare lose etc..)
     }
   }
+}
+
+export function validateKick(
+  data: KickData,
+  current: User | undefined
+): Record<string, string> | null {
+  const result = roomSchema.safeParse(data);
+
+  if (!result.success) {
+    return formatSchemeError(result.error);
+  }
+  const room = rooms.get(data.room);
+
+  if (current === undefined) {
+    return { kick: "You do not belong to a room!" };
+  }
+  if (room === undefined) {
+    return { kick: `The room ${data.room} does not exist!` };
+  }
+  if (room.host != current) {
+    return { kick: "You are not the host of this room!" };
+  }
+  if (data.username === current.name) {
+    return { kick: "You can't kick yourself! " };
+  }
+  if (room.get(data.username) === undefined) {
+    return { kick: `The user ${data.username} is not in the room!` };
+  }
+  return null;
 }
