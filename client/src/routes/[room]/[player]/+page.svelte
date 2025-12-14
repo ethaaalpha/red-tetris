@@ -3,24 +3,27 @@
   import { goto } from "$app/navigation";
   import { page } from "$app/state";
 
+  // components
+  import Piece from "$lib/components/Piece.svelte";
+  import { Crown, LogOut, Swords } from "@lucide/svelte";
+
   // socket
-  import { getRoom, getSocket } from "$lib/socket";
+  import { getSocket } from "$lib/socket";
 
   // types
-  import type {
-    SocketJoinRoomError,
-    SocketJoinRoomResponse,
-    SocketJoinRoomData
-  } from "$lib/types/socket";
+  import type { SocketJoinRoomError, SocketJoinRoomData } from "$lib/types/socket";
   import { USERNAME_MAX_LENGTH } from "$lib/constants";
+  import type { RoomInfo } from "server-types";
 
   const room = page.params.room;
   const username = page.params.player;
 
-  let roomError = $state<string | undefined>(undefined);
-  let userError = $state<string | undefined>(undefined);
-  let unusualError = $state<string | undefined>(undefined);
+  let roomError = $state<string>();
+  let userError = $state<string>();
+  let unusualError = $state<string>();
+  let roomData = $state<RoomInfo>();
   let joined = $state(false);
+  let countdown = $state(3);
 
   const socket = getSocket();
 
@@ -31,27 +34,34 @@
 
     localStorage.setItem("username", username?.substring(0, USERNAME_MAX_LENGTH)!);
     const data: SocketJoinRoomData = { username: username || "", room: room || "" };
-    socket.emit("join room", data, (err: SocketJoinRoomError, response: SocketJoinRoomResponse) => {
-      if (err) {
-        roomError = err.room;
-        userError = err.username;
+    socket.emit("join room", data, (success: boolean, data: RoomInfo | SocketJoinRoomError) => {
+      if (!success) {
+        const errorData = data as SocketJoinRoomError;
+        roomError = errorData.room;
+        userError = errorData.username;
         if (!userError && !roomError) {
           unusualError = "Failed to join room";
         }
-        setTimeout(() => {
-          goto("/");
-        }, 3000);
-      } else if (response.success) {
+        const interval = setInterval(() => {
+          countdown--;
+          if (countdown <= 0) {
+            clearInterval(interval);
+            goto("/");
+          }
+        }, 1000);
+      } else {
+        roomData = data as RoomInfo;
+        socket.on("room update", (data: RoomInfo) => {
+          roomData = data;
+        });
         joined = true;
       }
     });
   }
 
   onMount(() => {
-    if (socket.connected) {
-      if (!getRoom()) joinRoom();
-      else joined = true;
-    } else socket.on("connect", joinRoom);
+    if (socket.connected) joinRoom();
+    else socket.on("connect", joinRoom);
 
     return () => {
       socket.off("connect", joinRoom);
@@ -66,17 +76,60 @@
         {#each errors as error}
           {#if error}
             <p class="text-red-400 text-xl mb-2">{error}</p>
+            <p>Redirecting in {countdown} second{countdown !== 1 ? "s" : ""}...</p>
           {/if}
         {:else}
           <p class="text-white text-xl">Joining room "{room}" as "{username}"...</p>
         {/each}
       </div>
     </div>
-  {:else}
+  {:else if roomData}
     <div
-      class="p-4 text-center bg-dark-secondary ring ring-inset ring-border h-[640px] w-[320px] flex flex-col"
+      class="p-4 bg-dark-secondary ring ring-inset ring-border h-[640px] w-[360px] flex flex-col"
     >
-      <h1 class="text-red-primary text-2xl text-ellipsis overflow-hidden">{room}</h1>
+      <h1 class="text-center text-red-primary overflow-hidden text-ellipsis text-3xl pb-2">
+        {room}
+      </h1>
+      <span class="text-center text-xl">{roomData.userCount} / {roomData.max}</span>
+      <ul class="py-4">
+        {#each roomData.players as player, index (player.color)}
+          <li
+            class="text-white p-2 text-lg flex items-center gap-2 {index % 2 === 0
+              ? 'bg-dark-accent'
+              : 'bg-dark-secondary'}"
+          >
+            <Piece color={player.color} size={24} />
+            <span class="overflow-hidden text-ellipsis">
+              {player.username}
+            </span>
+            {#if roomData.host === player.username}
+              <Crown color="#FFC832" />
+            {/if}
+          </li>
+        {/each}
+      </ul>
+      <div class="mt-auto space-y-4">
+        {#if roomData.host === username}
+          <button class="btn btn-secondary text-lg py-1.5 w-full">leave room</button>
+        {:else}
+          <p class="text-center text-white/50">Waiting for the host to start...</p>
+        {/if}
+        {#if roomData.host === username}
+          <button
+            class="btn btn-primary w-full text-3xl py-3 flex items-center justify-center gap-4"
+          >
+            START GAME
+            <Swords size={32} />
+          </button>
+        {:else}
+          <button
+            class="btn btn-primary w-full text-3xl py-3 flex items-center justify-center gap-4"
+          >
+            EXIT ROOM
+            <LogOut size={32} />
+          </button>
+        {/if}
+      </div>
     </div>
     <div class="bg-dark-secondary ring ring-inset ring-border flex h-[640px] w-[320px]"></div>
   {/if}

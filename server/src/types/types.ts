@@ -4,9 +4,11 @@ export interface GetRoomsData {
   max: number;
 }
 
+export type UserColor = "cyan" | "red" | "green" | "blue" | "yellow" | "orange" | "purple" | "grey";
+
 export interface RoomInfo {
   name: string;
-  players: string[];
+  players: Array<{ color: UserColor; username: string }>;
   userCount: number;
   max: number;
   host: string;
@@ -17,4 +19,4 @@ export interface SocketKickData {
   room: string;
 }
 
-export type Callback = (err: unknown, response?: unknown) => void;
+export type Callback = (success: boolean, data?: unknown) => void;

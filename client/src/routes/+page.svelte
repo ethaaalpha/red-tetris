@@ -12,14 +12,13 @@
   import { USERNAME_MAX_LENGTH, ROOM_NAME_MAX_LENGTH } from "$lib/constants";
 
   // socket
-  import { getSocket, setRoom } from "$lib/socket";
+  import { getSocket } from "$lib/socket";
 
   // types
   import type {
     SocketGetRoomsResponse,
     SocketJoinRoomData,
-    SocketJoinRoomError,
-    SocketJoinRoomResponse
+    SocketJoinRoomError
   } from "$lib/types/socket";
 
   // assets
@@ -39,20 +38,20 @@
     emitting = true;
     localStorage.setItem("username", username);
     const data: SocketJoinRoomData = { username: username || "", room: room || "" };
-    socket.emit("join room", data, (err: SocketJoinRoomError, response: SocketJoinRoomResponse) => {
+    socket.emit("can join room", data, (success: boolean, data?: SocketJoinRoomError) => {
       emitting = false;
-      usernameError = err?.username;
-      roomError = err?.room;
-      if (response.success) {
-        setRoom(room);
-        goto(`/${encodeURIComponent(room)}/${encodeURIComponent(username)}`);
+      if (!success) {
+        usernameError = data?.username;
+        roomError = data?.room;
+      } else {
+        goto(`/${room}/${username}`);
       }
     });
   }
 
   function getRooms() {
-    socket.emit("get rooms", (err: any, response: SocketGetRoomsResponse) => {
-      rooms = response.rooms ?? [];
+    socket.emit("get rooms", (success: boolean, data: SocketGetRoomsResponse) => {
+      if (success) rooms = data;
     });
   }
 

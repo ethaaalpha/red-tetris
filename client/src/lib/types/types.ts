@@ -1,3 +1,3 @@
-import type { SocketJoinRoomData } from "./socket";
+import type { SocketJoinRoomData, SocketJoinRoomError } from "./socket";
 
-export type { SocketJoinRoomData };
+export type { SocketJoinRoomData, SocketJoinRoomError };

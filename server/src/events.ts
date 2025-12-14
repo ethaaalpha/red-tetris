@@ -13,10 +13,19 @@ import type { Callback, GetRoomsData, SocketKickData } from "./types/types";
 import type { SocketJoinRoomData } from "client-types";
 
 export function registerClientHandlers(io: Server, socket: Socket) {
+  socket.on("can join room", (data: SocketJoinRoomData, callback: Callback) => {
+    const errors = validateJoinRoom(socket, data);
+    if (errors) {
+      callback(false, errors);
+      return;
+    }
+    callback(true);
+  });
+
   socket.on("join room", (data: SocketJoinRoomData, callback: Callback) => {
     const errors = validateJoinRoom(socket, data);
     if (errors) {
-      callback(errors, { success: false });
+      callback(false, errors);
       return;
     }
 
@@ -27,7 +36,7 @@ export function registerClientHandlers(io: Server, socket: Socket) {
     socket.join(data.room);
 
     console.log(`User ${users[socket.id]?.name} joined room ${data.room} ${socket.rooms.size}`);
-    callback(null, { success: true, room: room.asInfo() });
+    callback(true, room.asInfo());
   });
 
   socket.on("get rooms", (callback: Callback) => {
@@ -41,7 +50,7 @@ export function registerClientHandlers(io: Server, socket: Socket) {
       });
     });
 
-    callback(null, { rooms: result });
+    callback(true, result);
   });
 
   socket.on("kick", (data: SocketKickData, callback: Callback) => {
@@ -49,7 +58,7 @@ export function registerClientHandlers(io: Server, socket: Socket) {
     const errors = validateKick(data, current);
 
     if (errors) {
-      callback(errors, { success: false });
+      callback(false, errors);
       return;
     }
     // existance checked before
@@ -60,7 +69,7 @@ export function registerClientHandlers(io: Server, socket: Socket) {
       target.socket.emit("kick", { room: data.room });
       console.log(`user ${data.username} has been kicked from ${data.room} room`);
 
-      callback(null, { success: true });
+      callback(true);
     }
   });
 

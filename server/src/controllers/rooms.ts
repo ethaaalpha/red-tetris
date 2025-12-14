@@ -73,7 +73,7 @@ export function joinOrCreateRoom(user: User, room_id: string): Room {
   // the current socket will receive information with the callback
   // we can exclude him on this call
   // see: https://socket.io/docs/v4/rooms/
-  user.socket.to(room.name).emit("room", room.asInfo());
+  user.socket.to(room.name).emit("room update", room.asInfo());
   return room;
 }
 
@@ -81,7 +81,7 @@ function setNextHost(room: Room) {
   const next = room.users.entries().next();
 
   if (next.value) {
-    room.host = next.value[1];
+    room.host = next.value[1].user;
   }
 }
 
