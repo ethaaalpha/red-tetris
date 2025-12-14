@@ -7,7 +7,11 @@
   import { getRoom, getSocket } from "$lib/socket";
 
   // types
-  import type { SocketJoinRoomError, SocketJoinRoomResponse } from "$lib/types/socket";
+  import type {
+    SocketJoinRoomError,
+    SocketJoinRoomResponse,
+    SocketJoinRoomData
+  } from "$lib/types/socket";
   import { USERNAME_MAX_LENGTH } from "$lib/constants";
 
   const room = page.params.room;
@@ -26,24 +30,21 @@
     if (joined) return;
 
     localStorage.setItem("username", username?.substring(0, USERNAME_MAX_LENGTH)!);
-    socket.emit(
-      "join room",
-      { username, room },
-      (err: SocketJoinRoomError, response: SocketJoinRoomResponse) => {
-        if (err) {
-          roomError = err.room;
-          userError = err.username;
-          if (!userError && !roomError) {
-            unusualError = "Failed to join room";
-          }
-          setTimeout(() => {
-            goto("/");
-          }, 3000);
-        } else if (response.success) {
-          joined = true;
+    const data: SocketJoinRoomData = { username: username || "", room: room || "" };
+    socket.emit("join room", data, (err: SocketJoinRoomError, response: SocketJoinRoomResponse) => {
+      if (err) {
+        roomError = err.room;
+        userError = err.username;
+        if (!userError && !roomError) {
+          unusualError = "Failed to join room";
         }
+        setTimeout(() => {
+          goto("/");
+        }, 3000);
+      } else if (response.success) {
+        joined = true;
       }
-    );
+    });
   }
 
   onMount(() => {

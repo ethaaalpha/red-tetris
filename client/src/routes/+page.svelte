@@ -17,6 +17,7 @@
   // types
   import type {
     SocketGetRoomsResponse,
+    SocketJoinRoomData,
     SocketJoinRoomError,
     SocketJoinRoomResponse
   } from "$lib/types/socket";
@@ -37,19 +38,16 @@
   function validate() {
     emitting = true;
     localStorage.setItem("username", username);
-    socket.emit(
-      "join room",
-      { username, room },
-      (err: SocketJoinRoomError, response: SocketJoinRoomResponse) => {
-        emitting = false;
-        usernameError = err?.username;
-        roomError = err?.room;
-        if (response.success) {
-          setRoom(room);
-          goto(`/${encodeURIComponent(room)}/${encodeURIComponent(username)}`);
-        }
+    const data: SocketJoinRoomData = { username: username || "", room: room || "" };
+    socket.emit("join room", data, (err: SocketJoinRoomError, response: SocketJoinRoomResponse) => {
+      emitting = false;
+      usernameError = err?.username;
+      roomError = err?.room;
+      if (response.success) {
+        setRoom(room);
+        goto(`/${encodeURIComponent(room)}/${encodeURIComponent(username)}`);
       }
-    );
+    });
   }
 
   function getRooms() {

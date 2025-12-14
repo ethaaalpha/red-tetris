@@ -1,11 +1,18 @@
+import type { RoomInfo } from "server-types";
+
 export interface SocketJoinRoomError {
   username?: string;
   room?: string;
 }
 
+export interface SocketJoinRoomData {
+  username: string;
+  room: string;
+}
+
 export interface SocketJoinRoomResponse {
   success: boolean;
-  message?: string;
+  room: RoomInfo;
 }
 
 export interface SocketGetRoomsResponse {

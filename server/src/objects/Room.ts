@@ -1,5 +1,5 @@
 import { ROOM_MAX_USERS } from "../constants";
-import type { RoomInfo } from "../types";
+import type { RoomInfo } from "../types/types";
 import type { User } from "./User";
 
 export class Room {
@@ -31,6 +31,7 @@ export class Room {
 
   public asInfo(): RoomInfo {
     return {
+      name: this.name,
       players: [...this.users.values()].map((u) => u.name),
       userCount: this.users.size,
       max: ROOM_MAX_USERS,

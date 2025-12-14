@@ -3,29 +3,35 @@ import * as z from "zod";
 import { ROOM_MAX, ROOM_MAX_LENGTH, ROOM_MAX_USERS, USERNAME_MAX_LENGTH } from "../constants";
 import { Room, rooms } from "../objects/Room";
 import { type User } from "../objects/User";
-import type { JoinRoomData, KickData } from "../types";
+import type { SocketKickData } from "../types/types";
+import type { SocketJoinRoomData } from "client-types";
 import { formatSchemeError } from "./utils";
 
-const roomSchema = z.object({
-  username: z
-    .string()
-    .min(1, "Username cannot be empty")
-    .max(USERNAME_MAX_LENGTH, `Username cannot be longer than ${USERNAME_MAX_LENGTH} characters`),
-  room: z
-    .string()
-    .min(1, "Room name cannot be empty")
-    .max(ROOM_MAX_LENGTH, `Room name cannot be longer than ${ROOM_MAX_LENGTH} characters`)
+const roomValidation = z
+  .string()
+  .min(1, "Room name cannot be empty")
+  .max(ROOM_MAX_LENGTH, `Room name cannot be longer than ${ROOM_MAX_LENGTH} characters`);
+
+const usernameValidation = z
+  .string()
+  .min(1, "Username cannot be empty")
+  .max(USERNAME_MAX_LENGTH, `Username cannot be longer than ${USERNAME_MAX_LENGTH} characters`);
+
+const joinRoomSchema = z.object({
+  username: usernameValidation,
+  room: roomValidation
 });
 
 export function validateJoinRoom(
   socket: Socket,
-  data: JoinRoomData
+  data: SocketJoinRoomData
 ): Record<string, string> | null {
-  const result = roomSchema.safeParse(data);
+  const result = joinRoomSchema.safeParse(data);
   if (!result.success) {
     return formatSchemeError(result.error);
   }
-  const room = rooms.get(data.room);
+
+  const room = rooms.get(result.data.room);
 
   if (socket.rooms.size > 1) {
     return { room: `You are already in room ${Array.from(socket.rooms)[1]}` };
@@ -106,10 +112,10 @@ export function leaveRoom(target: User, room_id: string) {
 }
 
 export function validateKick(
-  data: KickData,
+  data: SocketKickData,
   current: User | undefined
 ): Record<string, string> | null {
-  const result = roomSchema.safeParse(data);
+  const result = joinRoomSchema.safeParse(data); // à changer!
 
   if (!result.success) {
     return formatSchemeError(result.error);

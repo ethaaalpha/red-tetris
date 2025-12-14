@@ -9,10 +9,11 @@ import {
 } from "./controllers/rooms";
 import { rooms } from "./objects/Room";
 import { User, users } from "./objects/User";
-import type { Callback, GetRoomsData, JoinRoomData, KickData } from "./types";
+import type { Callback, GetRoomsData, SocketKickData } from "./types/types";
+import type { SocketJoinRoomData } from "client-types";
 
 export function registerClientHandlers(io: Server, socket: Socket) {
-  socket.on("join room", (data: JoinRoomData, callback: Callback) => {
+  socket.on("join room", (data: SocketJoinRoomData, callback: Callback) => {
     const errors = validateJoinRoom(socket, data);
     if (errors) {
       callback(errors, { success: false });
@@ -43,7 +44,7 @@ export function registerClientHandlers(io: Server, socket: Socket) {
     callback(null, { rooms: result });
   });
 
-  socket.on("kick", (data: KickData, callback: Callback) => {
+  socket.on("kick", (data: SocketKickData, callback: Callback) => {
     const current = users[socket.id];
     const errors = validateKick(data, current);
 
