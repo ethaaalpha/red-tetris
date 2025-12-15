@@ -12,10 +12,12 @@ body {
 
 @theme {
   --color-red-primary: #d00000;
+  --color-red-accent: #eb0000;
   --color-red-secondary: #770000;
   --color-dark-primary: hsl(0, 0%, 10%);
   --color-dark-secondary: hsl(0, 0%, 20%);
   --color-dark-accent: hsl(0, 0%, 30%);
+  --color-dark-hover: hsl(0, 0%, 35%);
   --color-border: hsl(0, 0%, 40%);
 }
 
@@ -50,4 +52,12 @@ body {
   background-color: var(--color-dark-accent);
   box-shadow: 0 var(--btn-depth) 0 var(--color-dark-secondary);
   cursor: not-allowed;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-red-accent);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-dark-hover);
 }

@@ -117,6 +117,7 @@
         {#if roomData.host === username}
           <button
             class="btn btn-primary w-full text-3xl py-3 flex items-center justify-center gap-4"
+            style="--btn-depth: 6px;"
           >
             START GAME
             <Swords size={32} />
@@ -124,6 +125,7 @@
         {:else}
           <button
             class="btn btn-primary w-full text-3xl py-3 flex items-center justify-center gap-4"
+            style="--btn-depth: 6px;"
           >
             EXIT ROOM
             <LogOut size={32} />
