@@ -30,12 +30,13 @@ export function registerClientHandlers(io: Server, socket: Socket) {
     }
 
     const user = new User(socket.id, data.username, socket);
-    users[socket.id] = user;
+    users.set(socket.id, user);
 
     const room = joinOrCreateRoom(user, data.room);
+    user.room = room;
     socket.join(data.room);
 
-    console.log(`User ${users[socket.id]?.name} joined room ${data.room} ${socket.rooms.size}`);
+    console.log(`User ${users.get(socket.id)?.name} joined room ${data.room} ${socket.rooms.size}`);
     callback(true, room.asInfo());
   });
 
@@ -54,7 +55,7 @@ export function registerClientHandlers(io: Server, socket: Socket) {
   });
 
   socket.on("kick", (data: SocketKickData, callback: Callback) => {
-    const current = users[socket.id];
+    const current = users.get(socket.id);
     const errors = validateKick(data, current);
 
     if (errors) {
@@ -77,7 +78,7 @@ export function registerClientHandlers(io: Server, socket: Socket) {
   });
 
   socket.on("disconnecting", () => {
-    const user = users[socket.id];
+    const user = users.get(socket.id);
     const room = getRoom(socket);
 
     if (user && room) {

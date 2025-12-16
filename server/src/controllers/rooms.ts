@@ -2,7 +2,7 @@ import { Socket } from "socket.io";
 import * as z from "zod";
 import { ROOM_MAX, ROOM_MAX_LENGTH, ROOM_MAX_USERS, USERNAME_MAX_LENGTH } from "../constants";
 import { Room, rooms } from "../objects/Room";
-import { type User } from "../objects/User";
+import { users, type User } from "../objects/User";
 import type { SocketKickData } from "../types/types";
 import type { SocketJoinRoomData } from "client-types";
 import { formatSchemeError } from "./utils";
@@ -101,6 +101,8 @@ export function leaveRoom(target: User, room: Room) {
     }
   }
 
+  // an user cannot exist outside of a room
+  users.delete(target.socket.id);
   return room.asInfo();
 }
 
