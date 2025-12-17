@@ -19,6 +19,7 @@
   // utils
   import { USERNAME_MAX_LENGTH } from "$lib/constants";
   import { pieceColors } from "$lib/utils/piece";
+  import { setKickedDialog, setKickedRoom } from "$lib/stores/kick.svelte";
 
   const room = page.params.room;
   const username = page.params.player;
@@ -90,6 +91,8 @@
 
     // to change
     socket.on("kick", () => {
+      setKickedRoom(room!);
+      setKickedDialog(true);
       goto("/");
     });
 

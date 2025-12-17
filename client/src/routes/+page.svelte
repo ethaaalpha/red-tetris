@@ -6,7 +6,10 @@
   import Dialog from "$lib/components/Dialog.svelte";
   import Piece from "$lib/components/Piece.svelte";
   import TextInput from "$lib/components/TextInput.svelte";
-  import { Gamepad2 } from "@lucide/svelte";
+  import { Gamepad2, Info } from "@lucide/svelte";
+
+  // stores
+  import { kickState } from "$lib/stores/kick.svelte";
 
   // constants
   import { USERNAME_MAX_LENGTH, ROOM_NAME_MAX_LENGTH } from "$lib/constants";
@@ -188,3 +191,9 @@
     {/if}
   </Dialog>
 </div>
+
+<Dialog icon={Info} confirm="ok" title="You have been kicked" bind:open={kickState.show}>
+  <p class="text-white/75">
+    You have been kicked from <span class="text-red-accent">{kickState.room}</span>
+  </p>
+</Dialog>
