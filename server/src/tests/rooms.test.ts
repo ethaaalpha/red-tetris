@@ -5,7 +5,7 @@ import { init } from "../../app";
 import { ROOM_MAX, ROOM_MAX_USERS } from "../constants";
 import { Room, rooms } from "../objects/Room";
 import { User, users } from "../objects/User";
-import type { Callback, RoomInfo, SocketKickData } from "../types/types";
+import type { Callback, RoomInfo } from "../types/types";
 import type { TestSocket } from "../types/server";
 import { createClient, emitAsync, onceAsync } from "./utils";
 import type { SocketJoinRoomError } from "client-types";
