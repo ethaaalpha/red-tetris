@@ -1,0 +1,33 @@
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { emitAsync, setupTestServer, shutdownTestServer } from "./utils";
+import { Room, rooms } from "../objects/Room";
+import { User } from "../objects/User";
+import { ROOM_MAX_USERS } from "../constants";
+import type { TestServerData } from "./types";
+
+let ctx: TestServerData;
+
+beforeEach(async () => {
+  ctx = await setupTestServer();
+});
+
+afterEach(async () => {
+  await shutdownTestServer(ctx);
+});
+
+describe("get rooms", () => {
+  it("simple", async () => {
+    rooms.set("example", new Room("example", new User("id", "example", null)));
+
+    await emitAsync(ctx.test1.client, "get rooms").then(({ success, data }) => {
+      expect(data).toEqual([
+        {
+          name: "example",
+          userCount: 1,
+          max: ROOM_MAX_USERS
+        }
+      ]);
+      expect(success).toBe(true);
+    });
+  });
+});
