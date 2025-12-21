@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { createClient, emitAsync, onceAsync, setupTestServer, shutdownTestServer } from "./utils";
-import type { TestServerData } from "../types/server";
 import { User } from "../objects/User";
 import { Room, rooms } from "../objects/Room";
 import { ROOM_MAX, ROOM_MAX_USERS } from "../constants";
 import type { SocketJoinRoomError } from "client-types";
 import type { RoomInfo } from "../types/types";
+import type { TestServerData } from "./types";
 
 let ctx: TestServerData;
 

@@ -9,7 +9,7 @@ import {
 } from "./utils";
 import { Room, rooms } from "../objects/Room";
 import { User, users } from "../objects/User";
-import type { TestServerData } from "../types/server";
+import type { TestServerData } from "./types";
 
 let ctx: TestServerData;
 

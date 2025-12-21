@@ -7,8 +7,8 @@ import {
   setupTestServer,
   shutdownTestServer
 } from "./utils";
-import type { TestServerData } from "../types/server";
 import type { SocketMessageData } from "../../../client/src/lib/types/socket";
+import type { TestServerData } from "./types";
 
 let ctx: TestServerData;
 

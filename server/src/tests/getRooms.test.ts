@@ -3,7 +3,7 @@ import { emitAsync, setupTestServer, shutdownTestServer } from "./utils";
 import { Room, rooms } from "../objects/Room";
 import { User } from "../objects/User";
 import { ROOM_MAX_USERS } from "../constants";
-import type { TestServerData } from "../types/server";
+import type { TestServerData } from "./types";
 
 let ctx: TestServerData;
 
