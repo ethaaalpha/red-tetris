@@ -8,6 +8,12 @@ export interface TestSocket {
   server: ServerSocket;
 }
 
+export interface TestServerData {
+  io: IoServer;
+  test1: TestSocket;
+  address: string;
+}
+
 export interface ServerData {
   app: Express;
   server: HttpServer;

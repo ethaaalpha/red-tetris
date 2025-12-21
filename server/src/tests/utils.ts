@@ -1,7 +1,11 @@
 import { Server, type Socket as ServerSocket } from "socket.io";
 import { io as ioc, type Socket as ClientSocket } from "socket.io-client";
 import type { Callback } from "../types/types";
-import type { TestSocket } from "../types/server";
+import type { TestServerData, TestSocket } from "../types/server";
+import type { AddressInfo } from "net";
+import { init } from "../../app";
+import { Room, rooms } from "../objects/Room";
+import { expect } from "vitest";
 
 export function createClient(address: string, io: Server): Promise<TestSocket> {
   return new Promise((resolve) => {
@@ -23,9 +27,15 @@ export function emitAsync(
   data?: unknown
 ): Promise<{ success: boolean; data?: unknown }> {
   return new Promise((resolve) => {
-    socket.emit(event, data, ((success: boolean, data?: unknown) => {
-      resolve({ success, data });
-    }) as Callback);
+    if (data) {
+      socket.emit(event, data, ((success: boolean, data?: unknown) => {
+        resolve({ success, data });
+      }) as Callback);
+    } else {
+      socket.emit(event, ((success: boolean, data?: unknown) => {
+        resolve({ success, data });
+      }) as Callback);
+    }
   });
 }
 
@@ -35,4 +45,44 @@ export function onceAsync(socket: ClientSocket | ServerSocket, event: string): P
       resolve(data);
     });
   });
+}
+
+export async function setupTestServer(): Promise<TestServerData> {
+  const struct = init();
+  const io: Server = struct.io;
+
+  await new Promise<void>((resolve) => {
+    struct.server.listen(() => resolve());
+  });
+
+  const address = `http://localhost:${(struct.server.address() as AddressInfo).port}`;
+  const test1 = await createClient(address, io);
+
+  return {
+    io: io,
+    address: address,
+    test1: test1
+  };
+}
+
+export async function shutdownTestServer(ctx: TestServerData): Promise<void> {
+  await ctx.io.close();
+  rooms.clear();
+}
+
+export async function joinRoom(
+  test: TestSocket,
+  roomname: string,
+  username: string
+): Promise<Room> {
+  await emitAsync(test.client, "join room", {
+    username: username,
+    room: roomname
+  });
+
+  const room = rooms.get(roomname);
+  expect(room).toBeDefined();
+  expect(room).toBeInstanceOf(Room);
+
+  return room;
 }
