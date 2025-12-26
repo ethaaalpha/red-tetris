@@ -1,6 +1,7 @@
+import type { Socket } from "socket.io";
 import { ROOM_MAX_USERS } from "../constants";
 import type { SocketRoomInfoData, SocketUserColor } from "../types/types";
-import type { User } from "./User";
+import { users, type User } from "./User";
 
 export class Room {
   public users: Map<string, { color: SocketUserColor; user: User }> = new Map();
@@ -35,18 +36,45 @@ export class Room {
     return color;
   }
 
-  public add(user: User) {
-    if (this.exist(user)) throw new Error("User already exists");
-    else if (this.users.size >= ROOM_MAX_USERS) throw new Error("Room is full");
-    const color = this.getColor();
-    this.users.set(user.id, { color, user });
+  public setNextHost() {
+    const next = this.users.entries().next();
+
+    if (next.value) {
+      this.host = next.value[1].user;
+    }
   }
 
-  public remove(user: User) {
+  public add(user: User): SocketRoomInfoData {
+    if (this.exist(user)) throw new Error("User already exists");
+    else if (this.users.size >= ROOM_MAX_USERS) throw new Error("Room is full");
+
+    const color = this.getColor();
+    this.users.set(user.id, { color, user });
+
+    return this.asInfo();
+  }
+
+  public remove(user: User): SocketRoomInfoData {
     const retrieved = this.users.get(user.id);
     if (!retrieved) throw new Error("User not found");
+
     this.users.delete(retrieved.user.id);
     this.colors.push(retrieved.color);
+
+    console.log(`User ${user.name} left room ${user.name}`);
+    // deletion of empty room
+    if (this.users.size == 0) {
+      rooms.delete(this.name);
+      console.log(`room ${this.name} deleted`);
+    } else {
+      if (user === this.host) {
+        this.setNextHost();
+      }
+    }
+
+    // an user cannot exist outside of a room
+    users.delete(user.socket.id);
+    return this.asInfo();
   }
 
   // there are no duplicates usernames in a room
@@ -67,3 +95,27 @@ export class Room {
 }
 
 export const rooms: Map<string, Room> = new Map();
+
+export function joinOrCreateRoom(user: User, room_id: string): Room {
+  let room = rooms.get(room_id);
+
+  if (room == undefined) {
+    room = new Room(room_id, user);
+
+    rooms.set(room_id, room);
+  } else {
+    room.add(user);
+  }
+
+  user.room = room;
+  return room;
+}
+
+export function getRoom(socket: Socket): Room | null {
+  for (const roomId of socket.rooms) {
+    if (roomId !== socket.id) {
+      return rooms.get(roomId) ?? null;
+    }
+  }
+  return null;
+}

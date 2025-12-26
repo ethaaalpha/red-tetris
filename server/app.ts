@@ -5,8 +5,13 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { Server as IoServer, Socket } from "socket.io";
 import { SERVER_PORT } from "./src/constants";
-import { registerClientHandlers } from "./src/events";
-import type { ServerData } from "./src/types";
+import { registerHandlers as canJoinRoomHandler } from "./src/events/canJoinRoom";
+import { registerHandlers as chatHandler } from "./src/events/chat";
+import { registerHandlers as disconnectingHandler } from "./src/events/disconnecting";
+import { registerHandlers as getRoomsHandler } from "./src/events/getRooms";
+import { registerHandlers as joinRoomHandler } from "./src/events/joinRoom";
+import { registerHandlers as kickHandler } from "./src/events/kick";
+import type { ServerData } from "./src/types/server";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,7 +29,12 @@ function configureSocket(io: IoServer) {
   io.on("connection", (socket: Socket) => {
     console.log("New client connected");
 
-    registerClientHandlers(io, socket);
+    canJoinRoomHandler(socket);
+    chatHandler(socket);
+    disconnectingHandler(io, socket);
+    getRoomsHandler(socket);
+    joinRoomHandler(socket);
+    kickHandler(io, socket);
   });
 }
 
