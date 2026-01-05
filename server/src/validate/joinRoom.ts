@@ -1,6 +1,5 @@
 // global
-import { Socket } from "socket.io";
-import * as z from "zod";
+import z from "zod";
 
 // intern
 import { rooms } from "../objects/Room";
@@ -10,6 +9,7 @@ import { ROOM_MAX, ROOM_MAX_USERS } from "../constants";
 // types
 import type { ValidateError } from "../types/server";
 import type { SocketJoinRoomData } from "client-types";
+import type { Socket } from "socket.io";
 
 const schema = z.object({
   username: usernameValidation,
