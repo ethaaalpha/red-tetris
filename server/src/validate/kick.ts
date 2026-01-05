@@ -3,13 +3,13 @@ import z from "zod";
 
 // intern
 import { rooms, type Room } from "../objects/Room";
+import { users, type User } from "../objects/User";
 import { formatSchemeError, roomValidation, usernameValidation } from "./validation";
 
 // types
-import { users, type User } from "../objects/User";
 import type { SocketKickData } from "client-types";
-import type { ValidateError } from "../types/server";
 import type { Socket } from "socket.io";
+import type { ValidateError } from "../types/server";
 
 const schema = z.object({
   username: usernameValidation,

@@ -2,14 +2,14 @@
 import z from "zod";
 
 // intern
+import { ROOM_MAX, ROOM_MAX_USERS } from "../constants";
 import { rooms } from "../objects/Room";
 import { formatSchemeError, roomValidation, usernameValidation } from "./validation";
-import { ROOM_MAX, ROOM_MAX_USERS } from "../constants";
 
 // types
-import type { ValidateError } from "../types/server";
 import type { SocketJoinRoomData } from "client-types";
 import type { Socket } from "socket.io";
+import type { ValidateError } from "../types/server";
 
 const schema = z.object({
   username: usernameValidation,

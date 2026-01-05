@@ -8,8 +8,8 @@ import { formatSchemeError, roomValidation } from "./validation";
 
 // types
 import type { SocketLeaveRoomData } from "client-types";
-import type { ValidateError } from "../types/server";
 import type { Socket } from "socket.io";
+import type { ValidateError } from "../types/server";
 
 const schema = z.object({
   room: roomValidation

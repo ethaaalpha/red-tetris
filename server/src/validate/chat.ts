@@ -2,15 +2,15 @@
 import z from "zod";
 
 // intern
-import { formatSchemeError, messageValidation, roomValidation } from "./validation";
 import { Room, rooms } from "../objects/Room";
 import { users } from "../objects/User";
+import { formatSchemeError, messageValidation, roomValidation } from "./validation";
 
 // types
-import type { User } from "../objects/User";
 import type { SocketChatData } from "client-types";
-import type { ValidateError } from "../types/server";
 import type { Socket } from "socket.io";
+import type { User } from "../objects/User";
+import type { ValidateError } from "../types/server";
 
 const schema = z.object({
   message: messageValidation,
