@@ -1,42 +1,59 @@
-import type { SocketJoinRoomData } from "client-types";
+// global
 import { Socket } from "socket.io";
 import * as z from "zod";
-import { ROOM_MAX, ROOM_MAX_USERS } from "../constants";
+
+// intern
 import { rooms } from "../objects/Room";
 import { formatSchemeError, roomValidation, usernameValidation } from "./validation";
+import { ROOM_MAX, ROOM_MAX_USERS } from "../constants";
+
+// types
+import type { ValidateError } from "../types/server";
+import type { SocketJoinRoomData } from "client-types";
 
 const schema = z.object({
   username: usernameValidation,
   room: roomValidation
 });
 
-export function validateJoinRoom(
-  socket: Socket,
-  data: SocketJoinRoomData
-): Record<string, string> | null {
+type ValidateJoinRoomSuccess = {
+  status: true;
+  roomName: string;
+  username: string;
+};
+
+type ValidateJoinRoomResult = ValidateJoinRoomSuccess | ValidateError;
+
+export function validateJoinRoom(socket: Socket, data: SocketJoinRoomData): ValidateJoinRoomResult {
   const result = schema.safeParse(data);
   if (!result.success) {
-    return formatSchemeError(result.error);
+    return { status: false, error: formatSchemeError(result.error) };
   }
 
   const room = rooms.get(result.data.room);
 
   if (socket.rooms.size > 1) {
-    return { room: `You are already in room ${Array.from(socket.rooms)[1]}` };
+    return {
+      status: false,
+      error: { joinRoom: `You are already in room ${Array.from(socket.rooms)[1]}` }
+    };
   }
 
   if (room && room.users.size >= ROOM_MAX_USERS) {
-    return { room: "Room is full" };
+    return { status: false, error: { joinRoom: "Room is full" } };
   }
   if (rooms.size >= ROOM_MAX) {
-    return { room: "Maximum number of rooms reached, please join an existing room" };
+    return {
+      status: false,
+      error: { joinRoom: "Maximum number of rooms reached, please join an existing room" }
+    };
   }
   if (room && room.get(data.username)) {
-    return { room: "This username is already taken in the room!" };
+    return { status: false, error: { joinRoom: "This username is already taken in the room!" } };
   }
   if (room && room.playing === true) {
-    return { room: "This is room is already playing!" };
+    return { status: false, error: { joinRoom: "This is room is already playing!" } };
   }
 
-  return null;
+  return { status: true, roomName: result.data.room, username: result.data.username };
 }
