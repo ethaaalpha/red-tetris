@@ -13,7 +13,6 @@ export function registerHandlers(io: Server, socket: Socket) {
     }
 
     const roomInfo = removeUserFromRoom(result.targetUser, result.room);
-
     result.targetUser.socket.emit("kick", { room: result.room.name });
     io.to(result.room.name).emit("room update", roomInfo);
 
