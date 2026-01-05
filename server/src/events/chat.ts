@@ -13,9 +13,11 @@ export function registerHandlers(socket: Socket) {
     }
 
     result.current.socket
-      .to(result.room)
+      .to(result.room.name)
       .emit("message", { from: result.current.name, message: result.message });
+
     console.log(`user ${result.current.name} wrote: "${result.message}" to ${result.room} `);
+
     callback(true);
   });
 }

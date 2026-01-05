@@ -34,11 +34,9 @@ export function validateChat(socket: Socket, data: SocketChatData): ValidateChat
 
   const current = users.get(socket.id);
   const room = rooms.get(result.data.room);
-
   if (current === undefined) {
     return { status: false, error: { chat: "You do not belong to a room!" } };
   }
-
   if (!current.room || room !== current.room) {
     return { status: false, error: { chat: `You are not in the room ${room?.name}` } };
   }
