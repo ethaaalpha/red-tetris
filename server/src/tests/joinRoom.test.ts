@@ -44,7 +44,7 @@ describe("invalid join", () => {
       username: "user1",
       room: "example"
     }).then(({ success, data }) => {
-      expect((data as SocketJoinRoomResponse).joinRoom).toContain(ROOM_IS_FULL);
+      expect((data as SocketJoinRoomResponse).roomName).toContain(ROOM_IS_FULL);
       expect(success).toBe(false);
     });
   });
@@ -57,7 +57,7 @@ describe("invalid join", () => {
       username: "user1",
       room: "example"
     }).then(({ success, data }) => {
-      expect((data as SocketJoinRoomResponse).joinRoom).toContain(MAX_ROOMS);
+      expect((data as SocketJoinRoomResponse).roomName).toContain(MAX_ROOMS);
       expect(success).toBe(false);
     });
   });
@@ -69,7 +69,7 @@ describe("invalid join", () => {
       username: "name",
       room: "example"
     }).then(({ success, data }) => {
-      expect((data as SocketJoinRoomResponse).joinRoom).toContain(USERNAME_TAKEN);
+      expect((data as SocketJoinRoomResponse).username).toContain(USERNAME_TAKEN);
       expect(success).toBe(false);
     });
   });
@@ -96,7 +96,7 @@ describe("invalid join", () => {
       username: "user1",
       room: "example"
     }).then(({ success, data }) => {
-      expect((data as SocketJoinRoomResponse).joinRoom).toContain(PLAYING_ROOM);
+      expect((data as SocketJoinRoomResponse).roomName).toContain(PLAYING_ROOM);
       expect(success).toBe(false);
     });
   });
