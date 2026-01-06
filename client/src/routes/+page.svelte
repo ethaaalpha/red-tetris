@@ -22,7 +22,7 @@
   import type { SocketJoinRoomResponse, SocketGetRoomsResponse } from "server-types";
 
   // constants
-  import { USERNAME_MAX_LENGTH, ROOM_NAME_MAX_LENGTH } from "$lib/constants/max";
+  import { USERNAME_MAX_LENGTH, ROOM_NAME_MAX_LENGTH, REGEX_USER_AND_ROOM } from "$lib/constants/max";
 
   // error
   let usernameError = $state<string>();
@@ -106,6 +106,7 @@
           onEnter={() => {
             roomNameInput?.focus();
           }}
+          regex={REGEX_USER_AND_ROOM}
         />
         <TextInput
           bind:value={room}
@@ -116,6 +117,7 @@
           onEnter={() => {
             canJoinRoom();
           }}
+          regex={REGEX_USER_AND_ROOM}
         />
       </div>
       <div class="pt-8 flex flex-col space-y-4 w-xs">
