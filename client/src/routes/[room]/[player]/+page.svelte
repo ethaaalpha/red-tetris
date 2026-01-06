@@ -5,19 +5,25 @@
 
   // components
   import Piece from "$lib/components/Piece.svelte";
-  import { Crown, DoorOpen, LogOut, Swords, UserX, X } from "@lucide/svelte";
+  import { Crown, DoorOpen, LogOut, Swords, UserX, X, Send } from "@lucide/svelte";
   import Dialog from "$lib/components/Dialog.svelte";
+  import TextInput from "$lib/components/TextInput.svelte";
 
   // socket
   import { getSocket } from "$lib/socket";
 
   // types
-  import type { SocketJoinRoomData, SocketKickData, SocketLeaveRoomData } from "$lib/types/socket";
+  import type {
+    SocketChatData,
+    SocketJoinRoomData,
+    SocketKickData,
+    SocketLeaveRoomData
+  } from "$lib/types/socket";
   import type { SocketJoinRoomResponse, SocketRoomInfoData, SocketPlayerData } from "server-types";
   import type { PieceColor } from "$lib/types/piece";
 
   // utils
-  import { USERNAME_MAX_LENGTH } from "$lib/constants";
+  import { USERNAME_MAX_LENGTH, MESSAGE_MAX_LENGTH } from "$lib/constants";
   import { pieceColors } from "$lib/utils/piece";
   import { setKickedDialog, setKickedRoom } from "$lib/stores/kick.svelte";
 
@@ -38,6 +44,8 @@
   let userToKickColor = $state<PieceColor>("empty");
   let userToKickPieceColor = $state<string>("#e6e6e6");
 
+  let message = $state<string>("");
+
   let showLeaveDialog = $state(false);
 
   const socket = getSocket();
@@ -48,7 +56,7 @@
     if (joined) return;
 
     localStorage.setItem("username", username?.substring(0, USERNAME_MAX_LENGTH)!);
-    const data: SocketJoinRoomData = { username: username || "", room: room || "" };
+    const data: SocketJoinRoomData = { username: username || "", roomName: room || "" };
     socket.emit(
       "join room",
       data,
@@ -102,6 +110,25 @@
     });
   }
 
+  let messages = $state<Array<any>>([]);
+  let messagesContainer = $state<HTMLDivElement>();
+  $effect(() => {
+    if (messages.length && messagesContainer) {
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+  });
+
+  function sendMessage() {
+    if (message) {
+      const data: SocketChatData = { message };
+      socket.emit("chat", data, (success: boolean) => {
+        if (success) {
+          message = "";
+        }
+      });
+    }
+  }
+
   onMount(() => {
     if (socket.connected) joinRoom();
     else socket.on("connect", joinRoom);
@@ -113,6 +140,10 @@
       goto("/");
     });
 
+    socket.on("message", (data: any) => {
+      messages.push({ from: data.from, message: data.message, color: data.color });
+    });
+
     return () => {
       socket.off("connect", joinRoom);
     };
@@ -120,6 +151,7 @@
 </script>
 
 <div class="flex h-screen items-center justify-center bg-dark-primary gap-32">
+  <!-- error & redirect -->
   {#if !joined}
     <div class="bg-dark-secondary px-8 py-4 ring-border ring">
       <div class="text-center">
@@ -129,14 +161,14 @@
             <p>Redirecting in {countdown} second{countdown !== 1 ? "s" : ""}...</p>
           {/if}
         {:else}
-          <p class="text-white text-xl">Joining room "{room}" as "{username}"...</p>
+          <p class="text-xl">Joining room "{room}" as "{username}"...</p>
         {/each}
       </div>
     </div>
+
+    <!-- connected -->
   {:else if roomData}
-    <div
-      class="p-4 bg-dark-secondary ring ring-inset ring-border h-[640px] w-[360px] flex flex-col"
-    >
+    <div class="p-4 bg-dark-secondary border border-border h-[640px] w-[360px] flex flex-col">
       <h1 class="text-center text-red-primary overflow-hidden text-ellipsis text-3xl pb-2">
         {room}
       </h1>
@@ -144,8 +176,7 @@
       <ul class="py-4">
         {#each roomData.players as player, index (player.color)}
           <li
-            class="text-white p-2 text-lg flex items-center gap-2 group/list {username ===
-            player.username
+            class="p-2 text-lg flex items-center gap-2 group/list {username === player.username
               ? `border-l-2`
               : ''} {index % 2 === 0 ? 'bg-dark-list-accent' : ''}"
             style={username === player.username ? `border-color: ${color}; color: ${color};` : ""}
@@ -163,7 +194,7 @@
                 class="ml-auto btn btn-secondary group/button group-hover/list:opacity-100 opacity-0 duration-75 p-1"
                 style="--btn-depth: 2px;"
               >
-                <X size={20} class="group-hover/button:text-red-500 duration-100 text-white/90" />
+                <X size={20} class="group-hover/button:text-red-500 duration-100" />
               </button>
             {/if}
           </li>
@@ -200,10 +231,60 @@
         {/if}
       </div>
     </div>
-    <div class="bg-dark-secondary ring ring-inset ring-border flex h-[640px] w-[320px]"></div>
+
+    <!-- message & warm-up -->
+    <div class="bg-dark-secondary border border-border flex flex-col h-[640px] w-[320px]">
+      <div
+        bind:this={messagesContainer}
+        class="flex-1 flex flex-col max-h-[600px] overflow-y-auto py-1 gap-3"
+      >
+        {#each messages as m}
+          <div class="space-y-1 flex flex-col">
+            <div
+              class="flex items-center gap-2
+              {username === m.from ? 'ml-auto pr-2' : 'pl-2'}"
+              style="color: {username === m.from ? pieceColors[m.color as PieceColor].light : ''}"
+            >
+              <Piece color={m.color} size={16} />
+              {m.from}
+            </div>
+
+            <div
+              class="p-2 wrap-break-word w-fit max-w-64 text-white
+              {username === m.from ? 'ml-auto' : ' bg-dark-accent'}"
+              style="background-color: {username === m.from
+                ? pieceColors[m.color as PieceColor].dark
+                : ''}"
+            >
+              {m.message}
+            </div>
+          </div>
+        {/each}
+      </div>
+      <div class="h-10 border-t border-border mt-auto w-full flex">
+        <TextInput
+          bind:value={message}
+          maxlength={MESSAGE_MAX_LENGTH}
+          placeholder="Type your message..."
+          border={false}
+          fontSize="sm"
+          fill={true}
+          outline={false}
+          onEnter={sendMessage}
+          bright
+        />
+        <button
+          class="btn btn-primary w-12 flex items-center justify-center"
+          style="--btn-depth: 0px;"
+        >
+          <Send />
+        </button>
+      </div>
+    </div>
   {/if}
 </div>
 
+<!--confirm kick dialog -->
 {#if showKickDialog}
   <Dialog
     icon={UserX}
@@ -226,6 +307,7 @@
   </Dialog>
 {/if}
 
+<!-- confirm leave dialog -->
 <Dialog
   icon={DoorOpen}
   confirm="leave"

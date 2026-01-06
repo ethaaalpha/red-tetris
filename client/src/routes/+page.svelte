@@ -40,14 +40,14 @@
   function validate() {
     emitting = true;
     localStorage.setItem("username", username);
-    const data: SocketJoinRoomData = { username: username || "", room: room || "" };
+    const data: SocketJoinRoomData = { username: username || "", roomName: room || "" };
     socket.emit("can join room", data, (success: boolean, data: SocketJoinRoomResponse) => {
       emitting = false;
       if (!success) {
         usernameError = data.username;
         roomError = data.roomName;
       } else {
-        goto(`/${room}/${username}`);
+        goto(`/${data.roomName}/${data.username}`);
       }
     });
   }
