@@ -73,7 +73,7 @@
   });
 
   onMount(() => {
-    username = localStorage.getItem("username") ?? "";
+    username = localStorage.getItem("username")?.slice(0, USERNAME_MAX_LENGTH) ?? "";
   });
 </script>
 
