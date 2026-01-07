@@ -2,19 +2,20 @@
 import z from "zod";
 
 // intern
-import { Room } from "../objects/Room";
+import { Room, rooms } from "../objects/Room";
 import { users } from "../objects/User";
-import { formatSchemeError, messageValidation } from "./validation";
+import { formatSchemeError, messageValidation, roomValidation } from "./validation";
 
 // types
 import type { SocketChatData } from "client-types";
 import type { Socket } from "socket.io";
 import type { User } from "../objects/User";
 import type { ValidateError } from "../types/server";
-import { NOT_IN_A_ROOM } from "../constants/error";
+import { NOT_IN_A_ROOM, NOT_IN_THIS_ROOM } from "../constants/error";
 
 const schema = z.object({
-  message: messageValidation
+  message: messageValidation,
+  room: roomValidation
 });
 
 type ValidateChatSuccess = {
@@ -33,9 +34,13 @@ export function validateChat(socket: Socket, data: SocketChatData): ValidateChat
   }
 
   const current = users.get(socket.id);
-  if (!current || current.room === null) {
+  const room = rooms.get(result.data.room);
+  if (current === undefined) {
     return { status: false, error: { room: NOT_IN_A_ROOM } };
   }
+  if (!current.room || room !== current.room) {
+    return { status: false, error: { room: NOT_IN_THIS_ROOM } };
+  }
 
-  return { status: true, current, message: result.data.message, room: current.room };
+  return { status: true, current, message: result.data.message, room };
 }

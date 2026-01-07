@@ -1,5 +1,3 @@
-import type { SocketUserColor } from "server-types";
-
 type PieceColor =
   | "red"
   | "blue"
@@ -17,7 +15,7 @@ interface Piece {
 }
 
 type PieceColorDetail = Record<
-  PieceColor | SocketUserColor,
+  PieceColor,
   {
     main: string;
     dark: string;

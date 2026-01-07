@@ -17,7 +17,7 @@ export function registerHandlers(socket: Socket) {
     users.set(socket.id, user);
 
     const room = joinOrCreateRoom(user, result.roomName);
-    socket.join(data.roomName);
+    socket.join(data.room);
 
     user.socket.to(result.roomName).emit("room update", room.asInfo());
 

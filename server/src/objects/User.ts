@@ -3,7 +3,6 @@ import type { Room } from "./Room";
 
 export class User {
   public room: Room | null = null;
-  public color: string = "";
 
   constructor(
     public id: string,

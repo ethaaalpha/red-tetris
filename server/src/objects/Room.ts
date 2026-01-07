@@ -21,8 +21,7 @@ export class Room {
     public name: string,
     public host: User
   ) {
-    const userColor = this.add(host);
-    host.color = userColor;
+    this.add(host);
   }
 
   public exist(user: User) {
@@ -46,14 +45,14 @@ export class Room {
     }
   }
 
-  public add(user: User) {
+  public add(user: User): SocketRoomInfoData {
     if (this.exist(user)) throw new Error("User already exists");
     else if (this.users.size >= ROOM_MAX_USERS) throw new Error("Room is full");
 
     const color = this.getColor();
     this.users.set(user.id, { color, user });
 
-    return color;
+    return this.asInfo();
   }
 
   public remove(user: User | undefined): SocketRoomInfoData {
@@ -115,8 +114,7 @@ export function joinOrCreateRoom(user: User, room_id: string): Room {
 
     rooms.set(room_id, room);
   } else {
-    const userColor = room.add(user);
-    user.color = userColor;
+    room.add(user);
   }
 
   user.room = room;

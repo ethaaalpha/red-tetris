@@ -2,9 +2,6 @@
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
 
-  // assets
-  import bgTile from "$lib/assets/empty_piece.jpg";
-
   // components
   import Dialog from "$lib/components/Dialog.svelte";
   import Piece from "$lib/components/Piece.svelte";
@@ -14,6 +11,9 @@
   // stores
   import { kickState, setKickedDialog } from "$lib/stores/kick.svelte";
 
+  // constants
+  import { USERNAME_MAX_LENGTH, ROOM_NAME_MAX_LENGTH } from "$lib/constants";
+
   // socket
   import { getSocket } from "$lib/socket";
 
@@ -21,51 +21,47 @@
   import type { SocketJoinRoomData } from "$lib/types/socket";
   import type { SocketJoinRoomResponse, SocketGetRoomsResponse } from "server-types";
 
-  // constants
-  import { USERNAME_MAX_LENGTH, ROOM_NAME_MAX_LENGTH } from "$lib/constants/max";
+  // assets
+  import bgTile from "$lib/assets/empty_piece.jpg";
 
-  // error
-  let usernameError = $state<string>();
-  let roomError = $state<string>();
+  let username = $state("");
+  let usernameError = $state<string | undefined>(undefined);
 
-  // socket
+  let room = $state("");
+  let roomError = $state<string | undefined>(undefined);
+  let roomNameInput = $state<HTMLInputElement>();
+
+  let emitting = $state(false);
+  let showRoomsDialog = $state(false);
+  let rooms = $state<SocketGetRoomsResponse[]>([]);
+
   const socket = getSocket();
 
-  // join room
-  let username = $state("");
-  let room = $state("");
-  let roomNameInput = $state<HTMLInputElement>();
-  let emitting = $state(false);
-
-  function canJoinRoom() {
+  function validate() {
     emitting = true;
     localStorage.setItem("username", username);
-    const data: SocketJoinRoomData = { username: username || "", roomName: room || "" };
+    const data: SocketJoinRoomData = { username: username || "", room: room || "" };
     socket.emit("can join room", data, (success: boolean, data: SocketJoinRoomResponse) => {
+      emitting = false;
       if (!success) {
         usernameError = data.username;
         roomError = data.roomName;
-        emitting = false;
       } else {
-        goto(`/${data.roomName}/${data.username}`);
+        goto(`/${room}/${username}`);
       }
     });
   }
-
-  function joinSelectedRoom(selectedRoom: string) {
-    room = selectedRoom;
-    showRoomsDialog = false;
-    canJoinRoom();
-  }
-
-  // get rooms
-  let rooms = $state<SocketGetRoomsResponse[]>([]);
-  let showRoomsDialog = $state(false);
 
   function getRooms() {
     socket.emit("get rooms", (success: boolean, data: SocketGetRoomsResponse[]) => {
       if (success) rooms = data;
     });
+  }
+
+  function joinRoom(selectedRoom: string) {
+    room = selectedRoom;
+    showRoomsDialog = false;
+    validate();
   }
 
   $effect(() => {
@@ -77,7 +73,7 @@
   });
 
   onMount(() => {
-    username = localStorage.getItem("username")?.slice(0, USERNAME_MAX_LENGTH) ?? "";
+    username = localStorage.getItem("username") ?? "";
   });
 </script>
 
@@ -114,14 +110,14 @@
           placeholder="Room Name"
           error={roomError}
           onEnter={() => {
-            canJoinRoom();
+            validate();
           }}
         />
       </div>
       <div class="pt-8 flex flex-col space-y-4 w-xs">
         <button
           disabled={emitting}
-          onclick={canJoinRoom}
+          onclick={validate}
           class="btn btn-primary text-3xl py-4"
           style="--btn-depth: 6px;"
         >
@@ -190,7 +186,7 @@
         {#each rooms as { name, userCount, max }}
           <li>
             <button
-              onclick={() => joinSelectedRoom(name)}
+              onclick={() => joinRoom(name)}
               class="w-full text-left px-4 py-3 bg-dark-secondary hover:bg-dark-accent border border-border transition-colors duration-75 flex justify-between items-center"
             >
               <span>{name}</span>
