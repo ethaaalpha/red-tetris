@@ -24,44 +24,48 @@
   // constants
   import { USERNAME_MAX_LENGTH, ROOM_NAME_MAX_LENGTH } from "$lib/constants/max";
 
-  let username = $state("");
-  let usernameError = $state<string | undefined>(undefined);
+  // error
+  let usernameError = $state<string>();
+  let roomError = $state<string>();
 
-  let room = $state("");
-  let roomError = $state<string | undefined>(undefined);
-  let roomNameInput = $state<HTMLInputElement>();
-
-  let emitting = $state(false);
-  let showRoomsDialog = $state(false);
-  let rooms = $state<SocketGetRoomsResponse[]>([]);
-
+  // socket
   const socket = getSocket();
 
-  function validate() {
+  // join room
+  let username = $state("");
+  let room = $state("");
+  let roomNameInput = $state<HTMLInputElement>();
+  let emitting = $state(false);
+
+  function canJoinRoom() {
     emitting = true;
     localStorage.setItem("username", username);
     const data: SocketJoinRoomData = { username: username || "", roomName: room || "" };
     socket.emit("can join room", data, (success: boolean, data: SocketJoinRoomResponse) => {
-      emitting = false;
       if (!success) {
         usernameError = data.username;
         roomError = data.roomName;
+        emitting = false;
       } else {
         goto(`/${data.roomName}/${data.username}`);
       }
     });
   }
 
+  function joinSelectedRoom(selectedRoom: string) {
+    room = selectedRoom;
+    showRoomsDialog = false;
+    canJoinRoom();
+  }
+
+  // get rooms
+  let rooms = $state<SocketGetRoomsResponse[]>([]);
+  let showRoomsDialog = $state(false);
+
   function getRooms() {
     socket.emit("get rooms", (success: boolean, data: SocketGetRoomsResponse[]) => {
       if (success) rooms = data;
     });
-  }
-
-  function joinRoom(selectedRoom: string) {
-    room = selectedRoom;
-    showRoomsDialog = false;
-    validate();
   }
 
   $effect(() => {
@@ -110,14 +114,14 @@
           placeholder="Room Name"
           error={roomError}
           onEnter={() => {
-            validate();
+            canJoinRoom();
           }}
         />
       </div>
       <div class="pt-8 flex flex-col space-y-4 w-xs">
         <button
           disabled={emitting}
-          onclick={validate}
+          onclick={canJoinRoom}
           class="btn btn-primary text-3xl py-4"
           style="--btn-depth: 6px;"
         >
@@ -186,7 +190,7 @@
         {#each rooms as { name, userCount, max }}
           <li>
             <button
-              onclick={() => joinRoom(name)}
+              onclick={() => joinSelectedRoom(name)}
               class="w-full text-left px-4 py-3 bg-dark-secondary hover:bg-dark-accent border border-border transition-colors duration-75 flex justify-between items-center"
             >
               <span>{name}</span>

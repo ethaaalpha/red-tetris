@@ -51,7 +51,7 @@
 
   // data
   let roomData = $state<SocketRoomInfoData>();
-  let color = $state<string>();
+  let userColor = $state<string>();
 
   // join
   let joined = $state(false);
@@ -85,7 +85,7 @@
             roomData = data;
           });
           const player = roomData.players.find((p) => p.username === username)!;
-          color = pieceColors[player.color].light;
+          userColor = pieceColors[player.color].light;
           joined = true;
         }
       }
@@ -199,7 +199,9 @@
             class="p-2 text-lg flex items-center gap-2 group/list {username === player.username
               ? `border-l-2`
               : ''} {index % 2 === 0 ? 'bg-dark-list-accent' : ''}"
-            style={username === player.username ? `border-color: ${color}; color: ${color};` : ""}
+            style={username === player.username
+              ? `border-color: ${userColor}; color: ${userColor};`
+              : ""}
           >
             <Piece color={player.color} size={24} />
             <span class="overflow-hidden text-ellipsis">
