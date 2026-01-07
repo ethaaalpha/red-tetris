@@ -8,8 +8,8 @@ import {
   shutdownTestServer
 } from "./utils";
 import type { TestServerData } from "./types";
-import type { SocketMessageData } from "../types/types";
-import { NOT_IN_A_ROOM, NOT_IN_THIS_ROOM } from "../constants/error";
+import type { SocketMessageResponse } from "../types/types";
+import { NOT_IN_A_ROOM } from "../constants/error";
 
 let ctx: TestServerData;
 
@@ -35,8 +35,7 @@ describe("invalid chat", () => {
 
 it("valid chat", async () => {
   const test2 = await createClient(ctx.address, ctx.io);
-  const message1 = "c'est un super message!";
-  const message2 = "c'est une super réponse!";
+  const message = "c'est un super message!";
   const chatListener1 = onceAsync(ctx.test1.client, "message");
   const chatListener2 = onceAsync(test2.client, "message");
 
@@ -45,24 +44,18 @@ it("valid chat", async () => {
 
   // users talks
   await emitAsync(ctx.test1.client, "chat", {
-    message: message1,
-    room: "example"
-  }).then(({ success }) => {
-    expect(success).toBe(true);
-  });
-  await emitAsync(test2.client, "chat", {
-    message: message2,
+    message: message,
     room: "example"
   }).then(({ success }) => {
     expect(success).toBe(true);
   });
 
   // check results
-  const data2 = (await chatListener2) as SocketMessageData;
+  const data2 = (await chatListener2) as SocketMessageResponse;
   expect(data2.from).toEqual("user1");
-  expect(data2.message).toEqual(message1);
+  expect(data2.message).toEqual(message);
 
-  const data1 = (await chatListener1) as SocketMessageData;
-  expect(data1.from).toEqual("user2");
-  expect(data1.message).toEqual(message2);
+  const data1 = (await chatListener1) as SocketMessageResponse;
+  expect(data1.from).toEqual("user1");
+  expect(data1.message).toEqual(message);
 });

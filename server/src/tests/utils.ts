@@ -77,7 +77,7 @@ export async function joinRoom(
 ): Promise<Room> {
   await emitAsync(test.client, "join room", {
     username: username,
-    room: roomname
+    roomName: roomname
   });
 
   const room = rooms.get(roomname);
