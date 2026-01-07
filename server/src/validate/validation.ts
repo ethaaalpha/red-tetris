@@ -20,13 +20,13 @@ export function formatSchemeError(error: ZodError) {
 
 export const roomValidation = z
   .string()
-  .regex(REGEX_ROOM_USER, "Invalid characters, only alnum chars and _ are authorized!")
+  .regex(REGEX_ROOM_USER, "Only alphanumeric characters and -_ are authorized")
   .min(1, "Room name cannot be empty")
   .max(ROOM_MAX_LENGTH, `Room name cannot be longer than ${ROOM_MAX_LENGTH} characters`);
 
 export const usernameValidation = z
   .string()
-  .regex(REGEX_ROOM_USER, "Invalid characters, only alnum chars and _ are authorized!")
+  .regex(REGEX_ROOM_USER, "Only alphanumeric characters and -_ are authorized")
   .min(1, "Username cannot be empty")
   .max(USERNAME_MAX_LENGTH, `Username cannot be longer than ${USERNAME_MAX_LENGTH} characters`);
 
