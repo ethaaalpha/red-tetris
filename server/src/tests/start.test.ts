@@ -9,7 +9,7 @@ import {
   setupTestServer,
   shutdownTestServer
 } from "./utils";
-import { rooms } from "../core/room";
+import { getRoom } from "../core/room";
 import type { TestServerData } from "./types";
 
 let ctx: TestServerData;
@@ -64,7 +64,7 @@ it("valid start", async () => {
     expect(success).toBe(true);
   });
 
-  const roomInfo = rooms.get("example")?.asInfo();
+  const roomInfo = getRoom("example")?.asInfo();
 
   await listener1.then((data) => {
     expect(data).toEqual(roomInfo);

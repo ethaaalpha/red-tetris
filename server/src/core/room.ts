@@ -3,7 +3,7 @@ import { User } from "../objects/User";
 import type { SocketRoomInfoData } from "../types/types";
 import type { Socket } from "socket.io";
 
-export const rooms: Map<string, Room> = new Map();
+const rooms: Map<string, Room> = new Map();
 
 export function removeUserFromRoom(user: User, room: Room): SocketRoomInfoData {
   const info = room.remove(user);
@@ -23,13 +23,15 @@ export function joinOrCreateRoom(user: User, room_id: string): Room {
     const userColor = room.add(user);
     user.color = userColor;
   }
-
-  user.room = room;
   return room;
 }
 
 export function getRoom(id: string): Room | undefined {
   return rooms.get(id);
+}
+
+export function getRooms(): Map<string, Room> {
+  return rooms;
 }
 
 export function getRoomBySocket(socket: Socket): Room | undefined {
@@ -39,8 +41,4 @@ export function getRoomBySocket(socket: Socket): Room | undefined {
     }
   }
   return undefined;
-}
-
-export function getRoomByUser(user: User): Room | undefined {
-  return getRoomBySocket(user.socket);
 }

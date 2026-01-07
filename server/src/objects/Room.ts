@@ -1,8 +1,8 @@
 import { ROOM_MAX_USERS } from "../constants/core";
-import { rooms } from "../core/room";
-import { users } from "../core/user";
+import { getRooms } from "../core/room";
+import { getUsers } from "../core/user";
 import type { SocketRoomInfoData, SocketUserColor } from "../types/types";
-import { type User } from "./User";
+import type { User } from "./User";
 
 export class Room {
   public playing: boolean = false;
@@ -69,7 +69,7 @@ export class Room {
     console.log(`User ${user.name} left room ${user.name}`);
     // deletion of empty room
     if (this.users.size == 0) {
-      rooms.delete(this.name);
+      getRooms().delete(this.name);
       console.log(`room ${this.name} deleted`);
     } else {
       if (user === this.host) {
@@ -78,7 +78,7 @@ export class Room {
     }
 
     // an user cannot exist outside of a room
-    users.delete(user.socket.id);
+    getUsers().delete(user.socket.id);
     return this.asInfo();
   }
 

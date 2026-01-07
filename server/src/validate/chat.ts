@@ -4,8 +4,9 @@ import z from "zod";
 // intern
 import { Room } from "../objects/Room";
 import { formatSchemeError, messageValidation } from "./validation";
-import { users } from "../core/user";
+import { getUser } from "../core/user";
 import { NOT_IN_A_ROOM } from "../constants/error";
+import { getRoomBySocket } from "../core/room";
 
 // types
 import type { SocketChatData } from "client-types";
@@ -33,10 +34,12 @@ export function validateChat(socket: Socket, data: SocketChatData): ValidateChat
     return { status: false, error: formatSchemeError(result.error) };
   }
 
-  const current = users.get(socket.id);
-  if (!current || current.room === null) {
+  const current = getUser(socket.id);
+  const room = getRoomBySocket(socket);
+
+  if (!current || !room) {
     return { status: false, error: { room: NOT_IN_A_ROOM } };
   }
 
-  return { status: true, current, message: result.data.message, room: current.room };
+  return { status: true, current, message: result.data.message, room: room };
 }

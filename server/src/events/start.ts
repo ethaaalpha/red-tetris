@@ -1,6 +1,7 @@
-import { Server, type Socket } from "socket.io";
-import type { Callback } from "../types/types";
 import { validateStart } from "../validate/start";
+import { Server } from "socket.io";
+import type { Socket } from "socket.io";
+import type { Callback } from "../types/types";
 
 export function registerHandlers(io: Server, socket: Socket) {
   socket.on("start", (callback: Callback) => {

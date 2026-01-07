@@ -1,7 +1,8 @@
 // intern
 import { Room } from "../objects/Room";
 import { NOT_HOST, NOT_IN_A_ROOM, PLAYING_ROOM } from "../constants/error";
-import { users } from "../core/user";
+import { getUser } from "../core/user";
+import { getRoomBySocket } from "../core/room";
 
 // types
 import type { Socket } from "socket.io";
@@ -16,10 +17,10 @@ type ValidateStartSuccess = {
 type ValideStartResult = ValidateStartSuccess | ValidateError;
 
 export function validateStart(socket: Socket): ValideStartResult {
-  const current = users.get(socket.id);
-  const room = current?.room;
+  const current = getUser(socket.id);
+  const room = getRoomBySocket(socket);
 
-  if (current === undefined || room === undefined || room === null) {
+  if (current === undefined || room === undefined) {
     return { status: false, error: { room: NOT_IN_A_ROOM } };
   }
   if (room.host != current) {

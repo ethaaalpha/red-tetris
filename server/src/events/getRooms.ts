@@ -1,5 +1,5 @@
 import { ROOM_MAX_USERS } from "../constants/core";
-import { rooms } from "../core/room";
+import { getRooms } from "../core/room";
 import type { Socket } from "socket.io";
 import type { Callback, SocketGetRoomsResponse } from "../types/types";
 
@@ -7,7 +7,7 @@ export function registerHandlers(socket: Socket) {
   socket.on("get rooms", (callback: Callback) => {
     const result: SocketGetRoomsResponse[] = [];
 
-    rooms.forEach((room) => {
+    getRooms().forEach((room) => {
       if (room.playing) {
         return;
       }

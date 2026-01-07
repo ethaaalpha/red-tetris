@@ -1,10 +1,10 @@
-import type { SocketJoinRoomData } from "client-types";
 import { validateJoinRoom } from "../validate/joinRoom";
-import type { Callback } from "../types/types";
 import { User } from "../objects/User";
-import type { Socket } from "socket.io";
-import { users } from "../core/user";
+import { getUsers } from "../core/user";
 import { joinOrCreateRoom } from "../core/room";
+import type { SocketJoinRoomData } from "client-types";
+import type { Callback } from "../types/types";
+import type { Socket } from "socket.io";
 
 export function registerHandlers(socket: Socket) {
   socket.on("join room", (data: SocketJoinRoomData, callback: Callback) => {
@@ -15,7 +15,7 @@ export function registerHandlers(socket: Socket) {
     }
 
     const user = new User(socket.id, result.username, socket);
-    users.set(socket.id, user);
+    getUsers().set(socket.id, user);
 
     const room = joinOrCreateRoom(user, result.roomName);
     socket.join(data.roomName);

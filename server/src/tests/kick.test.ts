@@ -6,8 +6,7 @@ import {
   NOT_HOST,
   NOT_IN_A_ROOM
 } from "../constants/validateErrors";
-import { rooms } from "../objects/Room";
-import { User, users } from "../objects/User";
+import { User } from "../objects/User";
 import type { TestServerData } from "./types";
 import {
   createClient,
@@ -17,6 +16,8 @@ import {
   setupTestServer,
   shutdownTestServer
 } from "./utils";
+import { getUsers } from "../core/user";
+import { getRoom } from "../core/room";
 
 let ctx: TestServerData;
 
@@ -63,7 +64,7 @@ describe("invalid kick", () => {
   it("an user not in the room", async () => {
     await joinRoom(ctx.test1, "example", "user1");
 
-    users.set("test", new User("test", "user3", null));
+    getUsers().set("test", new User("test", "user3", null));
     await emitAsync(ctx.test1.client, "kick", {
       username: "user3"
     }).then(({ success, data }) => {
@@ -92,7 +93,7 @@ describe("invalid kick", () => {
 
   it("room already started", async () => {
     await joinRoom(ctx.test1, "example", "user1");
-    rooms.get("example")?.start();
+    getRoom("example")?.start();
 
     await emitAsync(ctx.test1.client, "kick", {
       username: "user2"
@@ -114,7 +115,7 @@ it("valid kick", async () => {
   await joinRoom(test2, "example", "user2");
 
   await roomListener.then((data) => {
-    expect(data).toEqual(rooms.get("example")?.asInfo());
+    expect(data).toEqual(getRoom("example")?.asInfo());
   });
 
   roomListener = onceAsync(ctx.test1.client, "room update");
@@ -126,7 +127,7 @@ it("valid kick", async () => {
   });
   await roomListener.then((data) => {
     // update of room trigered
-    expect(data).toEqual(rooms.get("example")?.asInfo());
+    expect(data).toEqual(getRoom("example")?.asInfo());
   });
 
   // victim is warned
