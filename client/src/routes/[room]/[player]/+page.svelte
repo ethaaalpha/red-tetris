@@ -32,6 +32,7 @@
 
   // constants
   import { USERNAME_MAX_LENGTH, MESSAGE_MAX_LENGTH } from "$lib/constants/max";
+  import { REGEX_MESSAGE } from "$lib/constants/regex";
   import { pieceColors } from "$lib/constants/pieceColors";
 
   // url params
@@ -290,6 +291,7 @@
           fill={true}
           outline={false}
           onEnter={sendMessage}
+          regex={REGEX_MESSAGE}
           bright
         />
         <button

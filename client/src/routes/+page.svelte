@@ -22,7 +22,8 @@
   import type { SocketJoinRoomResponse, SocketGetRoomsResponse } from "server-types";
 
   // constants
-  import { USERNAME_MAX_LENGTH, ROOM_NAME_MAX_LENGTH, REGEX_USER_AND_ROOM } from "$lib/constants/max";
+  import { USERNAME_MAX_LENGTH, ROOM_NAME_MAX_LENGTH } from "$lib/constants/max";
+  import { REGEX_USER_AND_ROOM } from "$lib/constants/regex";
 
   // error
   let usernameError = $state<string>();

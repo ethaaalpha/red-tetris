@@ -1,6 +1,7 @@
 import z, { ZodError } from "zod";
 import {
   CHAT_MAX_LENGTH,
+  REGEX_MESSAGE,
   REGEX_ROOM_USER,
   ROOM_MAX_LENGTH,
   USERNAME_MAX_LENGTH
@@ -31,5 +32,6 @@ export const usernameValidation = z
 
 export const messageValidation = z
   .string()
+  .regex(REGEX_MESSAGE)
   .min(1, "Message cannot be empty")
   .max(CHAT_MAX_LENGTH, `Message cannot be longer than ${CHAT_MAX_LENGTH} characters`);
