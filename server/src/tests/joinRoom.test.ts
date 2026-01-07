@@ -42,7 +42,7 @@ describe("invalid join", () => {
 
     await emitAsync(ctx.test1.client, "join room", {
       username: "user1",
-      room: "example"
+      roomName: "example"
     }).then(({ success, data }) => {
       expect((data as SocketJoinRoomResponse).roomName).toBe(ROOM_IS_FULL);
       expect(success).toBe(false);
@@ -55,7 +55,7 @@ describe("invalid join", () => {
     }
     await emitAsync(ctx.test1.client, "join room", {
       username: "user1",
-      room: "example"
+      roomName: "example"
     }).then(({ success, data }) => {
       expect((data as SocketJoinRoomResponse).roomName).toBe(MAX_ROOMS);
       expect(success).toBe(false);
@@ -67,7 +67,7 @@ describe("invalid join", () => {
 
     await emitAsync(ctx.test1.client, "join room", {
       username: "name",
-      room: "example"
+      roomName: "example"
     }).then(({ success, data }) => {
       expect((data as SocketJoinRoomResponse).username).toBe(USERNAME_TAKEN);
       expect(success).toBe(false);
@@ -77,11 +77,11 @@ describe("invalid join", () => {
   it("already in a room", async () => {
     await emitAsync(ctx.test1.client, "join room", {
       username: "user1",
-      room: "example"
+      roomName: "example"
     });
     await emitAsync(ctx.test1.client, "join room", {
       username: "user1",
-      room: "example2"
+      roomName: "example2"
     }).then(({ success, data }) => {
       expect((data as SocketJoinRoomResponse).roomName).toBe(ALREADY_IN_A_ROOM);
       expect(success).toBe(false);
@@ -94,7 +94,7 @@ describe("invalid join", () => {
 
     await emitAsync(ctx.test1.client, "join room", {
       username: "user1",
-      room: "example"
+      roomName: "example"
     }).then(({ success, data }) => {
       expect((data as SocketJoinRoomResponse).roomName).toBe(PLAYING_ROOM);
       expect(success).toBe(false);
@@ -105,7 +105,7 @@ describe("invalid join", () => {
 it("valid join", async () => {
   const data = {
     username: "example",
-    room: "example"
+    roomName: "example"
   };
   await emitAsync(ctx.test1.client, "join room", data).then(({ success, data }) => {
     expect(data).toEqual({
@@ -133,11 +133,11 @@ it("host changed", async () => {
 
   await emitAsync(ctx.test1.client, "join room", {
     username: "user1",
-    room: "example"
+    roomName: "example"
   });
   await emitAsync(test2.client, "join room", {
     username: "user2",
-    room: "example"
+    roomName: "example"
   });
 
   // client1 is warned that a new player is here using "room" event
