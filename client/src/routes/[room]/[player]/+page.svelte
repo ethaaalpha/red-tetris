@@ -20,7 +20,6 @@
     SocketChatData,
     SocketJoinRoomData,
     SocketKickData,
-    SocketLeaveRoomData
   } from "$lib/types/socket";
   import type {
     SocketJoinRoomResponse,
@@ -96,8 +95,7 @@
   let showLeaveDialog = $state(false);
 
   function leaveRoom() {
-    const data: SocketLeaveRoomData = { room: room! };
-    socket.emit("leave room", data, (success: boolean) => {
+    socket.emit("leave room", (success: boolean) => {
       if (success) {
         goto("/");
       }

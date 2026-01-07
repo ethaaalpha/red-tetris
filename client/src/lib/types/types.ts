@@ -3,7 +3,6 @@ import type {
   SocketChatData,
   SocketKickData,
   SocketStartData,
-  SocketLeaveRoomData
 } from "./socket";
 import type { SocketJoinRoomResponse } from "server-types";
 
@@ -13,5 +12,4 @@ export type {
   SocketChatData,
   SocketKickData,
   SocketStartData,
-  SocketLeaveRoomData
 };

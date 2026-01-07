@@ -3,10 +3,6 @@ export interface SocketJoinRoomData {
   roomName: string;
 }
 
-export interface SocketLeaveRoomData {
-  room: string;
-}
-
 export interface SocketKickData {
   username: string;
 }
