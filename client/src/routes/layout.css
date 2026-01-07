@@ -55,7 +55,7 @@ body {
   cursor: not-allowed;
 }
 
-.btn-primary:hover {
+.btn-primary:hover:not(:disabled) {
   background-color: var(--color-red-accent);
 }
 

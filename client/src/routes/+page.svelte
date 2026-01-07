@@ -2,6 +2,9 @@
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
 
+  // assets
+  import bgTile from "$lib/assets/empty_piece.jpg";
+
   // components
   import Dialog from "$lib/components/Dialog.svelte";
   import Piece from "$lib/components/Piece.svelte";
@@ -11,9 +14,6 @@
   // stores
   import { kickState, setKickedDialog } from "$lib/stores/kick.svelte";
 
-  // constants
-  import { USERNAME_MAX_LENGTH, ROOM_NAME_MAX_LENGTH } from "$lib/constants";
-
   // socket
   import { getSocket } from "$lib/socket";
 
@@ -21,8 +21,8 @@
   import type { SocketJoinRoomData } from "$lib/types/socket";
   import type { SocketJoinRoomResponse, SocketGetRoomsResponse } from "server-types";
 
-  // assets
-  import bgTile from "$lib/assets/empty_piece.jpg";
+  // constants
+  import { USERNAME_MAX_LENGTH, ROOM_NAME_MAX_LENGTH } from "$lib/constants/max";
 
   let username = $state("");
   let usernameError = $state<string | undefined>(undefined);

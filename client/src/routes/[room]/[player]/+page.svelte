@@ -9,6 +9,9 @@
   import Dialog from "$lib/components/Dialog.svelte";
   import TextInput from "$lib/components/TextInput.svelte";
 
+  // stores
+  import { setKickedDialog, setKickedRoom } from "$lib/stores/kick.svelte";
+
   // socket
   import { getSocket } from "$lib/socket";
 
@@ -19,38 +22,39 @@
     SocketKickData,
     SocketLeaveRoomData
   } from "$lib/types/socket";
-  import type { SocketJoinRoomResponse, SocketRoomInfoData, SocketPlayerData } from "server-types";
+  import type {
+    SocketJoinRoomResponse,
+    SocketRoomInfoData,
+    SocketPlayerData,
+    SocketMessageResponse
+  } from "server-types";
   import type { PieceColor } from "$lib/types/piece";
 
-  // utils
-  import { USERNAME_MAX_LENGTH, MESSAGE_MAX_LENGTH } from "$lib/constants";
-  import { pieceColors } from "$lib/utils/piece";
-  import { setKickedDialog, setKickedRoom } from "$lib/stores/kick.svelte";
+  // constants
+  import { USERNAME_MAX_LENGTH, MESSAGE_MAX_LENGTH } from "$lib/constants/max";
+  import { pieceColors } from "$lib/constants/pieceColors";
 
+  // url params
   const room = page.params.room;
   const username = page.params.player;
 
-  let roomData = $state<SocketRoomInfoData>();
+  // errors
   let roomError = $state<string>();
   let userError = $state<string>();
   let unusualError = $state<string>();
-
-  let color = $state<string>();
-  let joined = $state(false);
   let countdown = $state(5);
 
-  let showKickDialog = $state(false);
-  let userToKick = $state<string>();
-  let userToKickColor = $state<PieceColor>("empty");
-  let userToKickPieceColor = $state<string>("#e6e6e6");
+  let errors = $derived([roomError, userError, unusualError].filter((e) => e));
 
-  let message = $state<string>("");
-
-  let showLeaveDialog = $state(false);
-
+  // socket
   const socket = getSocket();
 
-  let errors = $derived([roomError, userError, unusualError].filter((e) => e));
+  // data
+  let roomData = $state<SocketRoomInfoData>();
+  let color = $state<string>();
+
+  // join
+  let joined = $state(false);
 
   function joinRoom() {
     if (joined) return;
@@ -88,6 +92,9 @@
     );
   }
 
+  // leave
+  let showLeaveDialog = $state(false);
+
   function leaveRoom() {
     const data: SocketLeaveRoomData = { room: room! };
     socket.emit("leave room", data, (success: boolean) => {
@@ -96,6 +103,12 @@
       }
     });
   }
+
+  // kick
+  let showKickDialog = $state(false);
+  let userToKick = $state<string>();
+  let userToKickColor = $state<PieceColor>("empty");
+  let userToKickPieceColor = $state<string>("#e6e6e6");
 
   function handleKickUser(user: SocketPlayerData) {
     userToKick = user.username;
@@ -110,8 +123,19 @@
     });
   }
 
-  let messages = $state<Array<any>>([]);
+  function onKick() {
+    if (room) {
+      setKickedRoom(room);
+      setKickedDialog(true);
+      goto("/");
+    }
+  }
+
+  // messages
+  let message = $state<string>("");
+  let messages = $state<Array<SocketMessageResponse>>([]);
   let messagesContainer = $state<HTMLDivElement>();
+
   $effect(() => {
     if (messages.length && messagesContainer) {
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
@@ -129,20 +153,16 @@
     }
   }
 
+  function onMessage(data: SocketMessageResponse) {
+    messages.push({ from: data.from, message: data.message, color: data.color });
+  }
+
   onMount(() => {
     if (socket.connected) joinRoom();
     else socket.on("connect", joinRoom);
 
-    // to change
-    socket.on("kick", () => {
-      setKickedRoom(room!);
-      setKickedDialog(true);
-      goto("/");
-    });
-
-    socket.on("message", (data: any) => {
-      messages.push({ from: data.from, message: data.message, color: data.color });
-    });
+    socket.on("kick", onKick);
+    socket.on("message", onMessage);
 
     return () => {
       socket.off("connect", joinRoom);
@@ -234,10 +254,7 @@
 
     <!-- message & warm-up -->
     <div class="bg-dark-secondary border border-border flex flex-col h-[640px] w-[320px]">
-      <div
-        bind:this={messagesContainer}
-        class="flex-1 flex flex-col max-h-[600px] overflow-y-auto py-1 gap-3"
-      >
+      <div bind:this={messagesContainer} class="flex-1 flex flex-col overflow-y-auto py-1 gap-3">
         {#each messages as m}
           <div class="space-y-1 flex flex-col">
             <div
