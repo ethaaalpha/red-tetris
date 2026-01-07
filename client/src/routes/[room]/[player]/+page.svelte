@@ -176,14 +176,26 @@
   {#if !joined}
     <div class="bg-dark-secondary px-8 py-4 ring-border ring">
       <div class="text-center">
-        {#each errors as error}
-          {#if error}
-            <p class="text-red-400 text-xl mb-2">{error}</p>
-            <p>Redirecting in {countdown} second{countdown !== 1 ? "s" : ""}...</p>
+        {#if errors.length > 0}
+          {#if roomError}
+            <p class="text-red-400 text-xl mb-2">
+              <span class="font-semibold">Room:</span>
+              {roomError}
+            </p>
           {/if}
+          {#if userError}
+            <p class="text-red-400 text-xl mb-2">
+              <span class="font-semibold">Username:</span>
+              {userError}
+            </p>
+          {/if}
+          {#if unusualError}
+            <p class="text-red-400 text-xl mb-2">{unusualError}</p>
+          {/if}
+          <p>Redirecting in {countdown} second{countdown !== 1 ? "s" : ""}...</p>
         {:else}
           <p class="text-xl">Joining room "{room}" as "{username}"...</p>
-        {/each}
+        {/if}
       </div>
     </div>
 
