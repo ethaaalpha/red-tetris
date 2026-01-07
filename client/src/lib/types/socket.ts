@@ -10,7 +10,3 @@ export interface SocketKickData {
 export interface SocketChatData {
   message: string;
 }
-
-export interface SocketStartData {
-  room: string;
-}
