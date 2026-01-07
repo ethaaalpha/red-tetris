@@ -1,5 +1,11 @@
 import z, { ZodError } from "zod";
-import { CHAT_MAX_LENGTH, ROOM_MAX_LENGTH, USERNAME_MAX_LENGTH } from "../constants/core";
+import {
+  CHAT_MAX_LENGTH,
+  REGEX_MESSAGE,
+  REGEX_ROOM_USER,
+  ROOM_MAX_LENGTH,
+  USERNAME_MAX_LENGTH
+} from "../constants/core";
 
 export function formatSchemeError(error: ZodError) {
   return error.issues.reduce(
@@ -14,15 +20,18 @@ export function formatSchemeError(error: ZodError) {
 
 export const roomValidation = z
   .string()
+  .regex(REGEX_ROOM_USER, "Invalid characters, only alnum chars and _ are authorized!")
   .min(1, "Room name cannot be empty")
   .max(ROOM_MAX_LENGTH, `Room name cannot be longer than ${ROOM_MAX_LENGTH} characters`);
 
 export const usernameValidation = z
   .string()
+  .regex(REGEX_ROOM_USER, "Invalid characters, only alnum chars and _ are authorized!")
   .min(1, "Username cannot be empty")
   .max(USERNAME_MAX_LENGTH, `Username cannot be longer than ${USERNAME_MAX_LENGTH} characters`);
 
 export const messageValidation = z
   .string()
+  .regex(REGEX_MESSAGE)
   .min(1, "Message cannot be empty")
   .max(CHAT_MAX_LENGTH, `Message cannot be longer than ${CHAT_MAX_LENGTH} characters`);

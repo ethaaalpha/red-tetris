@@ -10,7 +10,8 @@
     fill = false,
     outline = true,
     onEnter = () => {},
-    bright = false
+    bright = false,
+    regex = undefined
   }: {
     value: string;
     input?: HTMLInputElement;
@@ -23,9 +24,17 @@
     outline?: boolean;
     onEnter?: () => void;
     bright?: boolean;
+    regex?: RegExp;
   } = $props();
 
   let isFocused = $state(false);
+
+  function format(v: string) {
+    if (regex !== undefined) {
+      return v.replace(regex, "_");
+    }
+    return v;
+  }
 </script>
 
 <div class="w-xs {fill ? 'h-full w-full' : ''}">
@@ -38,6 +47,7 @@
       }}
       bind:this={input}
       bind:value
+      oninput={() => (value = format(value))}
       onfocus={() => (isFocused = true)}
       onblur={() => (isFocused = false)}
       class="w-full outline-red-primary py-2 pl-4 pr-18
