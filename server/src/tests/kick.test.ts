@@ -16,7 +16,7 @@ import {
   setupTestServer,
   shutdownTestServer
 } from "./utils";
-import { getUsers } from "../core/user";
+import { setUser } from "../core/user";
 import { getRoom } from "../core/room";
 
 let ctx: TestServerData;
@@ -64,7 +64,7 @@ describe("invalid kick", () => {
   it("an user not in the room", async () => {
     await joinRoom(ctx.test1, "example", "user1");
 
-    getUsers().set("test", new User("test", "user3", null));
+    setUser("test", new User("test", "user3", null));
     await emitAsync(ctx.test1.client, "kick", {
       username: "user3"
     }).then(({ success, data }) => {

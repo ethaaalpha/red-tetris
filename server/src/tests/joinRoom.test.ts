@@ -8,7 +8,7 @@ import {
   ROOM_IS_FULL,
   USERNAME_TAKEN
 } from "../constants/validateErrors";
-import { getRoom, getRooms } from "../core/room";
+import { getRoom, getRooms, setRoom } from "../core/room";
 import { Room } from "../objects/Room";
 import { User } from "../objects/User";
 import type { SocketRoomInfoData } from "../types/types";
@@ -39,7 +39,7 @@ describe("invalid join", () => {
     for (let i = 1; i < ROOM_MAX_USERS; i++) {
       room.add(new User(`a${i}`, `a${i}`, null));
     }
-    getRooms().set("example", room);
+    setRoom("example", room);
 
     await emitAsync(ctx.test1.client, "join room", {
       username: "user1",
@@ -52,7 +52,7 @@ describe("invalid join", () => {
 
   it("maximum of rooms", async () => {
     for (let i = 0; i < ROOM_MAX; i++) {
-      getRooms().set(i.toString(), new Room(`test${i}`, fakeUser));
+      setRoom(i.toString(), new Room(`test${i}`, fakeUser));
     }
     await emitAsync(ctx.test1.client, "join room", {
       username: "user1",
@@ -64,7 +64,7 @@ describe("invalid join", () => {
   });
 
   it("username already taken", async () => {
-    getRooms().set("example", new Room("example", fakeUser));
+    setRoom("example", new Room("example", fakeUser));
 
     await emitAsync(ctx.test1.client, "join room", {
       username: "name",
@@ -90,8 +90,8 @@ describe("invalid join", () => {
   });
 
   it("room already started", async () => {
-    getRooms().set("example", new Room("example", fakeUser));
-    getRooms().get("example")?.start();
+    setRoom("example", new Room("example", fakeUser));
+    getRoom("example")?.start();
 
     await emitAsync(ctx.test1.client, "join room", {
       username: "user1",
@@ -141,7 +141,6 @@ it("host changed", async () => {
     roomName: "example"
   });
 
-  // client1 is warned that a new player is here using "room" event
   const data1 = (await roomListener) as SocketRoomInfoData;
   expect(getRoom("example")?.asInfo()).toEqual(data1);
 

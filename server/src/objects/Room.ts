@@ -1,6 +1,6 @@
 import { ROOM_MAX_USERS } from "../constants/core";
 import { getRooms } from "../core/room";
-import { getUsers } from "../core/user";
+import { deleteUser } from "../core/user";
 import type { SocketRoomInfoData, SocketUserColor } from "../types/types";
 import type { User } from "./User";
 
@@ -78,7 +78,7 @@ export class Room {
     }
 
     // an user cannot exist outside of a room
-    getUsers().delete(user.socket.id);
+    deleteUser(user.socket.id);
     return this.asInfo();
   }
 

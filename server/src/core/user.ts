@@ -13,3 +13,11 @@ export function getUserByUsername(username: string): User | undefined {
 export function getUsers(): Map<string, User> {
   return users;
 }
+
+export function setUser(socket_id: string, user: User) {
+  users.set(socket_id, user);
+}
+
+export function deleteUser(socket_id: string) {
+  users.delete(socket_id);
+}

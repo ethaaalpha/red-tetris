@@ -42,3 +42,11 @@ export function getRoomBySocket(socket: Socket): Room | undefined {
   }
   return undefined;
 }
+
+export function setRoom(name: string, room: Room) {
+  rooms.set(name, room);
+}
+
+export function deleteRoom(name: string) {
+  rooms.delete(name);
+}

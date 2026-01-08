@@ -24,8 +24,7 @@ afterEach(async () => {
 describe("invalid chat", () => {
   it("not in a room", async () => {
     await emitAsync(ctx.test1.client, "chat", {
-      message: "test",
-      room: "example"
+      message: "test"
     }).then(({ success, data }) => {
       expect((data as { room: string }).room).toBe(NOT_IN_A_ROOM);
       expect(success).toBe(false);
@@ -44,8 +43,7 @@ it("valid chat", async () => {
 
   // users talks
   await emitAsync(ctx.test1.client, "chat", {
-    message: message,
-    room: "example"
+    message: message
   }).then(({ success }) => {
     expect(success).toBe(true);
   });

@@ -3,7 +3,7 @@ import { emitAsync, setupTestServer, shutdownTestServer } from "./utils";
 import { Room } from "../objects/Room";
 import { User } from "../objects/User";
 import { ROOM_MAX_USERS } from "../constants/core";
-import { getRoom, getRooms } from "../core/room";
+import { getRoom, setRoom } from "../core/room";
 import type { TestServerData } from "./types";
 
 let ctx: TestServerData;
@@ -18,7 +18,7 @@ afterEach(async () => {
 
 describe("get rooms", () => {
   it("simple", async () => {
-    getRooms().set("example", new Room("example", new User("id", "example", null)));
+    setRoom("example", new Room("example", new User("id", "example", null)));
 
     await emitAsync(ctx.test1.client, "get rooms").then(({ success, data }) => {
       expect(data).toEqual([
@@ -33,8 +33,8 @@ describe("get rooms", () => {
   });
 
   it("ignore rooms in game", async () => {
-    getRooms().set("example", new Room("example", new User("id", "example", null)));
-    getRooms().set("example2", new Room("example2", new User("id2", "example2", null)));
+    setRoom("example", new Room("example", new User("id", "example", null)));
+    setRoom("example2", new Room("example2", new User("id2", "example2", null)));
     getRoom("example2")?.start();
 
     await emitAsync(ctx.test1.client, "get rooms").then(({ success, data }) => {
