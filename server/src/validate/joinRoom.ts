@@ -3,12 +3,8 @@ import z from "zod";
 
 // intern
 import { ROOM_MAX, ROOM_MAX_USERS } from "../constants/core";
-import { rooms } from "../objects/Room";
 import { formatSchemeError, roomValidation, usernameValidation } from "./validation";
-
-// types
-import type { SocketJoinRoomData } from "client-types";
-import type { Socket } from "socket.io";
+import { getRoom, getRooms } from "../core/room";
 import {
   ALREADY_IN_A_ROOM,
   MAX_ROOMS,
@@ -16,6 +12,10 @@ import {
   ROOM_IS_FULL,
   USERNAME_TAKEN
 } from "../constants/validateErrors";
+
+// types
+import type { SocketJoinRoomData } from "client-types";
+import type { Socket } from "socket.io";
 import type { ValidateError } from "../types/server";
 
 const schema = z.object({
@@ -44,21 +44,21 @@ export function validateJoinRoom(socket: Socket, data: SocketJoinRoomData): Vali
     };
   }
 
-  const room = rooms.get(result.data.roomName);
+  const room = getRoom(result.data.roomName);
   if (room && room.users.size >= ROOM_MAX_USERS) {
     return { status: false, error: { roomName: ROOM_IS_FULL } };
-  }
-  if (rooms.size >= ROOM_MAX) {
-    return {
-      status: false,
-      error: { roomName: MAX_ROOMS }
-    };
   }
   if (room && room.get(data.username)) {
     return { status: false, error: { username: USERNAME_TAKEN } };
   }
   if (room && room.playing === true) {
     return { status: false, error: { roomName: PLAYING_ROOM } };
+  }
+  if (getRooms().size >= ROOM_MAX) {
+    return {
+      status: false,
+      error: { roomName: MAX_ROOMS }
+    };
   }
 
   return { status: true, roomName: result.data.roomName, username: result.data.username };

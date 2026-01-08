@@ -1,8 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { NOT_HOST, NOT_IN_A_ROOM, PLAYING_ROOM } from "../constants/validateErrors";
-import { rooms } from "../objects/Room";
 import { User } from "../objects/User";
-import type { TestServerData } from "./types";
 import {
   createClient,
   emitAsync,
@@ -11,6 +9,8 @@ import {
   setupTestServer,
   shutdownTestServer
 } from "./utils";
+import { getRoom } from "../core/room";
+import type { TestServerData } from "./types";
 
 let ctx: TestServerData;
 
@@ -64,7 +64,7 @@ it("valid start", async () => {
     expect(success).toBe(true);
   });
 
-  const roomInfo = rooms.get("example")?.asInfo();
+  const roomInfo = getRoom("example")?.asInfo();
 
   await listener1.then((data) => {
     expect(data).toEqual(roomInfo);

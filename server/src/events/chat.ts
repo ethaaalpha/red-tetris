@@ -1,5 +1,5 @@
-import type { Server, Socket } from "socket.io";
 import { validateChat } from "../validate/chat";
+import type { Server, Socket } from "socket.io";
 import type { SocketChatData } from "client-types";
 import type { Callback } from "../types/types";
 

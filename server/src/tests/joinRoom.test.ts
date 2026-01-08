@@ -8,7 +8,8 @@ import {
   ROOM_IS_FULL,
   USERNAME_TAKEN
 } from "../constants/validateErrors";
-import { Room, rooms } from "../objects/Room";
+import { getRoom, getRooms, setRoom } from "../core/room";
+import { Room } from "../objects/Room";
 import { User } from "../objects/User";
 import type { SocketRoomInfoData } from "../types/types";
 import type { TestServerData } from "./types";
@@ -38,7 +39,7 @@ describe("invalid join", () => {
     for (let i = 1; i < ROOM_MAX_USERS; i++) {
       room.add(new User(`a${i}`, `a${i}`, null));
     }
-    rooms.set("example", room);
+    setRoom("example", room);
 
     await emitAsync(ctx.test1.client, "join room", {
       username: "user1",
@@ -51,7 +52,7 @@ describe("invalid join", () => {
 
   it("maximum of rooms", async () => {
     for (let i = 0; i < ROOM_MAX; i++) {
-      rooms.set(i.toString(), new Room(`test${i}`, fakeUser));
+      setRoom(i.toString(), new Room(`test${i}`, fakeUser));
     }
     await emitAsync(ctx.test1.client, "join room", {
       username: "user1",
@@ -63,7 +64,7 @@ describe("invalid join", () => {
   });
 
   it("username already taken", async () => {
-    rooms.set("example", new Room("example", fakeUser));
+    setRoom("example", new Room("example", fakeUser));
 
     await emitAsync(ctx.test1.client, "join room", {
       username: "name",
@@ -89,8 +90,8 @@ describe("invalid join", () => {
   });
 
   it("room already started", async () => {
-    rooms.set("example", new Room("example", fakeUser));
-    rooms.get("example")?.start();
+    setRoom("example", new Room("example", fakeUser));
+    getRoom("example")?.start();
 
     await emitAsync(ctx.test1.client, "join room", {
       username: "user1",
@@ -140,19 +141,18 @@ it("host changed", async () => {
     roomName: "example"
   });
 
-  // client1 is warned that a new player is here using "room" event
   const data1 = (await roomListener) as SocketRoomInfoData;
-  expect(rooms.get("example")?.asInfo()).toEqual(data1);
+  expect(getRoom("example")?.asInfo()).toEqual(data1);
 
   ctx.test1.client.close();
 
   // a new host has been setted
   const data2 = (await roomListener2) as SocketRoomInfoData;
-  expect(rooms.get("example")?.asInfo()).toEqual(data2);
+  expect(getRoom("example")?.asInfo()).toEqual(data2);
   expect(data2.host).toEqual("user2");
 
   test2.client.close();
   await disconnectListener;
 
-  expect(rooms.size).toEqual(0);
+  expect(getRooms().size).toEqual(0);
 });

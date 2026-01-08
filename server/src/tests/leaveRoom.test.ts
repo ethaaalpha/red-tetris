@@ -1,8 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { INEXISTING_ROOM, USER_NOT_FOUND } from "../constants/validateErrors";
-import { rooms } from "../objects/Room";
-import { users } from "../objects/User";
-import type { TestServerData } from "./types";
 import {
   createClient,
   emitAsync,
@@ -11,6 +8,9 @@ import {
   setupTestServer,
   shutdownTestServer
 } from "./utils";
+import { getRoom, getRooms } from "../core/room";
+import { getUser, getUsers } from "../core/user";
+import type { TestServerData } from "./types";
 
 let ctx: TestServerData;
 
@@ -32,14 +32,7 @@ describe("invalid leave room", () => {
 
   it("inexisting room", async () => {
     await joinRoom(ctx.test1, "example", "test");
-    // TO CHANGE AFTER REFACTOR
-    const retrieveUser = rooms.get("example")?.get("test");
-
-    if (retrieveUser) {
-      retrieveUser.room = null;
-      rooms.clear();
-    }
-    //
+    getRooms().clear();
 
     await emitAsync(ctx.test1.client, "leave room").then(({ success, data }) => {
       expect((data as { room: string }).room).toBe(INEXISTING_ROOM);
@@ -54,9 +47,9 @@ it("valid leave room", async () => {
   await joinRoom(ctx.test1, "example", "test");
   await joinRoom(test2, "example", "test2");
 
-  const userBefore = users.get(ctx.test1.server.id);
+  const userBefore = getUser(ctx.test1.server.id);
   expect(userBefore).toBeDefined();
-  expect(users.size).toBe(2);
+  expect(getUsers().size).toBe(2);
 
   const listener = onceAsync(test2.client, "room update");
 
@@ -65,14 +58,14 @@ it("valid leave room", async () => {
   });
 
   // check that the action is effective and host updated here
-  const roomInfo = rooms.get("example")?.asInfo();
+  const roomInfo = getRoom("example")?.asInfo();
   expect(roomInfo?.host).toEqual("test2");
   expect(roomInfo?.players.length).toEqual(1);
 
   // the user should not exist anymore in memory
-  const user = users.get(ctx.test1.server.id);
+  const user = getUser(ctx.test1.server.id);
   expect(user).toBeUndefined();
-  expect(users.size).toBe(1);
+  expect(getUsers().size).toBe(1);
 
   // check that the remaining user have the good informations
   await listener.then((data) => {

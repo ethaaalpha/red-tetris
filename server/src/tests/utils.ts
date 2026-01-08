@@ -1,10 +1,11 @@
-import type { AddressInfo } from "net";
 import { Server, type Socket as ServerSocket } from "socket.io";
 import { io as ioc, type Socket as ClientSocket } from "socket.io-client";
 import { expect } from "vitest";
 import { init } from "../../app";
-import { Room, rooms } from "../objects/Room";
-import { users } from "../objects/User";
+import { Room } from "../objects/Room";
+import { getRoom, getRooms } from "../core/room";
+import { getUsers } from "../core/user";
+import type { AddressInfo } from "net";
 import type { Callback } from "../types/types";
 import type { TestServerData, TestSocket } from "./types";
 
@@ -68,8 +69,8 @@ export async function setupTestServer(): Promise<TestServerData> {
 
 export async function shutdownTestServer(ctx: TestServerData): Promise<void> {
   await ctx.io.close();
-  rooms.clear();
-  users.clear();
+  getRooms().clear();
+  getUsers().clear();
 }
 
 export async function joinRoom(
@@ -82,7 +83,8 @@ export async function joinRoom(
     roomName: roomname
   });
 
-  const room = rooms.get(roomname);
+  const room = getRoom(roomname);
+
   expect(room).toBeDefined();
   expect(room).toBeInstanceOf(Room);
 
