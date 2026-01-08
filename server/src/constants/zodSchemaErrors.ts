@@ -10,4 +10,4 @@ export const Z_MESSAGE_EMPTY = "Message cannot be empty";
 export const Z_MESSAGE_MAX = `Message cannot be longer than ${CHAT_MAX_LENGTH} characters`;
 export const Z_REGEX_ROOM_AND_USER =
   "Only alphanumeric characters, underscores and hyphens are allowed";
-export const Z_REGEX_MESSAGE_SANITIZE = "Only unicode characters are allowed";
+export const Z_REGEX_MESSAGE = "Only unicode characters are allowed";
