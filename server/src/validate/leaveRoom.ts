@@ -1,5 +1,5 @@
 // intern
-import { INEXISTING_ROOM, USER_NOT_FOUND } from "../constants/error";
+import { INEXISTING_ROOM, USER_NOT_FOUND } from "../constants/validateErrors";
 import { getRoomBySocket } from "../core/room";
 import { getUser } from "../core/user";
 
@@ -7,7 +7,6 @@ import { getUser } from "../core/user";
 import type { Room } from "../objects/Room";
 import type { User } from "../objects/User";
 import type { Socket } from "socket.io";
-import { INEXISTING_ROOM, USER_NOT_FOUND } from "../constants/validateErrors";
 import type { ValidateError } from "../types/server";
 
 type ValidateLeaveRoomSuccess = {

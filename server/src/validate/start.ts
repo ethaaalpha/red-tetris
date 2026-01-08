@@ -1,12 +1,11 @@
 // intern
 import { Room } from "../objects/Room";
-import { NOT_HOST, NOT_IN_A_ROOM, PLAYING_ROOM } from "../constants/error";
+import { NOT_HOST, NOT_IN_A_ROOM, PLAYING_ROOM } from "../constants/validateErrors";
 import { getUser } from "../core/user";
 import { getRoomBySocket } from "../core/room";
 
 // types
 import type { Socket } from "socket.io";
-import { NOT_HOST, NOT_IN_A_ROOM, PLAYING_ROOM } from "../constants/validateErrors";
 import type { ValidateError } from "../types/server";
 
 type ValidateStartSuccess = {

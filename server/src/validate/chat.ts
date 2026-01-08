@@ -5,13 +5,12 @@ import z from "zod";
 import { Room } from "../objects/Room";
 import { formatSchemeError, messageValidation } from "./validation";
 import { getUser } from "../core/user";
-import { NOT_IN_A_ROOM } from "../constants/error";
+import { NOT_IN_A_ROOM } from "../constants/validateErrors";
 import { getRoomBySocket } from "../core/room";
 
 // types
 import type { SocketChatData } from "client-types";
 import type { Socket } from "socket.io";
-import { NOT_IN_A_ROOM } from "../constants/validateErrors";
 import type { User } from "../objects/User";
 import type { ValidateError } from "../types/server";
 
