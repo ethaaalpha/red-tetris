@@ -18,5 +18,7 @@ export const ERROR_KICK_INEXISTING = "This user is not in this room";
 // leave room
 export const ERROR_USER_NOT_FOUND = "User not found";
 
+import { WARMUP_RESTART_DELAY } from "./core";
+
 // warm-up
-export const ERROR_WARM_UP = "You are already in warm-up";
+export const ERROR_WARM_UP_TIMEOUT = `You cannot restart your warm-up, please wait at least ${WARMUP_RESTART_DELAY} second${WARMUP_RESTART_DELAY > 1 ? "s" : ""}`;

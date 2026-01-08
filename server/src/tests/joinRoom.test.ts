@@ -1,6 +1,6 @@
 import type { SocketJoinRoomResponse } from "client-types";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { ROOM_MAX, ROOM_MAX_USERS } from "../constants/core";
+import { ROOM_MAX, ROOM_MAX_USERS, WARMUP_RESTART_DELAY } from "../constants/core";
 import {
   ERROR_ALREADY_IN_A_ROOM,
   ERROR_MAX_ROOMS,
@@ -126,7 +126,8 @@ it("valid join", async () => {
         }
       ],
       userCount: 1,
-      playing: false
+      playing: false,
+      warmUpRestartDelay: WARMUP_RESTART_DELAY
     } as SocketRoomInfoData);
     expect(success).toBe(true);
   });

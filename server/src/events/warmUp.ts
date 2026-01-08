@@ -10,6 +10,8 @@ export function registerHandlers(socket: Socket) {
       return;
     }
 
+    result.current.setWarmUp();
+
     console.log(`user ${result.current.name} started warm-up`);
 
     callback(true);

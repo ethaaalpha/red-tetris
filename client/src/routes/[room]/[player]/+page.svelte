@@ -2,10 +2,20 @@
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
   import { page } from "$app/state";
+  import { fade } from "svelte/transition";
 
   // components
   import Piece from "$lib/components/Piece.svelte";
-  import { Crown, DoorOpen, LogOut, UserX, X, Send, GamepadDirectional } from "@lucide/svelte";
+  import {
+    Crown,
+    DoorOpen,
+    LogOut,
+    UserX,
+    X,
+    Send,
+    GamepadDirectional,
+    RotateCcw
+  } from "@lucide/svelte";
   import Dialog from "$lib/components/Dialog.svelte";
   import TextInput from "$lib/components/TextInput.svelte";
 
@@ -154,14 +164,14 @@
 
   // warm-up
   let warmUp = $state<boolean>(false);
-  let showRestart = $state<boolean>(false);
+  let showWarmUpRestart = $state<boolean>(false);
   function startWarmUp() {
     socket.emit("warm-up", (success: boolean) => {
       if (success) {
         warmUp = true;
         setTimeout(() => {
-          showRestart = true;
-        }, 5000);
+          showWarmUpRestart = true;
+        }, roomData?.warmUpRestartDelay || 5000);
       }
     });
   }
@@ -334,22 +344,22 @@
         </div>
       {/each}
 
-      <button
-        class="btn btn-primary px-4 py-2 text-xl absolute right-1/2 translate-x-1/2 -bottom-16 flex items-center gap-2 !duration-200
-        {warmUp ? 'opacity-0' : ''}"
-        onclick={startWarmUp}
-      >
-        <GamepadDirectional />
-        warm-up
-      </button>
-      {#if showRestart}
+      {#if warmUp == false}
         <button
-          class="btn btn-primary px-4 py-2 text-xl absolute right-1/2 translate-x-1/2 -bottom-16 flex items-center gap-2 !duration-200
-          {warmUp ? 'opacity-0' : ''}"
+          out:fade={{ duration: 200 }}
+          class="btn btn-primary px-4 py-2 text-xl absolute right-1/2 translate-x-1/2 -bottom-16 flex items-center gap-2"
           onclick={startWarmUp}
         >
           <GamepadDirectional />
           warm-up
+        </button>
+      {:else if showWarmUpRestart}
+        <button
+          in:fade={{ duration: 200 }}
+          class="btn btn-primary px-4 py-2 text-xl absolute right-1/2 translate-x-1/2 -bottom-16 flex items-center gap-2"
+        >
+          <RotateCcw />
+          restart
         </button>
       {/if}
     </div>
