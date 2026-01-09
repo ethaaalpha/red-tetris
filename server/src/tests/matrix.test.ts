@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { Piece } from "../objects/Piece";
 import { PIECES } from "../constants/pieces";
+import type { Matrix2D } from "../types/types";
 
 it("non rectangular matrix", () => {
   const matrix: number[][] = [
@@ -8,7 +9,7 @@ it("non rectangular matrix", () => {
     [1, 0]
   ];
 
-  expect(() => new Piece("I", matrix).rotate90(1)).toThrowError();
+  expect(() => new Piece("I", matrix as Matrix2D<number>).rotate90(1)).toThrowError();
 });
 
 describe("matrix rotations", () => {
@@ -85,8 +86,8 @@ describe("matrix rotations", () => {
   });
 
   it("O", () => {
-    const rotationA = new Piece("O", PIECES.O).rotate90(3);
-    const rotationB = new Piece("O", PIECES.O).rotate90(3);
+    const rotationA = new Piece("O", PIECES.O).rotate90(1);
+    const rotationB = new Piece("O", PIECES.O).rotate90(2);
     const rotationC = new Piece("O", PIECES.O).rotate90(3);
     expect(rotationA.matrix).toEqual(PIECES.O);
     expect(rotationB.matrix).toEqual(PIECES.O);
