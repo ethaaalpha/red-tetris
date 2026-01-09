@@ -1,5 +1,5 @@
 // socket main events
-export const EVENT_USER_DISCONNECT = "disconnect";
+export const EVENT_USER_DISCONNECT = "disconnecting";
 export const EVENT_USER_CONNECT = "connect";
 
 // join & leave events
