@@ -1,14 +1,21 @@
-import { Server, type Socket as ServerSocket } from "socket.io";
-import { io as ioc, type Socket as ClientSocket } from "socket.io-client";
+// global
+import { Server } from "socket.io";
+import { io as ioc } from "socket.io-client";
 import { expect } from "vitest";
+
+// intern
 import { init } from "../../app";
-import { Room } from "../objects/Room";
 import { getRoom, getRooms } from "../core/room";
 import { getUsers } from "../core/user";
+import { Room } from "../objects/Room";
+import { User } from "../objects/User";
+
+// types
 import type { AddressInfo } from "net";
+import type { Socket as ServerSocket } from "socket.io";
+import type { Socket as ClientSocket } from "socket.io-client";
 import type { Callback } from "../types/types";
 import type { TestServerData, TestSocket } from "./types";
-import { User } from "../objects/User";
 
 export function createClient(address: string, io: Server): Promise<TestSocket> {
   return new Promise((resolve) => {
