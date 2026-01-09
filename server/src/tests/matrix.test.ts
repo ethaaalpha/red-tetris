@@ -55,7 +55,7 @@ describe("matrix rotations", () => {
     expect(rotationB.matrix).toEqual([
       [0, 0, 0],
       [1, 1, 1],
-      [0, 0, 1]
+      [0, 0, 1],
     ]);
     expect(rotationC.matrix).toEqual([
       [0, 1, 0],
@@ -76,7 +76,7 @@ describe("matrix rotations", () => {
     expect(rotationB.matrix).toEqual([
       [0, 0, 0],
       [1, 1, 1],
-      [1, 0, 0]
+      [1, 0, 0],
     ]);
     expect(rotationC.matrix).toEqual([
       [1, 1, 0],
@@ -106,7 +106,7 @@ describe("matrix rotations", () => {
     expect(rotationB.matrix).toEqual([
       [0, 0, 0],
       [0, 1, 1],
-      [1, 1, 0]
+      [1, 1, 0],
     ]);
     expect(rotationC.matrix).toEqual([
       [1, 0, 0],
@@ -127,7 +127,28 @@ describe("matrix rotations", () => {
     expect(rotationB.matrix).toEqual([
       [0, 0, 0],
       [1, 1, 1],
-      [0, 1, 0]
+      [0, 1, 0],
+    ]);
+    expect(rotationC.matrix).toEqual([
+      [0, 1, 0],
+      [1, 1, 0],
+      [0, 1, 0],
+    ]);
+  });
+
+  it("Z", () => {
+    const rotationA = new Piece("Z", PIECES.Z).rotate90(1);
+    const rotationB = new Piece("Z", PIECES.Z).rotate90(2);
+    const rotationC = new Piece("Z", PIECES.Z).rotate90(3);
+    expect(rotationA.matrix).toEqual([
+      [0, 0, 1],
+      [0, 1, 1],
+      [0, 1, 0],
+    ]);
+    expect(rotationB.matrix).toEqual([
+      [0, 0, 0],
+      [1, 1, 0],
+      [0, 1, 1],
     ]);
     expect(rotationC.matrix).toEqual([
       [0, 1, 0],
