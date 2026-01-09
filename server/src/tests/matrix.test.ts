@@ -4,12 +4,12 @@ import { PIECES } from "../constants/pieces";
 import type { Matrix2D } from "../types/types";
 
 it("non rectangular matrix", () => {
-  const matrix: number[][] = [
+  const matrix: Matrix2D<number> = [
     [1, 0, 1],
     [1, 0]
   ];
 
-  expect(() => new Piece("I", matrix as Matrix2D<number>).rotate90(1)).toThrowError();
+  expect(() => new Piece("I", matrix).rotate90(1)).toThrowError();
 });
 
 describe("matrix rotations", () => {
