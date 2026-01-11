@@ -7,7 +7,7 @@ import { PIECES } from "../constants/pieces";
 let board: Board;
 
 beforeEach(() => {
-  board = new Board(BOARD_WIDTH, BOARD_HEIGHT);
+  board = new Board();
 });
 
 it("invalid constructor", () => {

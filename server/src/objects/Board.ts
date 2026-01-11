@@ -1,3 +1,4 @@
+import { BOARD_HEIGHT, BOARD_WIDTH } from "../constants/core";
 import type { Matrix2D, NonEmptyArray } from "../types/types";
 import { Piece } from "./Piece";
 
@@ -5,15 +6,13 @@ export class Board {
   public matrix: Matrix2D<number>; // row, column
   public restrictedLines: number = 0;
 
-  constructor(width: number, height: number) {
+  constructor(width: number = BOARD_WIDTH, height: number = BOARD_HEIGHT) {
     if (width < 1 || height < 1) throw Error("Invalid board dimensions!");
 
     // fill grid with 0;
-    const grid: number[][] = Array.from({ length: height }, () =>
+    this.matrix = Array.from({ length: height }, () =>
       Array.from({ length: width }, () => 0)
-    );
-
-    this.matrix = grid as Matrix2D<number>;
+    ) as Matrix2D<number>;
   }
 
   private getRow(index: number): NonEmptyArray<number> {
