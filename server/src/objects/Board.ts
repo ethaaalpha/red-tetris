@@ -36,8 +36,10 @@ export class Board {
 
         if (pieceCell === 1) {
           const boardRow = this.matrix[x + i];
+          // outside of board
           if (!boardRow) return false;
           const boardCell = boardRow[y + j];
+          // outside of board or colisision
           if (boardCell === undefined || boardCell === 1) return false;
         }
       }
