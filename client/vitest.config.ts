@@ -1,9 +1,11 @@
-import { defineConfig } from "vitest/config";
+import { defineConfig } from 'vitest/config';
+import { svelte } from '@sveltejs/vite-plugin-svelte';
 
 export default defineConfig({
+  plugins: [svelte()],
   test: {
     coverage: {
-      include: ["src/**/*.ts"],
+      include: ['src/**/*.{ts,svelte}'],
       thresholds: {
         functions: 70,
         statements: 70,
@@ -11,5 +13,5 @@ export default defineConfig({
         branches: 50
       }
     }
-  }
+  },
 });
