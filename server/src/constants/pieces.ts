@@ -1,40 +1,61 @@
-import type { Matrix2D, PieceType } from "../types/types";
+import type { Matrix2D, PieceType, SocketPieceColor } from "../types/types";
 
-export const PIECES: Record<PieceType, Matrix2D<number>> = {
-  I: [
-    [0, 0, 0, 0],
-    [1, 1, 1, 1],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0]
-  ],
-  J: [
-    [1, 0, 0],
-    [1, 1, 1],
-    [0, 0, 0]
-  ],
-  L: [
-    [0, 0, 1],
-    [1, 1, 1],
-    [0, 0, 0]
-  ],
-  O: [
-    [0, 1, 1, 0],
-    [0, 1, 1, 0],
-    [0, 0, 0, 0]
-  ],
-  S: [
-    [0, 1, 1],
-    [1, 1, 0],
-    [0, 0, 0]
-  ],
-  T: [
-    [0, 1, 0],
-    [1, 1, 1],
-    [0, 0, 0]
-  ],
-  Z: [
-    [1, 1, 0],
-    [0, 1, 1],
-    [0, 0, 0]
-  ]
+export const PIECES: Record<PieceType, { matrix: Matrix2D<number>; color: SocketPieceColor }> = {
+  I: {
+    matrix: [
+      [0, 0, 0, 0],
+      [1, 1, 1, 1],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0]
+    ],
+    color: "light_blue"
+  },
+  J: {
+    matrix: [
+      [1, 0, 0],
+      [1, 1, 1],
+      [0, 0, 0]
+    ],
+    color: "dark_blue"
+  },
+  L: {
+    matrix: [
+      [0, 0, 1],
+      [1, 1, 1],
+      [0, 0, 0]
+    ],
+    color: "orange"
+  },
+  O: {
+    matrix: [
+      [0, 1, 1, 0],
+      [0, 1, 1, 0],
+      [0, 0, 0, 0]
+    ],
+    color: "yellow"
+  },
+  S: {
+    matrix: [
+      [0, 1, 1],
+      [1, 1, 0],
+      [0, 0, 0]
+    ],
+    color: "green"
+  },
+  T: {
+    matrix: [
+      [0, 1, 0],
+      [1, 1, 1],
+      [0, 0, 0]
+    ],
+    color: "magenta"
+  },
+  Z: {
+    matrix: [
+      [1, 1, 0],
+      [0, 1, 1],
+      [0, 0, 0]
+    ],
+    color: "red"
+  }
 };
