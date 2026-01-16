@@ -3,6 +3,7 @@ import { getRooms } from "../core/room";
 import { deleteUser } from "../core/user";
 
 import type { RoomData, UserColor } from "@app/shared";
+import { Game } from "./Game";
 import type { User } from "./User";
 
 export class Room {
@@ -18,6 +19,7 @@ export class Room {
     "purple",
     "grey"
   ];
+  public game: Game | null = null;
 
   constructor(
     public name: string,
@@ -103,7 +105,6 @@ export class Room {
 
   public start() {
     this.playing = true;
-
-    // initialize game variables (like pieces, boards etccc)
+    this.game = new Game(this.users);
   }
 }

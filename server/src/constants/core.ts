@@ -14,6 +14,7 @@ export const CHAT_MAX_LENGTH = Number(process.env.CHAT_MAX_LENGTH) || 128;
 export const WARMUP_RESTART_DELAY = Number(process.env.RESTART_DELAY) || 5;
 export const BOARD_WIDTH = 10;
 export const BOARD_HEIGHT = 20;
+export const GAME_FALL_SLEEP = 500;
 
 // regex
 export const REGEX_ROOM_AND_USER = /^[a-zA-Z0-9_-]+$/;
