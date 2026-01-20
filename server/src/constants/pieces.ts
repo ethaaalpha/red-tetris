@@ -8,7 +8,7 @@ export const PIECES: Record<PieceType, { matrix: Matrix2D<number>; color: Socket
       [0, 0, 0, 0],
       [0, 0, 0, 0]
     ],
-    color: "light_blue"
+    color: "cyan"
   },
   J: {
     matrix: [
@@ -16,7 +16,7 @@ export const PIECES: Record<PieceType, { matrix: Matrix2D<number>; color: Socket
       [1, 1, 1],
       [0, 0, 0]
     ],
-    color: "dark_blue"
+    color: "blue"
   },
   L: {
     matrix: [
@@ -48,7 +48,7 @@ export const PIECES: Record<PieceType, { matrix: Matrix2D<number>; color: Socket
       [1, 1, 1],
       [0, 0, 0]
     ],
-    color: "magenta"
+    color: "purple"
   },
   Z: {
     matrix: [

@@ -15,4 +15,5 @@ type PieceColorDetail = Record<
     light: string;
   }
 >;
+
 export type { PieceColor, Piece, PieceColorDetail };
