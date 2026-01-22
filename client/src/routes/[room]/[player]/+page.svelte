@@ -32,8 +32,7 @@
     EVENT_LEAVE_ROOM,
     EVENT_KICK,
     EVENT_MESSAGE,
-    EVENT_WARM_UP,
-    EVENT_USER_CONNECT
+    EVENT_WARM_UP
   } from "server-events";
 
   // types
@@ -52,8 +51,8 @@
   import { pieceColors } from "$lib/constants/pieceColors";
 
   // url params
-  const room = page.params.room;
-  const username = page.params.player;
+  const room = page.params.room || "";
+  const username = page.params.player || "";
 
   // errors
   let roomError = $state<string>();
@@ -74,9 +73,6 @@
   let joined = $state(false);
 
   function joinRoom() {
-    if (joined) return;
-
-    localStorage.setItem("username", username?.substring(0, USERNAME_MAX_LENGTH)!);
     const data: SocketJoinRoomData = { username: username || "", roomName: room || "" };
     socket.emit(
       EVENT_JOIN_ROOM,
@@ -188,14 +184,16 @@
   }
 
   onMount(() => {
-    if (socket.connected) joinRoom();
-    else socket.on(EVENT_USER_CONNECT, joinRoom);
+    localStorage.setItem("username", username.substring(0, USERNAME_MAX_LENGTH)!);
+
+    joinRoom();
 
     socket.on(EVENT_KICK, onKick);
     socket.on(EVENT_MESSAGE, onMessage);
 
     return () => {
-      socket.off(EVENT_USER_CONNECT, joinRoom);
+      socket.off(EVENT_KICK, onKick);
+      socket.off(EVENT_MESSAGE, onMessage);
     };
   });
 </script>
