@@ -2,15 +2,14 @@ import { PIECES } from "../constants/pieces";
 import { Piece } from "../objects/Piece";
 import type { Matrix2D, NonEmptyArray, PieceType } from "../types/types";
 
-function randint(a: number, b: number) {
-  const range = b - a;
-
-  return a + Math.floor(Math.random() * (range + 1));
+function randint(max: number) {
+  // max is excluded
+  return Math.floor(Math.random() * max);
 }
 
 export function createPiece() {
   const types = Object.keys(PIECES) as PieceType[];
-  const randomType = types[randint(0, types.length - 1)];
+  const randomType = types[randint(types.length)];
 
   if (!randomType) throw new Error("Key generation failed!");
   const data = PIECES[randomType];
