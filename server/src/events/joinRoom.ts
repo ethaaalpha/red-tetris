@@ -6,15 +6,13 @@ import { User } from "../objects/User";
 import { validateJoinRoom } from "../validate/joinRoom";
 
 // types
-import type { SocketJoinRoomData } from "client-types";
-import type { Socket } from "socket.io";
-import type { Callback } from "../types/types";
+import type { AppSocket } from "../types/socket";
 
-export function registerHandlers(socket: Socket) {
-  socket.on(EVENT_JOIN_ROOM, (data: SocketJoinRoomData, callback: Callback) => {
-    const result = validateJoinRoom(socket, data);
+export function registerHandlers(socket: AppSocket) {
+  socket.on(EVENT_JOIN_ROOM, (payload, callback) => {
+    const result = validateJoinRoom(socket, payload);
     if (!result.status) {
-      callback(false, result.error);
+      callback({ success: false, error: result.error });
       return;
     }
 
@@ -22,12 +20,15 @@ export function registerHandlers(socket: Socket) {
     setUser(socket.id, user);
 
     const room = joinOrCreateRoom(user, result.roomName);
-    socket.join(data.roomName);
+    socket.join(result.roomName);
 
     user.socket.to(result.roomName).emit(EVENT_ROOM_UPDATE, room.asInfo());
 
     console.log(`User ${result.username} joined room ${result.roomName} ${socket.rooms.size}`);
 
-    callback(true, room.asInfo());
+    callback({
+      success: true,
+      data: { roomName: result.roomName, username: result.username, roomInfo: room.asInfo() }
+    });
   });
 }

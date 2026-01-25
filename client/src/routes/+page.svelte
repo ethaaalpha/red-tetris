@@ -18,7 +18,7 @@
   import { getSocket } from "$lib/socket/socket.svelte";
 
   // events
-  import { EVENT_CAN_JOIN_ROOM, EVENT_GET_ROOMS, EVENT_JOIN_ROOM } from "server-events";
+  import { EVENT_CAN_JOIN_ROOM, EVENT_GET_ROOMS } from "server-events";
 
   // types
   import type { SocketJoinRoomData } from "$lib/types/emitData";

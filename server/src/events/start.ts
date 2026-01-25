@@ -1,18 +1,15 @@
-// global
-import { Server, Socket } from "socket.io";
-
 // intern
 import { EVENT_GAME_START } from "../constants/events";
 import { validateStart } from "../validate/start";
 
 // types
-import type { Callback } from "../types/types";
+import type { AppServer, AppSocket } from "../types/socket";
 
-export function registerHandlers(io: Server, socket: Socket) {
-  socket.on(EVENT_GAME_START, (callback: Callback) => {
+export function registerHandlers(io: AppServer, socket: AppSocket) {
+  socket.on(EVENT_GAME_START, (callback) => {
     const result = validateStart(socket);
     if (!result.status) {
-      callback(result.status, result.error);
+      callback({ success: false, error: result.error });
       return;
     }
 
@@ -22,6 +19,6 @@ export function registerHandlers(io: Server, socket: Socket) {
     io.to(result.room.name).emit(EVENT_GAME_START, room.asInfo());
     // then send the board info (with the next 4 pieces) to each person
 
-    callback(true);
+    callback({ success: true });
   });
 }

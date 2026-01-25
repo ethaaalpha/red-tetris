@@ -1,19 +1,15 @@
-// global
-import { Server, Socket } from "socket.io";
-
 // intern
 import { EVENT_MESSAGE } from "../constants/events";
-import { validateChat } from "../validate/chat";
+import { validateMessage } from "../validate/message";
 
 // types
-import type { SocketChatData } from "client-types";
-import type { Callback } from "../types/types";
+import type { AppServer, AppSocket } from "../types/socket";
 
-export function registerHandlers(io: Server, socket: Socket) {
-  socket.on(EVENT_MESSAGE, (data: SocketChatData, callback: Callback) => {
-    const result = validateChat(socket, data);
+export function registerHandlers(io: AppServer, socket: AppSocket) {
+  socket.on(EVENT_MESSAGE, (payload, callback) => {
+    const result = validateMessage(socket, payload);
     if (!result.status) {
-      callback(false, result.error);
+      callback({ success: false, error: result.error });
       return;
     }
 
@@ -25,6 +21,6 @@ export function registerHandlers(io: Server, socket: Socket) {
 
     console.log(`user ${result.current.name} wrote: "${result.message}" to ${result.room.name} `);
 
-    callback(true);
+    callback({ success: true });
   });
 }
