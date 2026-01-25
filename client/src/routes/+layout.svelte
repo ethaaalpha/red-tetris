@@ -13,7 +13,7 @@
   import { ServerOff } from "@lucide/svelte";
 
   // events
-  import { EVENT_USER_CONNECT, EVENT_USER_CONNECT_ERROR } from "server-events";
+  import { EVENT_USER_CONNECT, EVENT_USER_CONNECT_ERROR } from "@app/shared";
 
   let { children } = $props();
 
