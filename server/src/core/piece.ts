@@ -1,6 +1,6 @@
-import { PIECES } from "../constants/pieces";
+import { PIECES, PIECES_TYPES } from "../constants/pieces";
 import { Piece } from "../objects/Piece";
-import type { Matrix2D, NonEmptyArray, PieceType } from "../types/types";
+import { type Matrix2D, type NonEmptyArray } from "../types/types";
 
 function randint(max: number) {
   // max is excluded
@@ -8,8 +8,7 @@ function randint(max: number) {
 }
 
 export function createPiece() {
-  const types = Object.keys(PIECES) as PieceType[];
-  const randomType = types[randint(types.length)];
+  const randomType = PIECES_TYPES[randint(PIECES_TYPES.length)];
 
   if (!randomType) throw new Error("Key generation failed!");
   const data = PIECES[randomType];

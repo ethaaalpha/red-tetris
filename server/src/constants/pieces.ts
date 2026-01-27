@@ -1,5 +1,6 @@
 import type { Matrix2D, PieceType, SocketPieceColor } from "../types/types";
 
+export const PIECES_TYPES = ["I", "J", "L", "O", "S", "T", "Z"] as const;
 export const PIECES: Record<PieceType, { matrix: Matrix2D<number>; color: SocketPieceColor }> = {
   I: {
     matrix: [
