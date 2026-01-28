@@ -13,6 +13,7 @@ export class Game {
   public players: Map<string, Player> = new Map();
   public pieces: Array<Piece> = [];
   public deadPlayers: number = 0;
+  public started: boolean = false;
 
   constructor(users: Map<string, { color: SocketUserColor; user: User }>) {
     const initPiece = this.nextPiece(0);
@@ -22,7 +23,7 @@ export class Game {
     });
   }
 
-  private getPlayer(id: string): Player {
+  public getPlayer(id: string): Player {
     const state = this.players.get(id);
     if (!state) throw new Error("User not existing!");
 

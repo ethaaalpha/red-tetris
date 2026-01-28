@@ -1,3 +1,4 @@
+import type { Game } from "../objects/Game";
 import type { Player } from "../objects/Player";
 import type { ActionData } from "../types/server";
 
@@ -13,8 +14,9 @@ export const actions = {
   }
 };
 
-export function applyMovement(player: Player, key: keyof typeof actions): boolean {
+export function applyMovement(game: Game, player: Player, key: keyof typeof actions): boolean {
   if (player.end) return false;
+  if (!game.started) return false;
 
   const next = player.actualPiece.clone();
 

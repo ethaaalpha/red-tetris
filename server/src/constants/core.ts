@@ -15,6 +15,7 @@ export const WARMUP_RESTART_DELAY = Number(process.env.RESTART_DELAY) || 5;
 export const BOARD_WIDTH = 10;
 export const BOARD_HEIGHT = 20;
 export const GAME_FALL_SLEEP = 500;
+export const GAME_START_DELAY = 3000;
 
 // regex
 export const REGEX_ROOM_AND_USER = /^[a-zA-Z0-9_-]+$/;
