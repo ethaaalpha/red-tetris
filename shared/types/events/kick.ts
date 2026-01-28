@@ -4,9 +4,7 @@ export type EventKickPayload = {
 
 export type EventKickSuccess = void;
 
-export type EventKickError = {
-  username?: string;
-};
+export type EventKickError = Partial<EventKickPayload>;
 
 export type EventKickData = {
   room: string;

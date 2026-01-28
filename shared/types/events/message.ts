@@ -6,9 +6,7 @@ export type EventMessagePayload = {
 
 export type EventMessageSuccess = void;
 
-export type EventMessageError = {
-  room?: string;
-};
+export type EventMessageError = Partial<EventMessagePayload>;
 
 export type EventMessageData = {
   from: string;

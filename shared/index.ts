@@ -13,6 +13,7 @@ export * from "./types/events/warmUp";
 
 export * from "./types/user";
 export * from "./types/room";
+export * from "./types/socket";
 
 // [ CONSTANTS ]
 export * from "./constants/events";

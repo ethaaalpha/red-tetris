@@ -2,7 +2,7 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 // intern
-import { EVENT_KICK, EVENT_ROOM_UPDATE } from "../constants/events";
+import { EVENT_KICK, EVENT_ROOM_UPDATE } from "@app/shared";
 import {
   ERROR_USER_NOT_FOUND,
   ERROR_KICK_PLAYING,

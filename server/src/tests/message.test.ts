@@ -2,7 +2,7 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 // intern
-import { EVENT_MESSAGE } from "../constants/events";
+import { EVENT_MESSAGE } from "@app/shared";
 import { ERROR_NOT_IN_A_ROOM } from "../constants/validateErrors";
 import {
   createClient,

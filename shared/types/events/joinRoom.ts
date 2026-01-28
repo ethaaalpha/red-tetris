@@ -11,7 +11,4 @@ export type EventJoinRoomSuccess = {
   roomInfo: RoomData;
 };
 
-export type EventJoinRoomError = {
-  roomName?: string;
-  username?: string;
-};
+export type EventJoinRoomError = Partial<EventJoinRoomPayload>;

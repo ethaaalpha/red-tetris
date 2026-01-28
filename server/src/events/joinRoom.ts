@@ -1,14 +1,16 @@
+// global
+import { EVENT_JOIN_ROOM, EVENT_ROOM_UPDATE } from "@app/shared";
+
 // intern
-import { EVENT_JOIN_ROOM, EVENT_ROOM_UPDATE } from "../constants/events";
 import { joinOrCreateRoom } from "../core/room";
 import { setUser } from "../core/user";
 import { User } from "../objects/User";
 import { validateJoinRoom } from "../validate/joinRoom";
 
 // types
-import type { AppSocket } from "../types/socket";
+import type { ServerSocket } from "../types/socket";
 
-export function registerHandlers(socket: AppSocket) {
+export function registerHandlers(socket: ServerSocket) {
   socket.on(EVENT_JOIN_ROOM, (payload, callback) => {
     const result = validateJoinRoom(socket, payload);
     if (!result.status) {

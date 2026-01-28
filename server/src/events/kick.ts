@@ -1,12 +1,14 @@
+// global
+import { EVENT_KICK, EVENT_ROOM_UPDATE } from "@app/shared";
+
 // intern
-import { EVENT_KICK, EVENT_ROOM_UPDATE } from "../constants/events";
 import { removeUserFromRoom } from "../core/room";
 import { validateKick } from "../validate/kick";
 
 // types
-import type { AppServer, AppSocket } from "../types/socket";
+import type { AppServer, ServerSocket } from "../types/socket";
 
-export function registerHandlers(io: AppServer, socket: AppSocket) {
+export function registerHandlers(io: AppServer, socket: ServerSocket) {
   socket.on(EVENT_KICK, (payload, callback) => {
     const result = validateKick(socket, payload);
     if (!result.status) {

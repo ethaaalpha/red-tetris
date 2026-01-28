@@ -1,11 +1,13 @@
+// global
+import { EVENT_GAME_START } from "@app/shared";
+
 // intern
-import { EVENT_GAME_START } from "../constants/events";
 import { validateStart } from "../validate/start";
 
 // types
-import type { AppServer, AppSocket } from "../types/socket";
+import type { AppServer, ServerSocket } from "../types/socket";
 
-export function registerHandlers(io: AppServer, socket: AppSocket) {
+export function registerHandlers(io: AppServer, socket: ServerSocket) {
   socket.on(EVENT_GAME_START, (callback) => {
     const result = validateStart(socket);
     if (!result.status) {

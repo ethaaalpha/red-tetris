@@ -62,8 +62,9 @@
     "shared": {
       "name": "@app/shared",
       "version": "1.0.0",
-      "dependencies": {
+      "devDependencies": {
         "prettier": "^3.8.1",
+        "socket.io-client": "^4.8.3",
       },
     },
   },

@@ -1,11 +1,13 @@
+// global
+import { EVENT_MESSAGE } from "@app/shared";
+
 // intern
-import { EVENT_MESSAGE } from "../constants/events";
 import { validateMessage } from "../validate/message";
 
 // types
-import type { AppServer, AppSocket } from "../types/socket";
+import type { AppServer, ServerSocket } from "../types/socket";
 
-export function registerHandlers(io: AppServer, socket: AppSocket) {
+export function registerHandlers(io: AppServer, socket: ServerSocket) {
   socket.on(EVENT_MESSAGE, (payload, callback) => {
     const result = validateMessage(socket, payload);
     if (!result.status) {

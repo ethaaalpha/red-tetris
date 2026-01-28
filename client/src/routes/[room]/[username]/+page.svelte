@@ -44,6 +44,7 @@
     EventMessageData,
     EventMessagePayload,
     RoomData,
+    UserColor,
     UserData
   } from "@app/shared";
   import type { PieceColor } from "$lib/types/piece";
@@ -185,7 +186,7 @@
   }
 
   onMount(() => {
-    localStorage.setItem("username", username.substring(0, USERNAME_MAX_LENGTH)!);
+    localStorage.setItem("username", username.substring(0, USERNAME_MAX_LENGTH));
 
     joinRoom();
 

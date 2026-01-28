@@ -1,11 +1,13 @@
+// global
+import { EVENT_CAN_JOIN_ROOM } from "@app/shared";
+
 // intern
-import { EVENT_CAN_JOIN_ROOM } from "../constants/events";
 import { validateJoinRoom } from "../validate/joinRoom";
 
 // types
-import type { AppSocket } from "../types/socket";
+import type { ServerSocket } from "../types/socket";
 
-export function registerHandlers(socket: AppSocket) {
+export function registerHandlers(socket: ServerSocket) {
   socket.on(EVENT_CAN_JOIN_ROOM, (payload, callback) => {
     const result = validateJoinRoom(socket, payload);
     if (!result.status) {

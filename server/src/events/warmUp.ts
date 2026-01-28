@@ -1,11 +1,13 @@
+// global
+import { EVENT_WARM_UP } from "@app/shared";
+
 // intern
-import { EVENT_WARM_UP } from "../constants/events";
 import { validateWarmUp } from "../validate/warmUp";
 
 // types
-import type { AppSocket } from "../types/socket";
+import type { ServerSocket } from "../types/socket";
 
-export function registerHandlers(socket: AppSocket) {
+export function registerHandlers(socket: ServerSocket) {
   socket.on(EVENT_WARM_UP, (callback) => {
     const result = validateWarmUp(socket);
     if (!result.status) {

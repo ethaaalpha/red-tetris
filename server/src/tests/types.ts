@@ -1,5 +1,5 @@
-import type { Socket as ClientSocket } from "socket.io-client";
-import type { AppServer, AppSocket } from "../types/socket";
+import type { AppClientSocket } from "@app/shared";
+import type { AppServer, ServerSocket } from "../types/socket";
 
 export interface TestServerData {
   io: AppServer;
@@ -8,6 +8,6 @@ export interface TestServerData {
 }
 
 export interface TestSocket {
-  client: ClientSocket;
-  server: AppSocket;
+  client: AppClientSocket;
+  server: ServerSocket;
 }

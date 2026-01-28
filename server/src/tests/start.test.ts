@@ -2,7 +2,7 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 // intern
-import { EVENT_GAME_START } from "../constants/events";
+import { EVENT_GAME_START } from "@app/shared";
 import {
   ERROR_NOT_HOST,
   ERROR_NOT_IN_A_ROOM,

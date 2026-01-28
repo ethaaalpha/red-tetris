@@ -1,9 +1,9 @@
 // global
+import { EVENT_JOIN_ROOM, EVENT_ROOM_UPDATE } from "@app/shared";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 // intern
 import { ROOM_MAX, ROOM_MAX_USERS, WARMUP_RESTART_DELAY } from "../constants/core";
-import { EVENT_JOIN_ROOM, EVENT_ROOM_UPDATE } from "../constants/events";
 import {
   ERROR_ALREADY_IN_A_ROOM,
   ERROR_MAX_ROOMS,

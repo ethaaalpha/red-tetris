@@ -1,9 +1,9 @@
 // global
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { EVENT_GET_ROOMS } from "@app/shared";
 
 // intern
 import { ROOM_MAX_USERS } from "../constants/core";
-import { EVENT_GET_ROOMS } from "../constants/events";
 import { getRoom, setRoom } from "../core/room";
 import { Room } from "../objects/Room";
 import { emitAsync, fakeUser, setupTestServer, shutdownTestServer } from "./utils";

@@ -22,7 +22,7 @@ import { registerHandlers as warmUpHandler } from "./src/events/warmUp";
 // types
 import type { Express } from "express";
 import type { ServerData } from "./src/types/server";
-import type { AppServer, AppSocket } from "./src/types/socket";
+import type { AppServer, ServerSocket } from "./src/types/socket";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -37,7 +37,7 @@ function configureHttp(app: Express) {
 }
 
 function configureSocket(io: AppServer) {
-  io.on("connection", (socket: AppSocket) => {
+  io.on("connection", (socket: ServerSocket) => {
     console.log("New client connected");
 
     canJoinRoomHandler(socket);

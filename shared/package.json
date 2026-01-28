@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.ts",
   "types": "index.ts",
-  "dependencies": {
-    "prettier": "^3.8.1"
+  "devDependencies": {
+    "prettier": "^3.8.1",
+    "socket.io-client": "^4.8.3"
   }
 }

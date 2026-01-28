@@ -1,23 +1,14 @@
 import type { UserColor } from "@app/shared";
 
-type PieceColor =
-  | "red"
-  | "blue"
-  | "green"
-  | "yellow"
-  | "purple"
-  | "orange"
-  | "cyan"
-  | "grey"
-  | "empty";
+type PieceColor = UserColor | "empty";
 
 interface Piece {
   size: number;
-  color: PieceColor | UserColor;
+  color: PieceColor;
 }
 
 type PieceColorDetail = Record<
-  PieceColor | UserColor,
+  PieceColor,
   {
     main: string;
     dark: string;

@@ -1,13 +1,12 @@
 import { io } from "socket.io-client";
-import type { Socket } from "socket.io-client";
-import type { ClientToServerEvents, ServerToClientEvents } from "@app/shared";
+
 import { PUBLIC_SERVER_ADDRESS, PUBLIC_SERVER_PORT } from "$env/static/public";
 
-type AppSocket = Socket<ServerToClientEvents, ClientToServerEvents>;
+import type { AppClientSocket } from "@app/shared";
 
-let socket: AppSocket | null = null;
+let socket: AppClientSocket | null = null;
 
-export function getSocket(): AppSocket {
+export function getSocket(): AppClientSocket {
   if (socket) {
     return socket;
   }

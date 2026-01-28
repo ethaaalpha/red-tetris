@@ -4,7 +4,7 @@ import { expect } from "vitest";
 
 // intern
 import { init } from "../../app";
-import { EVENT_JOIN_ROOM } from "../constants/events";
+import { EVENT_JOIN_ROOM } from "@app/shared";
 import { getRoom, getRooms } from "../core/room";
 import { getUsers } from "../core/user";
 import { Room } from "../objects/Room";
@@ -14,15 +14,15 @@ import { User } from "../objects/User";
 import type { AddressInfo } from "net";
 import type { Socket as ClientSocket } from "socket.io-client";
 import type { SocketResponse } from "@app/shared";
-import type { AppServer, AppSocket } from "../types/socket";
+import type { AppServer, ServerSocket } from "../types/socket";
 import type { TestServerData, TestSocket } from "./types";
 
 export function createClient(address: string, io: AppServer): Promise<TestSocket> {
   return new Promise((resolve) => {
     const client = ioc(address);
-    let server: AppSocket;
+    let server: ServerSocket;
 
-    io.once("connection", (socket: AppSocket) => {
+    io.once("connection", (socket: ServerSocket) => {
       server = socket;
     });
     client.once("connect", () => {
@@ -102,5 +102,5 @@ export async function joinRoom(
 }
 
 export function fakeUser(id: string, name: string): User {
-  return new User(id, name, {} as AppSocket);
+  return new User(id, name, {} as ServerSocket);
 }
