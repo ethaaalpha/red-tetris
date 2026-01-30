@@ -1,5 +1,5 @@
 import { BOARD_HEIGHT, BOARD_WIDTH } from "../constants/core";
-import type { Matrix2D, NonEmptyArray } from "../types/types";
+import type { Matrix2D, NonEmptyArray } from "@app/shared";
 import { Piece } from "./Piece";
 
 export class Board {

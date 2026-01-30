@@ -1,7 +1,7 @@
 import { describe, expect, it, beforeEach } from "vitest";
 import { Board } from "../objects/Board";
 import { Piece } from "../objects/Piece";
-import { PIECES } from "../constants/pieces";
+import { PIECES } from "@app/shared";
 
 let board: Board;
 
