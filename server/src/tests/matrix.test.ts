@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { Piece } from "../objects/Piece";
-import { PIECES } from "../constants/pieces";
-import type { Matrix2D } from "../types/types";
+import { PIECES, type Matrix2D } from "@app/shared";
 
 it("non rectangular matrix", () => {
   const matrix: Matrix2D<number> = [

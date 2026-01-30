@@ -1,6 +1,5 @@
-import { PIECES, PIECES_TYPES } from "../constants/pieces";
+import { PIECES, PIECES_TYPES, type Matrix2D, type NonEmptyArray } from "@app/shared";
 import { Piece } from "../objects/Piece";
-import { type Matrix2D, type NonEmptyArray } from "../types/types";
 
 function randint(max: number) {
   // max is excluded
