@@ -8,7 +8,7 @@ import {
   EVENT_GAME_INFO,
   EVENT_GAME_PENALITY,
   EVENT_GAME_SPECTRUM
-} from "../constants/events";
+} from "@app/shared";
 
 export const helpers = {
   applyPenality(game: Game, from: Player) {

@@ -7,7 +7,7 @@ import {
   EVENT_GAME_INFO,
   EVENT_GAME_PENALITY,
   EVENT_GAME_START
-} from "../constants/events";
+} from "@app/shared";
 import { getRoomBySocket } from "../core/room";
 import {
   createClient,
@@ -25,7 +25,7 @@ import type { Room } from "../objects/Room";
 import type { Game } from "../objects/Game";
 import { BOARD_WIDTH } from "../constants/core";
 import { Piece } from "../objects/Piece";
-import { PIECES } from "../constants/pieces";
+import { PIECES } from "@app/shared";
 
 let ctx: TestServerData;
 

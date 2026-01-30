@@ -1,5 +1,6 @@
 import type { UserColor } from "../types/user";
 import type { PIECES_TYPES } from "../constants/pieces";
+import type { Matrix2D } from "./matrix";
 
 export type PieceType = (typeof PIECES_TYPES)[number];
 
@@ -19,4 +20,11 @@ type PieceColorDetail = Record<
   }
 >;
 
-export type { PieceColor, Piece, PieceColorDetail };
+type PieceData = {
+  matrix: Matrix2D<number>;
+  x: number;
+  y: number;
+  color: PieceColor;
+}
+
+export type { PieceData, PieceColor, Piece, PieceColorDetail };

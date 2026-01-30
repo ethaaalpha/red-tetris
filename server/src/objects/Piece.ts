@@ -1,5 +1,5 @@
 import { asMatrix } from "../core/piece";
-import type { Matrix2D, PieceType, PieceColor } from "@app/shared";
+import type { Matrix2D, PieceType, PieceColor, PieceData } from "@app/shared";
 
 export class Piece {
   public rotation: number = 0;
@@ -75,5 +75,14 @@ export class Piece {
     copy.rotation = rotation;
     copy.alreadyMoved = alreadyMoved;
     return copy;
+  }
+
+  public asData(): PieceData {
+    return {
+      matrix: this.matrix,
+      x: this.x,
+      y: this.y,
+      color: this.color
+    };
   }
 }

@@ -1,12 +1,7 @@
 import type { Piece } from "./Piece";
 import type { User } from "./User";
 import { createPiece } from "../core/piece";
-import type {
-  Matrix2D,
-  SocketGameInfoData,
-  SocketGameSpectrumData,
-  SocketUserColor
-} from "../types/types";
+import type { GameData, GameSpectrum, Matrix2D, UserColor } from "@app/shared";
 import { Player } from "./Player";
 
 export class Game {
@@ -15,7 +10,7 @@ export class Game {
   public deadPlayers: number = 0;
   public started: boolean = false;
 
-  constructor(users: Map<string, { color: SocketUserColor; user: User }>) {
+  constructor(users: Map<string, { color: UserColor; user: User }>) {
     const initPiece = this.nextPiece(0);
 
     users.forEach((data, id) => {
@@ -46,12 +41,12 @@ export class Game {
     return piece;
   }
 
-  public getGameInfo(id: string): SocketGameInfoData {
+  public getGameInfo(id: string): GameData {
     const player = this.getPlayer(id);
 
     // + 1 for the actual piece
     const nextPieces = Array.from({ length: 3 }, (_, i) =>
-      this.nextPiece(i + 1 + player.board.placedPieces)
+      this.nextPiece(i + 1 + player.board.placedPieces).asData()
     );
 
     return {
@@ -63,7 +58,7 @@ export class Game {
     };
   }
 
-  public getGameSpectrum(id: string): SocketGameSpectrumData {
+  public getGameSpectrum(id: string): GameSpectrum {
     const player = this.getPlayer(id);
 
     // simplified matrix as in the subject
