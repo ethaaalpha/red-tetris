@@ -26,16 +26,8 @@ export class Board {
     // useful to detect if a movement is valid or if a piece reach the bottom
     if (!piece.matrix[0]) throw new Error("Invalid piece matrix!");
 
-    const pieceHeight = piece.matrix.length;
-    const pieceWidth = piece.matrix[0].length;
-
-    for (let i = 0; i < pieceHeight; i++) {
-      for (let j = 0; j < pieceWidth; j++) {
-        const pieceRow = piece.matrix[i];
-        if (!pieceRow) return false;
-        const pieceCell = pieceRow[j];
-        if (pieceCell === undefined) return false;
-
+    return piece.matrix.every((pieceRow, i) => {
+      return pieceRow.every((pieceCell, j) => {
         if (pieceCell === 1) {
           const boardRow = this.matrix[piece.x + i];
           // outside of board
@@ -44,9 +36,9 @@ export class Board {
           // outside of board or colisision
           if (boardCell === undefined || boardCell === 1) return false;
         }
-      }
-    }
-    return true;
+        return true;
+      })
+    })
   }
 
   public place(piece: Piece) {
