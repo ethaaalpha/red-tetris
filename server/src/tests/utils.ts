@@ -81,17 +81,13 @@ export async function shutdownTestServer(ctx: TestServerData): Promise<void> {
   getUsers().clear();
 }
 
-export async function joinRoom(
-  test: TestSocket,
-  roomname: string,
-  username: string
-): Promise<Room> {
+export async function joinRoom(test: TestSocket, room: string, username: string): Promise<Room> {
   await emitAsync(test.client, EVENT_JOIN_ROOM, {
     username: username,
-    roomName: roomname
+    room: room
   });
 
-  const room = getRoom(roomname);
+  const room = getRoom(room);
 
   if (!room) {
     expect.fail("Room isn't defined!");

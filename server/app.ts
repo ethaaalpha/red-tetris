@@ -44,7 +44,7 @@ function configureSocket(io: AppServer) {
     messageHandler(io, socket);
     disconnectingHandler(io, socket);
     getRoomsHandler(socket);
-    joinRoomHandler(socket);
+    joinRoomHandler(io, socket);
     kickHandler(io, socket);
     startHandler(io, socket);
     leaveRoomHandler(io, socket);

@@ -21,7 +21,7 @@
   import TextInput from "$lib/components/TextInput.svelte";
 
   // stores
-  import { setKickedDialog, setKickedRoom } from "$lib/stores/kick.svelte";
+  import { setKickedDialog, setKickedRoom } from "$lib/state/kick.svelte";
 
   // socket
   import { getSocket } from "$lib/socket/socket.svelte";
@@ -76,10 +76,10 @@
   let joined = $state(false);
 
   function joinRoom() {
-    const data: EventJoinRoomPayload = { username: username || "", roomName: room || "" };
+    const data: EventJoinRoomPayload = { username, room };
     socket.emit(EVENT_JOIN_ROOM, data, (response) => {
       if (!response.success) {
-        roomError = response.error.roomName;
+        roomError = response.error.room;
         userError = response.error.username;
         if (!userError && !roomError) unusualError = "Failed to join room";
 
@@ -91,19 +91,18 @@
           }
         }, 1000);
       } else {
-        roomData = response.data.roomInfo;
         username = response.data.username;
-        room = roomData.name;
+        room = response.data.room;
 
-        socket.on(EVENT_ROOM_UPDATE, (roomUpdateData) => {
-          roomData = roomUpdateData;
-        });
-
-        const player = roomData.players.find((p) => p.username === username)!;
-        userColor = pieceColors[player.color].light;
+        // const player = roomData.players.find((p) => p.username === username)!;
+        // userColor = pieceColors[player.color].light;
         joined = true;
       }
     });
+  }
+
+  function updateRoomData(roomUpdateData: RoomData) {
+    roomData = roomUpdateData;
   }
 
   // leave
@@ -191,10 +190,12 @@
 
     socket.on(EVENT_KICK, onKick);
     socket.on(EVENT_MESSAGE, onMessage);
+    socket.on(EVENT_ROOM_UPDATE, updateRoomData);
 
     return () => {
       socket.off(EVENT_KICK, onKick);
       socket.off(EVENT_MESSAGE, onMessage);
+      socket.off(EVENT_ROOM_UPDATE, updateRoomData);
     };
   });
 </script>

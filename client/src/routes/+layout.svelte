@@ -13,7 +13,8 @@
   import { ServerOff } from "@lucide/svelte";
 
   // events
-  import { EVENT_USER_CONNECT, EVENT_USER_CONNECT_ERROR } from "@app/shared";
+  import { EVENT_ROOM_UPDATE, EVENT_USER_CONNECT, EVENT_USER_CONNECT_ERROR } from "@app/shared";
+  import { setRoomData } from "$lib/state/room.svelte";
 
   let { children } = $props();
 

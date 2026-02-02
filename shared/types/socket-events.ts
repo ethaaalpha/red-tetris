@@ -33,7 +33,7 @@ export interface ClientToServerEvents {
   // to remove asap !
   [shared.EVENT_CAN_JOIN_ROOM]: SocketEvent<
     shared.EventJoinRoomPayload,
-    { roomName: string; username: string },
+    { room: string; username: string },
     shared.EventJoinRoomError
   >;
   [shared.EVENT_MESSAGE]: SocketEvent<

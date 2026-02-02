@@ -15,6 +15,6 @@ export function registerHandlers(socket: ServerSocket) {
       return;
     }
 
-    callback({ success: true, data: { roomName: result.roomName, username: result.username } });
+    callback({ success: true, data: { room: result.room, username: result.username } });
   });
 }

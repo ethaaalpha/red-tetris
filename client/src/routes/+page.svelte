@@ -13,7 +13,7 @@
   import { Gamepad2, Info } from "@lucide/svelte";
 
   // stores
-  import { kickState, setKickedDialog } from "$lib/stores/kick.svelte";
+  import { kickState, setKickedDialog } from "$lib/state/kick.svelte";
 
   // socket
   import { getSocket } from "$lib/socket/socket.svelte";
@@ -38,22 +38,22 @@
   // join room
   let username = $state("");
   let room = $state("");
-  let roomNameInput = $state<HTMLInputElement>();
+  let roomInput = $state<HTMLInputElement>();
   let emitting = $state(false);
 
   function canJoinRoom() {
     emitting = true;
     localStorage.setItem("username", username);
-    const data: EventJoinRoomPayload = { username, roomName: room };
+    const data: EventJoinRoomPayload = { username, room: room };
     socket.emit(EVENT_CAN_JOIN_ROOM, data, (response) => {
       if (!response.success) {
         usernameError = response.error.username;
-        roomError = response.error.roomName;
+        roomError = response.error.room;
         emitting = false;
       } else {
         goto(
           resolve("/[room]/[username]", {
-            room: data.roomName,
+            room: data.room,
             username: data.username
           })
         );
@@ -113,13 +113,13 @@
           placeholder="Username"
           error={usernameError}
           onEnter={() => {
-            roomNameInput?.focus();
+            roomInput?.focus();
           }}
           regex={REGEX_USER_AND_ROOM}
         />
         <TextInput
           bind:value={room}
-          bind:input={roomNameInput}
+          bind:input={roomInput}
           maxlength={ROOM_NAME_MAX_LENGTH}
           placeholder="Room Name"
           error={roomError}

@@ -54,11 +54,11 @@ describe("invalid join", () => {
 
     await emitAsync<unknown, EventJoinRoomError>(ctx.test1.client, EVENT_JOIN_ROOM, {
       username: "user1",
-      roomName: "example"
+      room: "example"
     }).then((response) => {
       expect(response.success).toBe(false);
       if (!response.success) {
-        expect(response.error.roomName).toBe(ERROR_ROOM_IS_FULL);
+        expect(response.error.room).toBe(ERROR_ROOM_IS_FULL);
       }
     });
   });
@@ -69,11 +69,11 @@ describe("invalid join", () => {
     }
     await emitAsync<unknown, EventJoinRoomError>(ctx.test1.client, EVENT_JOIN_ROOM, {
       username: "user1",
-      roomName: "example"
+      room: "example"
     }).then((response) => {
       expect(response.success).toBe(false);
       if (!response.success) {
-        expect(response.error.roomName).toBe(ERROR_MAX_ROOMS);
+        expect(response.error.room).toBe(ERROR_MAX_ROOMS);
       }
     });
   });
@@ -83,7 +83,7 @@ describe("invalid join", () => {
 
     await emitAsync<unknown, EventJoinRoomError>(ctx.test1.client, EVENT_JOIN_ROOM, {
       username: "name",
-      roomName: "example"
+      room: "example"
     }).then((response) => {
       expect(response.success).toBe(false);
       if (!response.success) {
@@ -95,15 +95,15 @@ describe("invalid join", () => {
   it("already in a room", async () => {
     await emitAsync(ctx.test1.client, EVENT_JOIN_ROOM, {
       username: "user1",
-      roomName: "example"
+      room: "example"
     });
     await emitAsync<unknown, EventJoinRoomError>(ctx.test1.client, EVENT_JOIN_ROOM, {
       username: "user1",
-      roomName: "example2"
+      room: "example2"
     }).then((response) => {
       expect(response.success).toBe(false);
       if (!response.success) {
-        expect(response.error.roomName).toBe(ERROR_ALREADY_IN_A_ROOM);
+        expect(response.error.room).toBe(ERROR_ALREADY_IN_A_ROOM);
       }
     });
   });
@@ -114,11 +114,11 @@ describe("invalid join", () => {
 
     await emitAsync<unknown, EventJoinRoomError>(ctx.test1.client, EVENT_JOIN_ROOM, {
       username: "user1",
-      roomName: "example"
+      room: "example"
     }).then((response) => {
       expect(response.success).toBe(false);
       if (!response.success) {
-        expect(response.error.roomName).toBe(ERROR_PLAYING_ROOM);
+        expect(response.error.room).toBe(ERROR_PLAYING_ROOM);
       }
     });
   });
@@ -127,7 +127,7 @@ describe("invalid join", () => {
 it("valid join", async () => {
   const payload = {
     username: "example",
-    roomName: "example"
+    room: "example"
   };
   await emitAsync<EventJoinRoomSuccess>(ctx.test1.client, EVENT_JOIN_ROOM, payload).then(
     (response) => {
@@ -159,11 +159,11 @@ it("host changed", async () => {
 
   await emitAsync(ctx.test1.client, EVENT_JOIN_ROOM, {
     username: "user1",
-    roomName: "example"
+    room: "example"
   });
   await emitAsync(test2.client, EVENT_JOIN_ROOM, {
     username: "user2",
-    roomName: "example"
+    room: "example"
   });
 
   const data1 = await roomListener;
