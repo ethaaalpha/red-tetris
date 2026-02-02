@@ -20,15 +20,15 @@
   import Dialog from "$lib/components/Dialog.svelte";
   import TextInput from "$lib/components/TextInput.svelte";
 
-  // stores
-  import { setKickedDialog, setKickedRoom } from "$lib/state/kick.svelte";
+  // state
+  import { kickState } from "$lib/state/kick.svelte";
+  import { roomState } from "$lib/state/room.svelte";
 
   // socket
   import { getSocket } from "$lib/socket/socket.svelte";
 
   // events
   import {
-    EVENT_ROOM_UPDATE,
     EVENT_JOIN_ROOM,
     EVENT_LEAVE_ROOM,
     EVENT_KICK,
@@ -44,7 +44,6 @@
     EventMessageData,
     EventMessagePayload,
     PieceColor,
-    RoomData,
     UserData
   } from "@app/shared";
 
@@ -69,11 +68,7 @@
   const socket = getSocket();
 
   // data
-  let roomData = $state<RoomData>();
   let userColor = $state<string>();
-
-  // join
-  let joined = $state(false);
 
   function joinRoom() {
     const data: EventJoinRoomPayload = { username, room };
@@ -93,16 +88,11 @@
       } else {
         username = response.data.username;
         room = response.data.room;
+        userColor = response.data.color;
 
-        // const player = roomData.players.find((p) => p.username === username)!;
-        // userColor = pieceColors[player.color].light;
-        joined = true;
+        roomState.joined = true;
       }
     });
-  }
-
-  function updateRoomData(roomUpdateData: RoomData) {
-    roomData = roomUpdateData;
   }
 
   // leave
@@ -138,8 +128,8 @@
   }
 
   function onKick(data: EventKickData) {
-    setKickedRoom(data.room);
-    setKickedDialog(true);
+    kickState.room = data.room;
+    kickState.show = true;
     goto(resolve("/"));
   }
 
@@ -178,7 +168,7 @@
         warmUp = true;
         setTimeout(() => {
           showWarmUpRestart = true;
-        }, roomData?.warmUpRestartDelay || 5000);
+        }, roomState.data?.warmUpRestartDelay || 5000);
       }
     });
   }
@@ -186,23 +176,21 @@
   onMount(() => {
     localStorage.setItem("username", username.substring(0, USERNAME_MAX_LENGTH));
 
-    joinRoom();
+    if (!roomState.joined) joinRoom();
 
     socket.on(EVENT_KICK, onKick);
     socket.on(EVENT_MESSAGE, onMessage);
-    socket.on(EVENT_ROOM_UPDATE, updateRoomData);
 
     return () => {
       socket.off(EVENT_KICK, onKick);
       socket.off(EVENT_MESSAGE, onMessage);
-      socket.off(EVENT_ROOM_UPDATE, updateRoomData);
     };
   });
 </script>
 
 <div class="flex h-screen items-center justify-center bg-dark-primary gap-32">
   <!-- error & redirect -->
-  {#if !joined}
+  {#if !roomState.joined}
     <div class="bg-dark-secondary px-8 py-4 ring-border ring">
       <div class="text-center">
         {#if errors.length > 0}
@@ -229,15 +217,15 @@
     </div>
 
     <!-- connected -->
-  {:else if roomData}
+  {:else if roomState.data}
     <div class="h-[640px] flex">
       <div class="p-4 bg-dark-secondary border border-border w-[360px] h-full flex flex-col">
         <h1 class="text-center text-red-primary overflow-hidden text-ellipsis text-3xl pb-2">
           {room}
         </h1>
-        <span class="text-center text-xl">{roomData.userCount} / {roomData.max}</span>
+        <span class="text-center text-xl">{roomState.data.userCount} / {roomState.data.max}</span>
         <ul class="py-4">
-          {#each roomData.players as player, index (player.color)}
+          {#each roomState.data.players as player, index (player.color)}
             <li
               class="p-2 text-lg flex items-center gap-2 group/list {username === player.username
                 ? `border-l-2`
@@ -250,10 +238,10 @@
               <span class="overflow-hidden text-ellipsis">
                 {player.username}
               </span>
-              {#if roomData.host === player.username}
+              {#if roomState.data.host === player.username}
                 <Crown color="#FFC832" />
               {/if}
-              {#if roomData.host === username && player.username !== username}
+              {#if roomState.data.host === username && player.username !== username}
                 <button
                   onclick={() => handleKickUser(player)}
                   class="ml-auto btn btn-secondary group/button group-hover/list:opacity-100 opacity-0 duration-75 p-1"
@@ -266,7 +254,7 @@
           {/each}
         </ul>
         <div class="mt-auto space-y-4">
-          {#if roomData.host === username}
+          {#if roomState.data.host === username}
             <button
               onclick={() => (showLeaveDialog = true)}
               class="btn btn-secondary text-lg py-1.5 w-full"
@@ -276,7 +264,7 @@
           {:else}
             <p class="text-center text-white/70">Waiting for the host to start...</p>
           {/if}
-          {#if roomData.host === username}
+          {#if roomState.data.host === username}
             <button
               class="btn btn-primary w-full text-3xl py-3 flex items-center justify-center gap-4"
               style="--btn-depth: 6px;"

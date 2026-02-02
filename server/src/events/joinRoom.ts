@@ -30,7 +30,7 @@ export function registerHandlers(io: AppServer, socket: ServerSocket) {
 
     callback({
       success: true,
-      data: { room: result.room, username: result.username, roomInfo: room.asInfo() }
+      data: { room: result.room, username: result.username, color: user.color }
     });
   });
 }

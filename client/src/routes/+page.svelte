@@ -12,14 +12,15 @@
   import TextInput from "$lib/components/TextInput.svelte";
   import { Gamepad2, Info } from "@lucide/svelte";
 
-  // stores
-  import { kickState, setKickedDialog } from "$lib/state/kick.svelte";
+  // state
+  import { kickState } from "$lib/state/kick.svelte";
+  import { roomState } from "$lib/state/room.svelte";
 
   // socket
   import { getSocket } from "$lib/socket/socket.svelte";
 
   // events
-  import { EVENT_CAN_JOIN_ROOM, EVENT_GET_ROOMS } from "@app/shared";
+  import { EVENT_GET_ROOMS, EVENT_JOIN_ROOM } from "@app/shared";
 
   // types
   import type { EventJoinRoomPayload, RoomListData } from "@app/shared";
@@ -44,13 +45,15 @@
   function canJoinRoom() {
     emitting = true;
     localStorage.setItem("username", username);
-    const data: EventJoinRoomPayload = { username, room: room };
-    socket.emit(EVENT_CAN_JOIN_ROOM, data, (response) => {
+    const data: EventJoinRoomPayload = { username, room };
+    socket.emit(EVENT_JOIN_ROOM, data, (response) => {
       if (!response.success) {
         usernameError = response.error.username;
         roomError = response.error.room;
         emitting = false;
       } else {
+        roomState.joined = true;
+
         goto(
           resolve("/[room]/[username]", {
             room: data.room,
@@ -216,14 +219,7 @@
   </Dialog>
 </div>
 
-<Dialog
-  icon={Info}
-  confirm="ok"
-  title="You have been kicked"
-  open={kickState.show}
-  confirmCallback={() => setKickedDialog(false)}
-  onclose={() => setKickedDialog(false)}
->
+<Dialog bind:open={kickState.show} icon={Info} confirm="ok" title="You have been kicked">
   <p class="text-white/75">
     You have been kicked from <span class="text-red-accent">{kickState.room}</span>
   </p>
