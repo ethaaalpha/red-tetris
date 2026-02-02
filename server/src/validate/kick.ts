@@ -42,7 +42,7 @@ export function validateKick(socket: Socket, data: EventKickPayload): ValidateKi
   const current = getUser(socket.id);
   const room = getRoomBySocket(socket);
 
-  if (current === undefined || room === undefined) {
+  if (!current || !room) {
     return { status: false, error: { username: ERROR_NOT_IN_A_ROOM } };
   }
   if (result.data.username === current.name) {

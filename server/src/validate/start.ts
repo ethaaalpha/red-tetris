@@ -23,7 +23,7 @@ export function validateStart(socket: Socket): ValideStartResult {
   const current = getUser(socket.id);
   const room = getRoomBySocket(socket);
 
-  if (current === undefined || room === undefined) {
+  if (!current || !room) {
     return { status: false, error: { room: ERROR_NOT_IN_A_ROOM } };
   }
   if (room.host != current) {

@@ -11,7 +11,7 @@ export function registerHandlers(socket: ServerSocket) {
   socket.on(EVENT_WARM_UP, (callback) => {
     const result = validateWarmUp(socket);
     if (!result.status) {
-      callback({ success: false, error: result.error });
+      callback({ success: false });
       return;
     }
 
