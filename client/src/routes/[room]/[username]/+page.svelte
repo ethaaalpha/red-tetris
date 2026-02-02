@@ -44,6 +44,7 @@
     EventMessageData,
     EventMessagePayload,
     PieceColor,
+    UserColor,
     UserData
   } from "@app/shared";
 
@@ -67,8 +68,12 @@
   // socket
   const socket = getSocket();
 
-  // data
-  let userColor = $state<string>(roomState.color);
+  // color
+  let userColor = $state<string>(getColor(roomState.color));
+
+  function getColor(color: UserColor) {
+    return pieceColors[color].light;
+  }
 
   function joinRoom() {
     const data: EventJoinRoomPayload = { username, room };
@@ -88,7 +93,7 @@
       } else {
         username = response.data.username;
         room = response.data.room;
-        userColor = response.data.color;
+        userColor = getColor(response.data.color);
 
         roomState.joined = true;
       }
