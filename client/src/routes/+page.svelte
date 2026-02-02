@@ -53,6 +53,7 @@
         emitting = false;
       } else {
         roomState.joined = true;
+        roomState.color = response.data.color;
 
         goto(
           resolve("/[room]/[username]", {

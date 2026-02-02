@@ -68,7 +68,7 @@
   const socket = getSocket();
 
   // data
-  let userColor = $state<string>();
+  let userColor = $state<string>(roomState.color);
 
   function joinRoom() {
     const data: EventJoinRoomPayload = { username, room };
