@@ -3,10 +3,10 @@ import { EVENT_WARMUP_START } from "@app/shared";
 
 // intern
 import { validateWarmUp } from "../validate/warmUp";
+import { warmupLoop } from "../core/warmup";
 
 // types
 import type { AppServer, ServerSocket } from "../types/socket";
-import { warmupLoop } from "../core/warmup";
 
 export function registerHandlers(io: AppServer, socket: ServerSocket) {
   socket.on(EVENT_WARMUP_START, (callback) => {

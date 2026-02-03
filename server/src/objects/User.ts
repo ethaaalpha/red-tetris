@@ -1,10 +1,12 @@
 // types
 import type { UserColor } from "@app/shared";
+import type { ServerSocket } from "../types/socket";
+
+// intern
 import { Game } from "./Game";
 
 // const
 import { WARMUP_RESTART_DELAY } from "../constants/core";
-import type { ServerSocket } from "../types/socket";
 
 export class User {
   public color: UserColor = "cyan";
