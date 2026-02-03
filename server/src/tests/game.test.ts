@@ -143,7 +143,7 @@ describe("game loop helpers", () => {
     });
   });
 
-  it.only("restart game, same room", async () => {
+  it("restart game, same room", async () => {
     await vi.advanceTimersToNextTimerAsync();
 
     const player1 = game.getPlayer(test1.server.id);
@@ -162,8 +162,8 @@ describe("game loop helpers", () => {
     // instant death
     await vi.advanceTimersToNextTimerAsync();
 
-    expect(player1.end).toBe(true);
-    expect(player2.end).toBe(true);
+    expect(player1.alive).toBe(false);
+    expect(player2.alive).toBe(false);
     expect(game.isFinish()).toBe(true);
 
     await listener1;

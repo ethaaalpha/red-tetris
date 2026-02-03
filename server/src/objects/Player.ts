@@ -6,7 +6,7 @@ import type { User } from "./User";
 export class Player {
   public board = new Board();
   public score = 0;
-  public end = false;
+  public alive = true;
   public actualPiece: Piece;
 
   constructor(

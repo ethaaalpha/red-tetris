@@ -7,7 +7,6 @@ import { Player } from "./Player";
 export class Game {
   public players: Map<string, Player> = new Map();
   public pieces: Array<Piece> = [];
-  public deadPlayers: Array<string> = [];
   public started: boolean = false;
 
   constructor(users: Map<string, { color: UserColor; user: User }>) {
@@ -25,8 +24,12 @@ export class Game {
     return state;
   }
 
+  public getDeadPlayers(): Player[] {
+    return [...this.players.values()].filter((p) => !p.alive);
+  }
+
   public isFinish(): boolean {
-    return this.deadPlayers.length === this.players.size;
+    return this.getDeadPlayers().length === this.players.size;
   }
 
   public nextPiece(i: number): Piece {
@@ -54,8 +57,7 @@ export class Game {
       nextPieces: nextPieces,
       actualPiece: player.actualPiece,
       score: player.score,
-      end: player.end,
-      deadPlayers: this.deadPlayers
+      alive: player.alive
     };
   }
 
@@ -79,8 +81,8 @@ export class Game {
     return {
       matrix: simplifiedMatrix,
       score: player.score,
-      end: player.end,
-      username: player.user.name
+      username: player.user.name,
+      alive: player.alive
     };
   }
 }

@@ -13,7 +13,7 @@ import {
 export const helpers = {
   applyPenality(game: Game, from: Player) {
     game.players.forEach((player) => {
-      if (player.end || player === from) return;
+      if (!player.alive || player === from) return;
       player.board.addRestrictedLine();
     });
   },
@@ -42,8 +42,7 @@ export const helpers = {
       }
 
       if (player.hasLost()) {
-        player.end = true;
-        game.deadPlayers.push(player.user.name);
+        player.alive = false;
       } else {
         player.score++;
       }
@@ -70,7 +69,7 @@ export async function gameLoop(room: Room, io: Server) {
   // the game runner
   const timer = setInterval(() => {
     game.players.forEach((player, id) => {
-      if (player.end) return;
+      if (!player.alive) return;
 
       const { penality, attached } = helpers.handleGravity(game, player);
       if (game.isFinish()) {
@@ -88,8 +87,8 @@ export async function gameLoop(room: Room, io: Server) {
         });
       }
 
-      if (attached) {
-        // to avoid useless updates
+      if (attached || !player.alive) {
+        // warm only lose/attach new piece
         io.to(room.name).emit(EVENT_GAME_SPECTRUM, game.getGameSpectrum(id));
       }
 
