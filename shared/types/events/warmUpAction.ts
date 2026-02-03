@@ -1,9 +1,9 @@
 import type { GameAction, GameData } from "../game"
 
-export type EventWarmupActionPayload = {
+export type EventWarmUpActionPayload = {
   action: GameAction
 }
 
-export type EventWarmupActionSuccess = GameData;
+export type EventWarmUpActionSuccess = GameData;
 
-export type EventWarmupActionError = void;
+export type EventWarmUpActionError = void;

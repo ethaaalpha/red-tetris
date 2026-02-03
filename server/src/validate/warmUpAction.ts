@@ -8,7 +8,7 @@ import { getUser } from "../core/user";
 import { getRoomBySocket } from "../core/room";
 
 // types
-import type { EventWarmupActionPayload, GameAction } from "@app/shared";
+import type { EventWarmUpActionPayload, GameAction } from "@app/shared";
 import type { ServerSocket } from "../types/socket";
 import type { Game } from "../objects/Game";
 import type { ValidateError } from "../types/validate";
@@ -29,7 +29,7 @@ type ValidateWarmUpActionResult = ValidateWarmUpActionSuccess | ValidateError;
 
 export function validateWarmUpAction(
   socket: ServerSocket,
-  payload: EventWarmupActionPayload
+  payload: EventWarmUpActionPayload
 ): ValidateWarmUpActionResult {
   const result = schema.safeParse(payload);
 
