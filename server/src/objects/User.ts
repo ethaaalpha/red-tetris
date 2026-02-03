@@ -1,10 +1,14 @@
-import { WARMUP_RESTART_DELAY } from "../constants/core";
+// types
 import type { UserColor } from "@app/shared";
+import { Game } from "./Game";
+
+// const
+import { WARMUP_RESTART_DELAY } from "../constants/core";
 import type { ServerSocket } from "../types/socket";
 
 export class User {
   public color: UserColor = "cyan";
-  public warmUp: boolean = false;
+  public warmUp: Game | null = null;
   public lastWarmUp: Date | null = null;
 
   constructor(
@@ -14,12 +18,13 @@ export class User {
   ) {}
 
   public setWarmUp(): void {
-    this.warmUp = true;
+    this.warmUp = new Game(new Map([[this.id, { color: this.color, user: this }]]));
     this.lastWarmUp = new Date();
   }
 
   public canWarmUp(): boolean {
     if (!this.lastWarmUp) return true;
+    if (this.warmUp && this.warmUp.started) return false;
 
     const now = new Date();
     const timeSinceLastWarmUp = now.getTime() - this.lastWarmUp.getTime();
