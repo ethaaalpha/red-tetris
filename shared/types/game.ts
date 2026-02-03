@@ -7,6 +7,7 @@ export type GameData = {
   actualPiece: PieceData;
   score: number;
   end: boolean;
+  deadPlayers: Array<string>;
 }
 
 export type GameSpectrum = {

@@ -43,7 +43,7 @@ export const helpers = {
 
       if (player.hasLost()) {
         player.end = true;
-        game.deadPlayers++;
+        game.deadPlayers.push(player.user.name);
       } else {
         player.score++;
       }

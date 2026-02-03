@@ -7,7 +7,7 @@ import { Player } from "./Player";
 export class Game {
   public players: Map<string, Player> = new Map();
   public pieces: Array<Piece> = [];
-  public deadPlayers: number = 0;
+  public deadPlayers: Array<string> = [];
   public started: boolean = false;
 
   constructor(users: Map<string, { color: UserColor; user: User }>) {
@@ -26,7 +26,7 @@ export class Game {
   }
 
   public isFinish(): boolean {
-    return this.deadPlayers === this.players.size;
+    return this.deadPlayers.length === this.players.size;
   }
 
   public nextPiece(i: number): Piece {
@@ -54,7 +54,8 @@ export class Game {
       nextPieces: nextPieces,
       actualPiece: player.actualPiece,
       score: player.score,
-      end: player.end
+      end: player.end,
+      deadPlayers: this.deadPlayers
     };
   }
 
