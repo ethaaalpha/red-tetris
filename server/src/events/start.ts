@@ -6,6 +6,7 @@ import { validateStart } from "../validate/start";
 
 // types
 import type { AppServer, ServerSocket } from "../types/socket";
+import { gameLoop } from "../core/game";
 
 export function registerHandlers(io: AppServer, socket: ServerSocket) {
   socket.on(EVENT_GAME_START, (callback) => {
@@ -19,8 +20,7 @@ export function registerHandlers(io: AppServer, socket: ServerSocket) {
     room.start();
 
     io.to(result.room.name).emit(EVENT_GAME_START, room.asInfo());
-    // then send the board info (with the next 4 pieces) to each person
-
+    gameLoop(room, io);
     callback({ success: true });
   });
 }
