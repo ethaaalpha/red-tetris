@@ -8,6 +8,8 @@ import {
   EVENT_GAME_PENALITY,
   EVENT_GAME_START
 } from "@app/shared";
+import { PIECES } from "@app/shared";
+import { BOARD_WIDTH } from "../constants/core";
 import { getRoomBySocket } from "../core/room";
 import {
   createClient,
@@ -17,15 +19,13 @@ import {
   setupTestServer,
   shutdownTestServer
 } from "./utils";
+import { Piece } from "../objects/Piece";
 import * as GameModule from "../core/game";
 
 // types
 import type { TestServerData, TestSocket } from "./types";
 import type { Room } from "../objects/Room";
 import type { Game } from "../objects/Game";
-import { BOARD_WIDTH } from "../constants/core";
-import { Piece } from "../objects/Piece";
-import { PIECES } from "@app/shared";
 
 let ctx: TestServerData;
 
