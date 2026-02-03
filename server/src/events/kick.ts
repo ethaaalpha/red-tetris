@@ -12,7 +12,7 @@ export function registerHandlers(io: AppServer, socket: ServerSocket) {
   socket.on(EVENT_KICK, (payload, callback) => {
     const result = validateKick(socket, payload);
     if (!result.status) {
-      callback({ success: result.status, error: result.error });
+      callback({ success: false });
       return;
     }
 

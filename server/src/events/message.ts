@@ -11,7 +11,7 @@ export function registerHandlers(io: AppServer, socket: ServerSocket) {
   socket.on(EVENT_MESSAGE, (payload, callback) => {
     const result = validateMessage(socket, payload);
     if (!result.status) {
-      callback({ success: false, error: result.error });
+      callback({ success: false });
       return;
     }
 

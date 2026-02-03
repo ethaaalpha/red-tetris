@@ -2,6 +2,4 @@ export type EventWarmUpPayload = void;
 
 export type EventWarmUpSuccess = void;
 
-export type EventWarmUpError = {
-  room?: string;
-};
+export type EventWarmUpError = void;

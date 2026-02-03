@@ -29,9 +29,6 @@ describe("invalid warm-up", () => {
   it("not in a room", async () => {
     await emitAsync<unknown, EventWarmUpError>(ctx.test1.client, EVENT_WARM_UP).then((response) => {
       expect(response.success).toBe(false);
-      if (!response.success) {
-        expect(response.error.room).toBe(ERROR_NOT_IN_A_ROOM);
-      }
     });
   });
 
@@ -41,9 +38,6 @@ describe("invalid warm-up", () => {
 
     await emitAsync<unknown, EventWarmUpError>(ctx.test1.client, EVENT_WARM_UP).then((response) => {
       expect(response.success).toBe(false);
-      if (!response.success) {
-        expect(response.error.room).toBe(ERROR_PLAYING_ROOM);
-      }
     });
   });
 
@@ -53,9 +47,6 @@ describe("invalid warm-up", () => {
     await emitAsync(ctx.test1.client, EVENT_WARM_UP);
     await emitAsync<unknown, EventWarmUpError>(ctx.test1.client, EVENT_WARM_UP).then((response) => {
       expect(response.success).toBe(false);
-      if (!response.success) {
-        expect(response.error.room).toBe(ERROR_WARM_UP_TIMEOUT);
-      }
     });
   });
 });

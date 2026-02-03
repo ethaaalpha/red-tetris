@@ -12,7 +12,7 @@ export function registerHandlers(io: AppServer, socket: ServerSocket) {
   socket.on(EVENT_LEAVE_ROOM, (callback) => {
     const result = validateLeaveRoom(socket);
     if (!result.status) {
-      callback({ success: false, error: result.error });
+      callback({ success: false });
       return;
     }
 

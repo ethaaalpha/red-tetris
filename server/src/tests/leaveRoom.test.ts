@@ -34,9 +34,6 @@ describe("invalid leave room", () => {
     await emitAsync<unknown, EventLeaveRoomError>(ctx.test1.client, EVENT_LEAVE_ROOM).then(
       (response) => {
         expect(response.success).toBe(false);
-        if (!response.success) {
-          expect(response.error.room).toBe(ERROR_USER_NOT_FOUND);
-        }
       }
     );
   });
@@ -48,9 +45,6 @@ describe("invalid leave room", () => {
     await emitAsync<unknown, EventLeaveRoomError>(ctx.test1.client, EVENT_LEAVE_ROOM).then(
       (response) => {
         expect(response.success).toBe(false);
-        if (!response.success) {
-          expect(response.error.room).toBe(ERROR_INEXISTING_ROOM);
-        }
       }
     );
   });

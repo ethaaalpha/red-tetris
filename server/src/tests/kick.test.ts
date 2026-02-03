@@ -42,9 +42,6 @@ describe("invalid kick", () => {
       username: "user2"
     }).then((response) => {
       expect(response.success).toBe(false);
-      if (!response.success) {
-        expect(response.error.username).toBe(ERROR_NOT_IN_A_ROOM);
-      }
     });
   });
 
@@ -56,9 +53,6 @@ describe("invalid kick", () => {
       username: "user2"
     }).then((response) => {
       expect(response.success).toBe(false);
-      if (!response.success) {
-        expect(response.error.username).toBe(ERROR_NOT_HOST);
-      }
     });
   });
 
@@ -68,9 +62,6 @@ describe("invalid kick", () => {
       username: "user1"
     }).then((response) => {
       expect(response.success).toBe(false);
-      if (!response.success) {
-        expect(response.error.username).toBe(ERROR_KICK_SELF);
-      }
     });
   });
 
@@ -82,9 +73,6 @@ describe("invalid kick", () => {
       username: "user3"
     }).then((response) => {
       expect(response.success).toBe(false);
-      if (!response.success) {
-        expect(response.error.username).toBe(ERROR_USER_NOT_FOUND);
-      }
     });
   });
 
@@ -102,9 +90,6 @@ describe("invalid kick", () => {
       username: "test"
     }).then((response) => {
       expect(response.success).toBe(false);
-      if (!response.success) {
-        expect(response.error.username).toBe(ERROR_NOT_HOST);
-      }
     });
   });
 
@@ -116,9 +101,6 @@ describe("invalid kick", () => {
       username: "user2"
     }).then((response) => {
       expect(response.success).toBe(false);
-      if (!response.success) {
-        expect(response.error.username).toBe(ERROR_KICK_PLAYING);
-      }
     });
   });
 });

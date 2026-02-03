@@ -34,30 +34,30 @@ describe("invalid chat", () => {
       expect(response.success).toBe(false);
     });
   });
-});
 
-it("valid chat", async () => {
-  const test2 = await createClient(ctx.address, ctx.io);
-  const message = "c'est un super message!";
-  const chatListener1 = onceAsync<EventMessageData>(ctx.test1.client, "message");
-  const chatListener2 = onceAsync<EventMessageData>(test2.client, "message");
+  it("valid chat", async () => {
+    const test2 = await createClient(ctx.address, ctx.io);
+    const message = "c'est un super message!";
+    const chatListener1 = onceAsync<EventMessageData>(ctx.test1.client, "message");
+    const chatListener2 = onceAsync<EventMessageData>(test2.client, "message");
 
-  await joinRoom(ctx.test1, "example", "user1");
-  await joinRoom(test2, "example", "user2");
+    await joinRoom(ctx.test1, "example", "user1");
+    await joinRoom(test2, "example", "user2");
 
-  // users talks
-  await emitAsync(ctx.test1.client, EVENT_MESSAGE, {
-    message: message
-  }).then((response) => {
-    expect(response.success).toBe(true);
+    // users talks
+    await emitAsync(ctx.test1.client, EVENT_MESSAGE, {
+      message: message
+    }).then((response) => {
+      expect(response.success).toBe(true);
+    });
+
+    // check results
+    const data2 = await chatListener2;
+    expect(data2.from).toEqual("user1");
+    expect(data2.message).toEqual(message);
+
+    const data1 = await chatListener1;
+    expect(data1.from).toEqual("user1");
+    expect(data1.message).toEqual(message);
   });
-
-  // check results
-  const data2 = await chatListener2;
-  expect(data2.from).toEqual("user1");
-  expect(data2.message).toEqual(message);
-
-  const data1 = await chatListener1;
-  expect(data1.from).toEqual("user1");
-  expect(data1.message).toEqual(message);
 });

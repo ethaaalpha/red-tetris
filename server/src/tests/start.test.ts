@@ -38,9 +38,6 @@ describe("invalid start", () => {
     await emitAsync<unknown, EventStartError>(ctx.test1.client, EVENT_GAME_START).then(
       (response) => {
         expect(response.success).toBe(false);
-        if (!response.success) {
-          expect(response.error.room).toBe(ERROR_NOT_IN_A_ROOM);
-        }
       }
     );
   });
@@ -52,9 +49,6 @@ describe("invalid start", () => {
     await emitAsync<unknown, EventStartError>(ctx.test1.client, EVENT_GAME_START).then(
       (response) => {
         expect(response.success).toBe(false);
-        if (!response.success) {
-          expect(response.error.room).toBe(ERROR_NOT_HOST);
-        }
       }
     );
   });
@@ -66,9 +60,6 @@ describe("invalid start", () => {
     await emitAsync<unknown, EventStartError>(ctx.test1.client, EVENT_GAME_START).then(
       (response) => {
         expect(response.success).toBe(false);
-        if (!response.success) {
-          expect(response.error.room).toBe(ERROR_PLAYING_ROOM);
-        }
       }
     );
   });
