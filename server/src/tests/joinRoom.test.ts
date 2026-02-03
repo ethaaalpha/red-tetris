@@ -1,9 +1,9 @@
 // global
-import { EVENT_JOIN_ROOM } from "@app/shared";
+import { EVENT_JOIN_ROOM, EVENT_ROOM_UPDATE } from "@app/shared";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 // intern
-import { ROOM_MAX, ROOM_MAX_USERS } from "../constants/core";
+import { ROOM_MAX, ROOM_MAX_USERS, WARMUP_RESTART_DELAY } from "../constants/core";
 import {
   ERROR_ALREADY_IN_A_ROOM,
   ERROR_MAX_ROOMS,
@@ -13,10 +13,17 @@ import {
 } from "../constants/validateErrors";
 import { getRoom, setRoom } from "../core/room";
 import { Room } from "../objects/Room";
-import { emitAsync, fakeUser, setupTestServer, shutdownTestServer } from "./utils";
+import {
+  createClient,
+  emitAsync,
+  fakeUser,
+  onceAsync,
+  setupTestServer,
+  shutdownTestServer
+} from "./utils";
 
 // types
-import type { EventJoinRoomError, EventJoinRoomSuccess } from "@app/shared";
+import type { EventJoinRoomError, EventJoinRoomSuccess, RoomData } from "@app/shared";
 import type { TestServerData } from "./types";
 
 let ctx: TestServerData;
@@ -131,4 +138,46 @@ it("valid join", async () => {
       }
     }
   );
+});
+
+it("host changed", async () => {
+  const test2 = await createClient(ctx.address, ctx.io);
+  const test3 = await createClient(ctx.address, ctx.io);
+  const roomListener = onceAsync<RoomData>(ctx.test1.client, EVENT_ROOM_UPDATE);
+
+  await emitAsync(ctx.test1.client, EVENT_JOIN_ROOM, {
+    username: "user1",
+    room: "example"
+  });
+  await emitAsync(test2.client, EVENT_JOIN_ROOM, {
+    username: "user2",
+    room: "example"
+  });
+  await emitAsync(test3.client, EVENT_JOIN_ROOM, {
+    username: "user3",
+    room: "example"
+  });
+
+  const data1 = await roomListener;
+  expect(data1.host).toBe("user1");
+
+  ctx.test1.client.close();
+
+  await new Promise((resolve) => setTimeout(resolve, 42));
+
+  expect(getRoom("example")?.asInfo()).toEqual({
+    name: "example",
+    players: [
+      { username: "user2", color: "red" },
+      { username: "user3", color: "green" }
+    ],
+    userCount: 2,
+    max: ROOM_MAX_USERS,
+    host: "user2",
+    playing: false,
+    warmUpRestartDelay: WARMUP_RESTART_DELAY * 1_000
+  });
+
+  test2.client.close();
+  test3.client.close();
 });
