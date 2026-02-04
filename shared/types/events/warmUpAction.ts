@@ -1,7 +1,8 @@
-import type { GameAction, GameData } from "../game"
+import type { GameActions } from "../../enums/actions";
+import type { GameData } from "../game"
 
 export type EventWarmUpActionPayload = {
-  action: GameAction
+  action: GameActions
 }
 
 export type EventWarmUpActionSuccess = GameData;

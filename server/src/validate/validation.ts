@@ -1,6 +1,6 @@
 import z, { ZodError } from "zod";
 
-import { ACTIONS } from "@app/shared";
+import { GameActions } from "@app/shared";
 
 import {
   CHAT_MAX_LENGTH,
@@ -41,4 +41,4 @@ export const messageValidation = z
   .min(1, ZodSchemaErrors.Z_ERROR_MESSAGE_EMPTY)
   .max(CHAT_MAX_LENGTH, ZodSchemaErrors.Z_ERROR_MESSAGE_MAX);
 
-export const actionValidation = z.enum(ACTIONS);
+export const actionValidation = z.enum(GameActions);

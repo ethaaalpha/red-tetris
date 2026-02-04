@@ -8,7 +8,7 @@ import { getUser } from "../core/user";
 import { getRoomBySocket } from "../core/room";
 
 // types
-import type { EventWarmUpActionPayload, GameAction } from "@app/shared";
+import type { EventWarmUpActionPayload, GameActions } from "@app/shared";
 import type { ServerSocket } from "../types/socket";
 import type { Game } from "../objects/Game";
 import type { ValidateError } from "../types/validate";
@@ -22,7 +22,7 @@ type ValidateWarmUpActionSuccess = {
   status: true;
   game: Game;
   player: Player;
-  action: GameAction;
+  action: GameActions;
 };
 
 type ValidateWarmUpActionResult = ValidateWarmUpActionSuccess | ValidateError;

@@ -2,7 +2,7 @@
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 
 // intern
-import { EVENT_WARMUP_ACTION, EVENT_WARMUP_START } from "@app/shared";
+import { EVENT_WARMUP_ACTION, EVENT_WARMUP_START, GameActions } from "@app/shared";
 import { emitAsync, joinRoom, setupTestServer, shutdownTestServer } from "./utils";
 import * as MovementModule from "../core/movements";
 import { getUser } from "../core/user";
@@ -58,7 +58,7 @@ it("warm up perform action", async () => {
   await emitAsync<EventWarmUpActionSuccess, EventWarmUpActionError, EventWarmUpActionPayload>(
     test1.client,
     EVENT_WARMUP_ACTION,
-    { action: "RIGHT" }
+    { action: GameActions.RIGHT }
   ).then((response) => {
     expect(response.success).toBe(true);
     if (response.success) {

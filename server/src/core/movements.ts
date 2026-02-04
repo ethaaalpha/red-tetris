@@ -1,9 +1,9 @@
-import type { GameAction } from "@app/shared";
+import type { GameActions } from "@app/shared";
 import type { Game } from "../objects/Game";
 import type { Player } from "../objects/Player";
 import type { ActionData } from "../types/server";
 
-const actions: Record<GameAction, (data: ActionData) => void> = {
+const actions: Record<GameActions, (data: ActionData) => void> = {
   UP: (data: ActionData) => data.piece.rotate90(),
   LEFT: (data: ActionData) => data.piece.moveLeft(),
   RIGHT: (data: ActionData) => data.piece.moveRight(),

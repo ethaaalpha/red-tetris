@@ -21,7 +21,6 @@ export class User {
 
   public setWarmUp(): void {
     if (this.warmUp) {
-      // stop the "current" warmup
       this.warmUp.ongoing = false;
     }
 
