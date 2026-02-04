@@ -1,5 +1,5 @@
 // global
-import { Colors, EVENT_JOIN_ROOM, EVENT_ROOM_UPDATE } from "@app/shared";
+import { Colors, EVENT_JOIN_ROOM, EVENT_ROOM_UPDATE, type EventJoinRoomPayload } from "@app/shared";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 // intern
@@ -40,7 +40,7 @@ describe("invalid join", () => {
   const user = fakeUser("id", "name");
 
   it("invalid scheme", async () => {
-    await emitAsync(ctx.test1.client, EVENT_JOIN_ROOM, {}).then(({ success }) => {
+    await emitAsync<EventJoinRoomSuccess, EventJoinRoomError, EventJoinRoomPayload>(ctx.test1.client, EVENT_JOIN_ROOM).then(({ success }) => {
       expect(success).toEqual(false);
     });
   });
@@ -52,7 +52,7 @@ describe("invalid join", () => {
     }
     setRoom("example", room);
 
-    await emitAsync<unknown, EventJoinRoomError>(ctx.test1.client, EVENT_JOIN_ROOM, {
+    await emitAsync<EventJoinRoomSuccess, EventJoinRoomError, EventJoinRoomPayload>(ctx.test1.client, EVENT_JOIN_ROOM, {
       username: "user1",
       room: "example"
     }).then((response) => {
@@ -67,7 +67,7 @@ describe("invalid join", () => {
     for (let i = 0; i < ROOM_MAX; i++) {
       setRoom(i.toString(), new Room(`test${i}`, user));
     }
-    await emitAsync<unknown, EventJoinRoomError>(ctx.test1.client, EVENT_JOIN_ROOM, {
+    await emitAsync<EventJoinRoomSuccess, EventJoinRoomError, EventJoinRoomPayload>(ctx.test1.client, EVENT_JOIN_ROOM, {
       username: "user1",
       room: "example"
     }).then((response) => {
@@ -81,7 +81,7 @@ describe("invalid join", () => {
   it("username already taken", async () => {
     setRoom("example", new Room("example", user));
 
-    await emitAsync<unknown, EventJoinRoomError>(ctx.test1.client, EVENT_JOIN_ROOM, {
+    await emitAsync<EventJoinRoomSuccess, EventJoinRoomError, EventJoinRoomPayload>(ctx.test1.client, EVENT_JOIN_ROOM, {
       username: "name",
       room: "example"
     }).then((response) => {
@@ -93,11 +93,11 @@ describe("invalid join", () => {
   });
 
   it("already in a room", async () => {
-    await emitAsync(ctx.test1.client, EVENT_JOIN_ROOM, {
+    await emitAsync<EventJoinRoomSuccess, EventJoinRoomError, EventJoinRoomPayload>(ctx.test1.client, EVENT_JOIN_ROOM, {
       username: "user1",
       room: "example"
     });
-    await emitAsync<unknown, EventJoinRoomError>(ctx.test1.client, EVENT_JOIN_ROOM, {
+    await emitAsync<EventJoinRoomSuccess, EventJoinRoomError, EventJoinRoomPayload>(ctx.test1.client, EVENT_JOIN_ROOM, {
       username: "user1",
       room: "example2"
     }).then((response) => {
@@ -112,7 +112,7 @@ describe("invalid join", () => {
     setRoom("example", new Room("example", user));
     getRoom("example")?.start();
 
-    await emitAsync<unknown, EventJoinRoomError>(ctx.test1.client, EVENT_JOIN_ROOM, {
+    await emitAsync<EventJoinRoomSuccess, EventJoinRoomError, EventJoinRoomPayload>(ctx.test1.client, EVENT_JOIN_ROOM, {
       username: "user1",
       room: "example"
     }).then((response) => {
@@ -129,7 +129,7 @@ it("valid join", async () => {
     username: "example",
     room: "example"
   };
-  await emitAsync<EventJoinRoomSuccess>(ctx.test1.client, EVENT_JOIN_ROOM, payload).then(
+  await emitAsync<EventJoinRoomSuccess, EventJoinRoomError, EventJoinRoomPayload>(ctx.test1.client, EVENT_JOIN_ROOM, payload).then(
     (response) => {
       expect(response.success).toBe(true);
       if (response.success) {
@@ -145,15 +145,15 @@ it("host changed", async () => {
   const test3 = await createClient(ctx.address, ctx.io);
   const roomListener = onceAsync<RoomData>(ctx.test1.client, EVENT_ROOM_UPDATE);
 
-  await emitAsync(ctx.test1.client, EVENT_JOIN_ROOM, {
+  await emitAsync<EventJoinRoomSuccess, EventJoinRoomError, EventJoinRoomPayload>(ctx.test1.client, EVENT_JOIN_ROOM, {
     username: "user1",
     room: "example"
   });
-  await emitAsync(test2.client, EVENT_JOIN_ROOM, {
+  await emitAsync<EventJoinRoomSuccess, EventJoinRoomError, EventJoinRoomPayload>(test2.client, EVENT_JOIN_ROOM, {
     username: "user2",
     room: "example"
   });
-  await emitAsync(test3.client, EVENT_JOIN_ROOM, {
+  await emitAsync<EventJoinRoomSuccess, EventJoinRoomError, EventJoinRoomPayload>(test3.client, EVENT_JOIN_ROOM, {
     username: "user3",
     room: "example"
   });
