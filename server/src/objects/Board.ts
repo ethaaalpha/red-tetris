@@ -1,4 +1,4 @@
-import { type Matrix2D, type NonEmptyArray } from "@app/shared";
+import { Colors, type Matrix2D, type NonEmptyArray } from "@app/shared";
 import { Piece } from "./Piece";
 import { BOARD } from "../constants/board";
 
@@ -26,13 +26,13 @@ export class Board {
 
     return piece.matrix.every((pieceRow, i) => {
       return pieceRow.every((pieceCell, j) => {
-        if (pieceCell === 1) {
+        if (pieceCell != 0) {
           const boardRow = this.matrix[piece.x + i];
           // outside of board
           if (!boardRow) return false;
           const boardCell = boardRow[piece.y + j];
           // outside of board or colisision
-          if (boardCell === undefined || boardCell === 1) return false;
+          if (boardCell === undefined || boardCell != 0) return false;
         }
         return true;
       });
@@ -46,13 +46,13 @@ export class Board {
 
     piece.matrix.forEach((pieceRow, i) => {
       // we skip empty piece lines
-      if (!pieceRow.find((v) => v === 1)) return;
+      if (!pieceRow.find((v) => v != 0)) return;
       const boardRow = this.getRow(piece.x + i);
 
       pieceRow.forEach((cell, j) => {
         // skip zeros
         if (!cell) return;
-        boardRow[piece.y + j] = cell;
+        boardRow[piece.y + j] = piece.color;
       });
     });
     this.placedPieces++;
@@ -66,7 +66,7 @@ export class Board {
     for (let rowIndex = start; rowIndex >= 0; rowIndex--) {
       const row = this.getRow(rowIndex);
 
-      const toClear = row.every((v) => v === 1);
+      const toClear = row.every((v) => v != 0);
       if (toClear) {
         cleared++;
         // push down every lines upper to the line cleared
@@ -89,7 +89,7 @@ export class Board {
   public addRestrictedLine() {
     const row = this.getRow(this.restrictedLines);
     row.forEach((_, i) => {
-      row[i] = 1;
+      row[i] = Colors.GREY;
     });
     this.restrictedLines++;
   }
