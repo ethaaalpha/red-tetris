@@ -53,7 +53,7 @@ export class Game {
     );
 
     return {
-      board: player.board.matrix,
+      matrix: player.board.matrix,
       nextPieces: nextPieces,
       actualPiece: player.actualPiece,
       score: player.score,

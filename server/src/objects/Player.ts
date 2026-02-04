@@ -25,7 +25,7 @@ export class Player {
 
   public getInfo(): PlayerInfo {
     return {
-      board: this.board.matrix,
+      matrix: this.board.matrix,
       score: this.score,
       alive: this.alive,
       color: this.color

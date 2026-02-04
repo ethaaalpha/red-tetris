@@ -3,7 +3,7 @@ import type { PieceData } from "./piece";
 import type { UserColor } from "./user";
 
 export type GameData = {
-  board: Matrix2D<number>;
+  matrix: Matrix2D<number>;
   nextPieces: PieceData[];
   actualPiece: PieceData;
   score: number;
@@ -11,7 +11,7 @@ export type GameData = {
 };
 
 export type PlayerInfo = {
-  board: Matrix2D<number>;
+  matrix: Matrix2D<number>;
   score: number;
   alive: boolean;
   color: UserColor;
