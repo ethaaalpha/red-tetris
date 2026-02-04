@@ -420,15 +420,13 @@
 
     <!-- warm-up -->
     <div class="relative border-4 border-red-secondary h-[640px] w-[320px] box-content">
-      <div class="absolute top-0 left-0">
-        {#each matrix as row, index_row (index_row)}
-          <div class="flex">
-            {#each row as cell, index_cell (index_cell)}
-              <Piece color={cell} size={32} />
-            {/each}
-          </div>
-        {/each}
-      </div>
+      {#each matrix as row, index_row (index_row)}
+        <div class="flex">
+          {#each row as cell, index_cell (index_cell)}
+            <Piece color={cell} size={32} />
+          {/each}
+        </div>
+      {/each}
 
       {#if warmUp == false}
         <button
