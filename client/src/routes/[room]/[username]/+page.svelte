@@ -37,15 +37,14 @@
   } from "@app/shared";
 
   // types
-  import type {
-    EventJoinRoomPayload,
-    EventKickData,
-    EventKickPayload,
-    EventMessageData,
-    EventMessagePayload,
-    PieceColor,
-    UserColor,
-    UserData
+  import {
+    Colors,
+    type EventJoinRoomPayload,
+    type EventKickData,
+    type EventKickPayload,
+    type EventMessageData,
+    type EventMessagePayload,
+    type UserData
   } from "@app/shared";
 
   // constants
@@ -71,7 +70,7 @@
   // color
   let userColor = $state<string>(getColor(roomState.color));
 
-  function getColor(color: UserColor) {
+  function getColor(color: Colors) {
     return pieceColors[color].light;
   }
 
@@ -114,7 +113,7 @@
   // kick
   let showKickDialog = $state(false);
   let userToKick = $state<string>();
-  let userToKickColor = $state<PieceColor>("empty");
+  let userToKickColor = $state<Colors>(Colors.EMPTY);
   let userToKickPieceColor = $state<string>("#e6e6e6");
 
   function handleKickUser(user: UserData) {
@@ -297,7 +296,7 @@
               <div
                 class="flex items-center gap-2
               {username === m.from ? 'ml-auto pr-2' : 'pl-2'}"
-                style="color: {username === m.from ? pieceColors[m.color as PieceColor].light : ''}"
+                style="color: {username === m.from ? pieceColors[m.color].light : ''}"
               >
                 <Piece color={m.color} size={16} />
                 {m.from}
@@ -306,9 +305,7 @@
               <div
                 class="p-2 wrap-break-word w-fit max-w-64 text-white text-sm
               {username === m.from ? 'ml-auto' : ' bg-dark-accent'}"
-                style="background-color: {username === m.from
-                  ? pieceColors[m.color as PieceColor].dark
-                  : ''}"
+                style="background-color: {username === m.from ? pieceColors[m.color].dark : ''}"
               >
                 {m.message}
               </div>
@@ -344,7 +341,7 @@
       {#each { length: 20 }}
         <div class="flex">
           {#each { length: 10 }}
-            <Piece color="empty" size={32} />
+            <Piece color={Colors.EMPTY} size={32} />
           {/each}
         </div>
       {/each}
