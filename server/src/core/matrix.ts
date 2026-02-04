@@ -28,7 +28,7 @@ export function placePieceOnMatrix(piece: Piece, matrix: Matrix2D<number>) {
     pieceRow.forEach((cell, j) => {
       // skip zeros
       if (!cell) return;
-      matrixRow[piece.y + j] = cell;
+      matrixRow[piece.y + j] = piece.color;
     });
   });
 }
