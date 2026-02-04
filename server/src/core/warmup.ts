@@ -11,7 +11,7 @@ export async function warmupLoop(user: User, io: Server) {
   const game = user.warmUp;
   if (!game) throw new Error("Game not prepared!");
 
-  game.started = true;
+  game.ongoing = true;
   io.to(user.id).emit(EVENT_WARMUP_INFO, game.getGameInfo(user.id));
 
   const timer = setInterval(() => {

@@ -105,7 +105,7 @@ it("warmup loop", async () => {
   if (!player) return;
 
   await vi.advanceTimersToNextTimerAsync();
-  expect(game.started).toBe(true);
+  expect(game.ongoing).toBe(true);
 
   // check gravity fall
   expect(handleGravityMock).toBeCalledWith(game, player);
