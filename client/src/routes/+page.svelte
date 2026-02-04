@@ -20,7 +20,7 @@
   import { getSocket } from "$lib/socket/socket.svelte";
 
   // events
-  import { EVENT_GET_ROOMS, EVENT_JOIN_ROOM } from "@app/shared";
+  import { Colors, EVENT_GET_ROOMS, EVENT_JOIN_ROOM } from "@app/shared";
 
   // types
   import type { EventJoinRoomPayload, RoomListData } from "@app/shared";
@@ -101,10 +101,10 @@
     >
       RED TETRIS
       <div class="absolute top-1/2 -translate-y-1/2 -left-24">
-        <Piece color="red" size={64} />
+        <Piece color={Colors.RED} size={64} />
       </div>
       <div class="absolute top-1/2 -translate-y-1/2 -right-24">
-        <Piece color="red" size={64} />
+        <Piece color={Colors.RED} size={64} />
       </div>
     </h1>
     <div
@@ -153,46 +153,46 @@
         </button>
       </div>
       <div class="absolute grid grid-cols-2 -left-32 top-0">
-        <Piece color="yellow" size={64} />
-        <Piece color="yellow" size={64} />
-        <Piece color="yellow" size={64} />
-        <Piece color="yellow" size={64} />
+        <Piece color={Colors.YELLOW} size={64} />
+        <Piece color={Colors.YELLOW} size={64} />
+        <Piece color={Colors.YELLOW} size={64} />
+        <Piece color={Colors.YELLOW} size={64} />
       </div>
 
       <div class="absolute flex -top-16 -left-16">
-        <Piece color="cyan" size={64} />
-        <Piece color="cyan" size={64} />
-        <Piece color="cyan" size={64} />
-        <Piece color="cyan" size={64} />
+        <Piece color={Colors.CYAN} size={64} />
+        <Piece color={Colors.CYAN} size={64} />
+        <Piece color={Colors.CYAN} size={64} />
+        <Piece color={Colors.CYAN} size={64} />
       </div>
 
       <div class="absolute -top-16 -right-16 flex">
         <div>
-          <Piece color="orange" size={64} />
+          <Piece color={Colors.ORANGE} size={64} />
         </div>
         <div>
-          <Piece color="orange" size={64} />
-          <Piece color="orange" size={64} />
-          <Piece color="orange" size={64} />
+          <Piece color={Colors.ORANGE} size={64} />
+          <Piece color={Colors.ORANGE} size={64} />
+          <Piece color={Colors.ORANGE} size={64} />
         </div>
       </div>
 
       <div class="absolute -bottom-16 -right-32 flex">
-        <Piece color="purple" size={64} />
-        <Piece color="purple" size={64} />
-        <Piece color="purple" size={64} />
+        <Piece color={Colors.PURPLE} size={64} />
+        <Piece color={Colors.PURPLE} size={64} />
+        <Piece color={Colors.PURPLE} size={64} />
       </div>
       <div class="absolute bottom-0 -right-16 flex">
-        <Piece color="purple" size={64} />
+        <Piece color={Colors.PURPLE} size={64} />
       </div>
 
       <div class="absolute -bottom-16 -left-16 flex flex-col">
-        <Piece color="green" size={64} />
-        <Piece color="green" size={64} />
+        <Piece color={Colors.GREEN} size={64} />
+        <Piece color={Colors.GREEN} size={64} />
       </div>
       <div class="absolute -bottom-32 left-0 flex flex-col">
-        <Piece color="green" size={64} />
-        <Piece color="green" size={64} />
+        <Piece color={Colors.GREEN} size={64} />
+        <Piece color={Colors.GREEN} size={64} />
       </div>
     </div>
   </div>

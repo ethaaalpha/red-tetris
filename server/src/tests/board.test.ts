@@ -1,7 +1,7 @@
 import { describe, expect, it, beforeEach } from "vitest";
 import { Board } from "../objects/Board";
 import { Piece } from "../objects/Piece";
-import { PIECES } from "@app/shared";
+import { Colors, PIECES } from "@app/shared";
 
 let board: Board;
 
@@ -99,8 +99,8 @@ it("valid placement", () => {
   expect(board.isValidPiece(piece)).toBe(true);
   board.place(piece);
 
-  expect(board.matrix[18]?.slice(4, 7)).toEqual([0, 1, 0]);
-  expect(board.matrix[19]?.slice(4, 7)).toEqual([1, 1, 1]);
+  expect(board.matrix[18]?.slice(4, 7)).toEqual([0, 7, 0]);
+  expect(board.matrix[19]?.slice(4, 7)).toEqual([7, 7, 7]);
 });
 
 it("clear lines", () => {
@@ -121,7 +121,12 @@ it("clear lines", () => {
   expect(board.cleanLines()).toEqual(2);
 
   // check if the first line have dropped twice
-  expect(board.matrix[2]?.slice(0, 4)).toEqual([1, 1, 1, 1]);
-  expect(board.matrix[2]?.slice(8, 10)).toEqual([1, 1]);
-  expect(board.matrix[3]?.slice(7, 9)).toEqual([1, 1]);
+  expect(board.matrix[2]?.slice(0, 4)).toEqual([
+    Colors.GREY,
+    Colors.GREY,
+    Colors.GREY,
+    Colors.GREY
+  ]);
+  expect(board.matrix[2]?.slice(8, 10)).toEqual([Colors.GREY, Colors.GREY]);
+  expect(board.matrix[3]?.slice(7, 9)).toEqual([Colors.GREY, Colors.GREY]);
 });
