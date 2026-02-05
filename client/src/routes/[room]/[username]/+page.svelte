@@ -82,6 +82,18 @@
     return pieceColors[color].light;
   }
 
+  // check if a cell is part of the shadow piece
+  function isShadowCell(data: GameData, rowIndex: number, cellIndex: number): boolean {
+    const { matrix, x, y } = data.shadowPiece;
+    const relativeRow = rowIndex - x;
+    const relativeCol = cellIndex - y;
+
+    if (relativeRow < 0 || relativeRow >= matrix.length) return false;
+    if (relativeCol < 0 || relativeCol >= matrix[0].length) return false;
+
+    return matrix[relativeRow][relativeCol] !== Colors.EMPTY;
+  }
+
   function joinRoom() {
     const data: EventJoinRoomPayload = { username, room };
     socket.emit(EVENT_JOIN_ROOM, data, (response) => {
@@ -201,7 +213,7 @@
   };
 
   function onWarmUpKeydown(event: KeyboardEvent) {
-    if (warmUp === false) return;
+    // if (warmUp === false) return;
     const action = keyToActionMap[event.key.toLocaleUpperCase()];
 
     if (action === undefined) return;
@@ -388,13 +400,26 @@
     </div>
 
     <!-- warm-up -->
-    <div class="relative border-4 border-red-secondary h-[640px] w-[320px] box-content">
+    <div class="relative border-4 border-red-secondary box-content">
       {#if gameData}
         <!-- BOARD -->
         {#each gameData.matrix as row, index_row (index_row)}
           <div class="flex">
             {#each row as cell, index_cell (index_cell)}
-              <Piece color={cell} size={32} />
+              {#if cell !== Colors.EMPTY}
+                <Piece color={cell} size={32} />
+              {:else if isShadowCell(gameData, index_row, index_cell)}
+                <!-- Shadow piece preview -->
+                <div class="relative h-[32px] w-[32px]">
+                  <Piece color={Colors.EMPTY} size={32} />
+                  <div
+                    class="absolute inset-0.5 border-2 rounded-xs opacity-75"
+                    style="border-color: {pieceColors[gameData.shadowPiece.color].light};"
+                  ></div>
+                </div>
+              {:else}
+                <Piece color={cell} size={32} />
+              {/if}
             {/each}
           </div>
         {/each}

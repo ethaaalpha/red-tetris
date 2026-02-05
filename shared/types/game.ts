@@ -8,6 +8,7 @@ import type { PieceData } from "./piece";
 export type GameData = {
   matrix: Matrix2D<number>;
   nextPieces: PieceData[];
+  shadowPiece: PieceData;
   score: number;
   alive: boolean;
 };
