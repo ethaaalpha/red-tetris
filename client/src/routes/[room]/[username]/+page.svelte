@@ -403,6 +403,31 @@
         <div class="absolute -top-12 right-1/2 translate-x-1/2 text-xl">
           Score: {gameData.score}
         </div>
+
+        <!-- NEXT PIECES -->
+        <div class="absolute top-0 -right-48 text-xl flex flex-col gap-2 items-center">
+          <span>Next</span>
+
+          <div class="border border-border flex flex-col w-40 py-8 items-center gap-8">
+            {#each gameData.nextPieces as piece, index (index)}
+              <div>
+                {#each piece.matrix as row, index_cell (index_cell)}
+                  <div class="flex">
+                    {#each row as cell, index_cell (index_cell)}
+                      {#if !row.some((cell) => cell)}
+                        <!-- do nothing -->
+                      {:else if cell !== Colors.EMPTY}
+                        <Piece color={piece.color} size={32} />
+                      {:else}
+                        <div class="h-[32px] w-[32px]"></div>
+                      {/if}
+                    {/each}
+                  </div>
+                {/each}
+              </div>
+            {/each}
+          </div>
+        </div>
       {:else}
         {#each { length: 20 }, index_row (index_row)}
           <div class="flex">
