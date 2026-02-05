@@ -391,7 +391,7 @@
     <div class="relative border-4 border-red-secondary h-[640px] w-[320px] box-content">
       {#if gameData}
         <!-- BOARD -->
-        {#each gameData?.matrix as row, index_row (index_row)}
+        {#each gameData.matrix as row, index_row (index_row)}
           <div class="flex">
             {#each row as cell, index_cell (index_cell)}
               <Piece color={cell} size={32} />
