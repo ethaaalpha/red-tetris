@@ -9,7 +9,7 @@ import { warmupLoop } from "../core/warmup";
 import type { AppServer, ServerSocket } from "../types/socket";
 
 export function registerHandlers(io: AppServer, socket: ServerSocket) {
-  socket.on(EVENT_WARMUP_START, (callback) => {
+  socket.on(EVENT_WARMUP_START, async (callback) => {
     const result = validateWarmUp(socket);
     if (!result.status) {
       callback({ success: false });
@@ -17,7 +17,7 @@ export function registerHandlers(io: AppServer, socket: ServerSocket) {
     }
 
     console.log(`user ${result.current.name} started warm-up`);
-    result.current.setWarmUp();
+    await result.current.setWarmUp();
     warmupLoop(result.current, io);
 
     callback({ success: true });

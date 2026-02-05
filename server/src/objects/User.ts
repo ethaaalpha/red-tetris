@@ -6,7 +6,7 @@ import { Game } from "./Game";
 import { Colors } from "@app/shared";
 
 // const
-import { WARMUP_RESTART_DELAY } from "../constants/core";
+import { WARMUP_CHECK_DELAY, WARMUP_RESTART_DELAY } from "../constants/core";
 
 export class User {
   public color: Colors = Colors.CYAN;
@@ -19,9 +19,13 @@ export class User {
     public socket: ServerSocket
   ) {}
 
-  public setWarmUp(): void {
+  public async setWarmUp() {
     if (this.warmUp) {
       this.warmUp.ongoing = false;
+
+      while (this.warmUp != null) {
+        await new Promise((resolve) => setTimeout(resolve, WARMUP_CHECK_DELAY));
+      }
     }
 
     this.warmUp = new Game(new Map([[this.id, { color: this.color, user: this }]]));

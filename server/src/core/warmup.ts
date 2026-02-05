@@ -23,10 +23,9 @@ export async function warmupLoop(user: User, io: Server) {
         clearInterval(timer);
         io.to(user.id).emit(EVENT_WARMUP_FINISH, {});
         user.warmUp = null;
-        return;
+      } else {
+        io.to(id).emit(EVENT_WARMUP_INFO, game.getGameInfo(id));
       }
-
-      io.to(id).emit(EVENT_WARMUP_INFO, game.getGameInfo(id));
     });
   }, GAME_TICK_DEFAULT);
 }
