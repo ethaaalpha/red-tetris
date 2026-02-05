@@ -2,6 +2,7 @@ import type { GameActions } from "@app/shared";
 import type { Game } from "../objects/Game";
 import type { Player } from "../objects/Player";
 import type { ActionData } from "../types/server";
+import { helpers } from "./game";
 
 const actions: Record<GameActions, (data: ActionData) => void> = {
   UP: (data: ActionData) => data.piece.rotate90(),
@@ -26,5 +27,11 @@ export function applyMovement(game: Game, player: Player, key: keyof typeof acti
 
   if (player.board.isValidPiece(actualPiece)) {
     player.actualPiece = actualPiece;
+
+    // Hard drop: place the piece immediately after moving it down
+    if (key === "SPACE") {
+      helpers.attachActualPiece(game, player);
+      player.score++;
+    }
   }
 }
