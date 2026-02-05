@@ -15,17 +15,16 @@ const actions: Record<GameActions, (data: ActionData) => void> = {
   }
 };
 
-export function applyMovement(game: Game, player: Player, key: keyof typeof actions): boolean {
-  if (!player.alive) return false;
-  if (!game.ongoing) return false;
+export function applyMovement(game: Game, player: Player, key: keyof typeof actions) {
+  if (!player.alive) return;
+  if (!game.ongoing) return;
 
-  const next = player.actualPiece.clone();
+  const actualPiece = player.actualPiece.clone();
 
-  actions[key]({ piece: next, board: player.board } as ActionData);
+  const actionData: ActionData = { piece: actualPiece, board: player.board };
+  actions[key](actionData);
 
-  if (player.board.isValidPiece(next)) {
-    player.actualPiece = next;
-    return true;
+  if (player.board.isValidPiece(actualPiece)) {
+    player.actualPiece = actualPiece;
   }
-  return false;
 }
