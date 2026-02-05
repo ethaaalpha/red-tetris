@@ -213,6 +213,7 @@
   };
 
   function onWarmUpKeydown(event: KeyboardEvent) {
+    // TO UNCOMMENT WHEN FINISHED
     // if (warmUp === false) return;
     const action = keyToActionMap[event.key.toLocaleUpperCase()];
 
