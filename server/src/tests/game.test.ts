@@ -174,7 +174,7 @@ describe("game loop helpers", () => {
 
     expect(player1.alive).toBe(false);
     expect(player2.alive).toBe(false);
-    expect(game.isFinish()).toBe(true);
+    expect(game.isFinished()).toBe(true);
 
     await listener1;
     await listener2;
