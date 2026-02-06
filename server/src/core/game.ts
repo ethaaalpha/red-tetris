@@ -50,7 +50,7 @@ export const helpers = {
       // apply gravity
       player.actualPiece.moveDown();
     }
-    return { penality: penality };
+    return { penality };
   }
 };
 
