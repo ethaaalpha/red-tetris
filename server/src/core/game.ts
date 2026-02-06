@@ -2,6 +2,7 @@ import type { Game } from "../objects/Game";
 import type { Room } from "../objects/Room";
 import type { Player } from "../objects/Player";
 import { GAME_TICK_DEFAULT, GAME_START_DELAY } from "../constants/core";
+import { sleep } from "../utils/sleep";
 import {
   EVENT_GAME_FINISH,
   EVENT_GAME_INFO,
@@ -63,7 +64,7 @@ export async function gameLoop(room: Room, io: AppServer) {
   });
 
   // delay start of game to synchronize all clients
-  await new Promise((resolve) => setTimeout(resolve, GAME_START_DELAY));
+  await sleep(GAME_START_DELAY);
   game.ongoing = true;
 
   // the game runner

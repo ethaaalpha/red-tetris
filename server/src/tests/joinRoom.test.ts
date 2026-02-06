@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 // intern
 import { ROOM_MAX, ROOM_MAX_USERS, WARMUP_RESTART_DELAY } from "../constants/core";
+import { sleep } from "../utils/sleep";
 import {
   ERROR_ALREADY_IN_A_ROOM,
   ERROR_MAX_ROOMS,
@@ -207,7 +208,7 @@ it("host changed", async () => {
 
   ctx.test1.client.close();
 
-  await new Promise((resolve) => setTimeout(resolve, 42));
+  await sleep(42);
 
   expect(getRoom("example")?.asInfo()).toEqual({
     name: "example",
