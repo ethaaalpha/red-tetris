@@ -72,7 +72,7 @@ export async function gameLoop(room: Room, io: AppServer) {
       if (!player.alive) return;
 
       const { penality, attached } = helpers.handleGravity(game, player);
-      if (game.isFinish()) {
+      if (game.isFinished()) {
         clearInterval(timer);
         io.to(room.name).emit(EVENT_GAME_FINISH, {});
         room.finish();

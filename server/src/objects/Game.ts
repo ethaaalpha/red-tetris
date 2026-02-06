@@ -33,7 +33,7 @@ export class Game {
     return [...this.players.values()].filter((p) => !p.alive);
   }
 
-  public isFinish(): boolean {
+  public isFinished(): boolean {
     return this.getDeadPlayers().length === this.players.size || !this.ongoing;
   }
 
