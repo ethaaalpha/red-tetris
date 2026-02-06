@@ -28,7 +28,7 @@ export function applyMovement(game: Game, player: Player, key: keyof typeof acti
   if (player.board.isValidPiece(actualPiece)) {
     player.actualPiece = actualPiece;
 
-    // Hard drop: place the piece immediately after moving it down
+    // hard drop
     if (key === "SPACE") {
       helpers.attachActualPiece(game, player);
       player.score++;

@@ -19,13 +19,10 @@ export const helpers = {
   },
 
   attachActualPiece(game: Game, player: Player): number {
-    // fix the actual piece
     player.board.place(player.actualPiece);
 
-    // generate a new valid piece
     player.actualPiece = game.nextPiece(player.board.placedPieces);
 
-    // clear the lines
     return player.board.cleanLines();
   },
 
