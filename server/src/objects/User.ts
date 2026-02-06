@@ -4,6 +4,7 @@ import type { ServerSocket } from "../types/socket";
 // intern
 import { Game } from "./Game";
 import { Colors } from "@app/shared";
+import { sleep } from "../utils/sleep";
 
 // const
 import { WARMUP_CHECK_DELAY, WARMUP_RESTART_DELAY } from "../constants/core";
@@ -24,7 +25,7 @@ export class User {
       this.warmUp.ongoing = false;
 
       while (this.warmUp != null) {
-        await new Promise((resolve) => setTimeout(resolve, WARMUP_CHECK_DELAY));
+        await sleep(WARMUP_CHECK_DELAY);
       }
     }
 

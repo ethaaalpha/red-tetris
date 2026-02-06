@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { WARMUP_RESTART_DELAY } from "../constants/core";
 import { EVENT_WARMUP_INFO, EVENT_WARMUP_START } from "@app/shared";
 import { emitAsync, joinRoom, onceAsync, setupTestServer, shutdownTestServer } from "./utils";
+import { sleep } from "../utils/sleep";
 import * as GameModule from "../core/game";
 import { getUser } from "../core/user";
 
@@ -77,7 +78,7 @@ it(
       expect(response.success).toBe(true);
     });
 
-    await new Promise((resolve) => setTimeout(resolve, (WARMUP_RESTART_DELAY + 1) * 1_000));
+    await sleep((WARMUP_RESTART_DELAY + 1) * 1_000);
 
     await emitAsync<EventWarmUpPayload, EventWarmUpSuccess, EventWarmUpError>(
       ctx.test1.client,
