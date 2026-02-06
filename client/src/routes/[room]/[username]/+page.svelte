@@ -411,7 +411,7 @@
                 <Piece color={cell} size={32} />
               {:else if isShadowCell(gameData, index_row, index_cell)}
                 <!-- Shadow piece preview -->
-                <div class="relative h-[32px] w-[32px]">
+                <div class="relative">
                   <Piece color={Colors.EMPTY} size={32} />
                   <div
                     class="absolute inset-0.5 border-2 rounded-xs opacity-75"
