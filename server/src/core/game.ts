@@ -26,23 +26,28 @@ export const helpers = {
     return player.board.cleanLines();
   },
 
+  goToNextPiece(game: Game, player: Player): boolean {
+    let penality = false;
+
+    if (helpers.attachActualPiece(game, player) > 0) {
+      penality = true;
+    }
+    if (player.hasLost()) {
+      player.alive = false;
+    } else {
+      player.score++;
+    }
+    return penality;
+  },
+
   handleGravity(game: Game, player: Player): { penality: boolean; attached: boolean } {
     const next = player.actualPiece.clone().moveDown();
     let penality = false,
       attached = false;
 
     if (!player.board.isValidPiece(next)) {
-      // piece reach bottom
       attached = true;
-      if (helpers.attachActualPiece(game, player) > 0) {
-        penality = true;
-      }
-
-      if (player.hasLost()) {
-        player.alive = false;
-      } else {
-        player.score++;
-      }
+      penality = this.goToNextPiece(game, player);
     } else {
       // apply gravity
       player.actualPiece.moveDown();

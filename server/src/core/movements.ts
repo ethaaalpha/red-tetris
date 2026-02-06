@@ -1,4 +1,4 @@
-import type { GameActions } from "@app/shared";
+import { GameActions } from "@app/shared";
 import type { Game } from "../objects/Game";
 import type { Player } from "../objects/Player";
 import type { ActionData } from "../types/server";
@@ -29,9 +29,8 @@ export function applyMovement(game: Game, player: Player, key: keyof typeof acti
     player.actualPiece = actualPiece;
 
     // hard drop
-    if (key === "SPACE") {
-      helpers.attachActualPiece(game, player);
-      player.score++;
+    if (key === GameActions.SPACE) {
+      helpers.goToNextPiece(game, player);
     }
   }
 }
