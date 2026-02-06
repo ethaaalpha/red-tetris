@@ -19,13 +19,8 @@ export const helpers = {
   },
 
   attachActualPiece(game: Game, player: Player): number {
-    try {
-      player.board.place(player.actualPiece);
-      player.actualPiece = game.nextPiece(player.board.placedPieces);
-    } catch {
-      player.alive = false;
-      return 0;
-    }
+    player.board.place(player.actualPiece);
+    player.actualPiece = game.nextPiece(player.board.placedPieces);
 
     return player.board.cleanLines();
   },
