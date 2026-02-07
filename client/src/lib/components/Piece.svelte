@@ -2,23 +2,31 @@
   import type { Piece } from "@app/shared";
   import { pieceColors } from "@app/shared";
 
-  let { size, color }: Piece = $props();
+  let { size, color, inline = false }: Piece & { inline?: boolean } = $props();
 
   const pieceColor = $derived(pieceColors[color]);
-  const borderWidth = $derived(size * 0.125);
+  const sizeValue = $derived(typeof size === "number" ? `${size}px` : size);
+  const borderWidth = $derived(
+    typeof size === "number" ? `${size * 0.125}px` : `calc(${size} * 0.125)`
+  );
+
+  const style = $derived(`
+		width: ${sizeValue};
+		height: ${sizeValue};
+		background-color: ${pieceColor.main};
+		border-width: ${borderWidth};
+		border-style: solid;
+		border-left-color: ${pieceColor.light};
+		border-top-color: ${pieceColor.light};
+		border-right-color: ${pieceColor.dark};
+		border-bottom-color: ${pieceColor.dark};
+		box-sizing: border-box;
+		${inline ? "display: inline-block; vertical-align: text-top;" : ""}
+	`);
 </script>
 
-<div
-  style="
-		width: {size}px;
-		height: {size}px;
-		background-color: {pieceColor.main};
-		border-width: {borderWidth}px;
-		border-style: solid;
-		border-left-color: {pieceColor.light};
-		border-top-color: {pieceColor.light};
-		border-right-color: {pieceColor.dark};
-		border-bottom-color: {pieceColor.dark};
-		box-sizing: border-box;
-	"
-></div>
+{#if inline}
+  <span {style}></span>
+{:else}
+  <div {style}></div>
+{/if}

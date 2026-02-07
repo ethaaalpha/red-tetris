@@ -5,7 +5,7 @@ import { Colors } from "../enums/colors";
 import type { Matrix2D } from "./matrix";
 
 interface Piece {
-  size: number;
+  size: number | string;
   color: Colors;
 }
 
