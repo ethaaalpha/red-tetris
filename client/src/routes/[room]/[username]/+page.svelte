@@ -495,16 +495,16 @@
     cancel="cancel"
     bind:open={showKickDialog}
   >
-    <div class="flex">
+    <p>
       Do you want to kick
-      <div class="flex items-center gap-2 px-2">
-        <Piece color={userToKickColor} size={16} />
+      <span class="px-1 space-x-1 text-nowrap">
+        <Piece color={userToKickColor} size="1em" inline />
         <span style="color: {userToKickPieceColor}">
           {userToKick}
         </span>
-      </div>
-      from the room ?
-    </div>
+      </span>
+      from the room?
+    </p>
   </Dialog>
 {/if}
 
