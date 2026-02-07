@@ -188,7 +188,6 @@ describe("game loop helpers", () => {
       EVENT_GAME_START,
       settings
     ).then((response) => {
-      console.log(response);
       expect(response.success).toBe(true);
     });
     const retrievedGame = room.game;
