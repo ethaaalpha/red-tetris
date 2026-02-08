@@ -13,7 +13,7 @@ import { formatSchemeError, tickValidation } from "./validation";
 // types
 import type { ValidateError } from "../types/validate";
 import type { ServerSocket } from "../types/socket";
-import type { EventStartPayload, Settings } from "@app/shared";
+import type { EventStartPayload, GameSettings } from "@app/shared";
 
 const schema = z.object({
   tick: tickValidation
@@ -22,7 +22,7 @@ const schema = z.object({
 type ValidateStartSuccess = {
   status: true;
   room: Room;
-  settings: Settings;
+  GameSettings: GameSettings;
 };
 
 type ValideStartResult = ValidateStartSuccess | ValidateError;
@@ -46,9 +46,9 @@ export function validateStart(socket: ServerSocket, payload: EventStartPayload):
     return { status: false, error: { room: ERROR_PLAYING_ROOM } };
   }
 
-  const settings: Settings = {
+  const GameSettings: GameSettings = {
     tick: result.data.tick
   };
 
-  return { status: true, room, settings: settings };
+  return { status: true, room, GameSettings: GameSettings };
 }

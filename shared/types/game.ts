@@ -20,6 +20,6 @@ export type PlayerInfo = {
   color: Colors;
 };
 
-export type Settings = {
+export type GameSettings = {
   tick: number;
 };

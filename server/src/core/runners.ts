@@ -6,7 +6,7 @@ import {
   EVENT_GAME_SPECTRUM,
   EVENT_WARMUP_FINISH,
   EVENT_WARMUP_INFO,
-  type Settings
+  type GameSettings
 } from "@app/shared";
 import { GAME_START_DELAY } from "../constants/core";
 
@@ -19,7 +19,7 @@ import type { Room } from "../objects/Room";
 import type { AppServer } from "../types/socket";
 import type { User } from "../objects/User";
 
-export async function gameLoop(io: AppServer, room: Room, settings: Settings) {
+export async function gameLoop(io: AppServer, room: Room, GameSettings: GameSettings) {
   const game = room.game;
   if (!game) throw new Error("Game not prepared!");
 
@@ -53,10 +53,10 @@ export async function gameLoop(io: AppServer, room: Room, settings: Settings) {
         io.to(id).emit(EVENT_GAME_INFO, game.getGameInfo(id));
       });
     }
-  }, settings.tick);
+  }, GameSettings.tick);
 }
 
-export async function warmUpLoop(io: AppServer, user: User, settings: Settings) {
+export async function warmUpLoop(io: AppServer, user: User, GameSettings: GameSettings) {
   const game = user.warmUp;
   if (!game) throw new Error("Game not prepared!");
 
@@ -79,5 +79,5 @@ export async function warmUpLoop(io: AppServer, user: User, settings: Settings) 
         io.to(id).emit(EVENT_WARMUP_INFO, game.getGameInfo(id));
       });
     }
-  }, settings.tick);
+  }, GameSettings.tick);
 }

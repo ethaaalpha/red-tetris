@@ -20,7 +20,7 @@ export function registerHandlers(io: AppServer, socket: ServerSocket) {
     room.start();
 
     io.to(result.room.name).emit(EVENT_GAME_START, room.asInfo());
-    gameLoop(io, room, result.settings);
+    gameLoop(io, room, result.GameSettings);
     callback({ success: true });
   });
 }

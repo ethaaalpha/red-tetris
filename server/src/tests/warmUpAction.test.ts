@@ -16,7 +16,7 @@ import type {
   EventWarmUpError,
   EventWarmUpPayload,
   EventWarmUpSuccess,
-  Settings
+  GameSettings
 } from "@app/shared";
 
 let ctx: TestServerData;
@@ -30,7 +30,7 @@ afterEach(async () => {
 });
 
 it("warm up perform action", async () => {
-  const settings: Settings = {
+  const GameSettings: GameSettings = {
     tick: 300
   };
   const applyMovement = vi.spyOn(MovementModule, "applyMovement");
@@ -46,7 +46,7 @@ it("warm up perform action", async () => {
   await emitAsync<EventWarmUpPayload, EventWarmUpSuccess, EventWarmUpError>(
     test1.client,
     EVENT_WARMUP_START,
-    settings
+    GameSettings
   ).then(({ success }) => {
     expect(success).toBe(true);
   });

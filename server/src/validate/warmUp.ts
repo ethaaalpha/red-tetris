@@ -9,7 +9,7 @@ import { formatSchemeError, tickValidation } from "./validation";
 import type { User } from "../objects/User";
 import type { ValidateError } from "../types/validate";
 import type { ServerSocket } from "../types/socket";
-import type { EventWarmUpPayload, Settings } from "@app/shared";
+import type { EventWarmUpPayload, GameSettings } from "@app/shared";
 
 const schema = z.object({
   tick: tickValidation
@@ -18,7 +18,7 @@ const schema = z.object({
 type ValidateWarmUpSuccess = {
   status: true;
   current: User;
-  settings: Settings;
+  GameSettings: GameSettings;
 };
 
 type ValidateWarmUpResult = ValidateWarmUpSuccess | ValidateError;
@@ -41,9 +41,9 @@ export function validateWarmUp(
   if (room.game) {
     return { status: false, error: { room: ERROR_PLAYING_ROOM } };
   }
-  const settings: Settings = {
+  const GameSettings: GameSettings = {
     tick: result.data.tick
   };
 
-  return { status: true, current: current, settings: settings };
+  return { status: true, current: current, GameSettings: GameSettings };
 }

@@ -1,6 +1,6 @@
-import type { Settings } from "../game";
+import type { GameSettings } from "../game";
 
-export type EventStartPayload = Settings;
+export type EventStartPayload = GameSettings;
 
 export type EventStartSuccess = void;
 

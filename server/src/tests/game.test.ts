@@ -32,7 +32,7 @@ import type {
   EventStartSuccess,
   EventGamePenalityData,
   GameData,
-  Settings
+  GameSettings
 } from "@app/shared";
 
 let ctx: TestServerData;
@@ -54,7 +54,7 @@ describe("game loop helpers", () => {
   let applyPenalityMock: Mock;
   const pieceI = new Piece(PieceType.I, -1, 3);
   const pieceO = new Piece(PieceType.O, 0, 3);
-  const settings: Settings = {
+  const GameSettings: GameSettings = {
     tick: 300
   };
 
@@ -81,7 +81,7 @@ describe("game loop helpers", () => {
     await emitAsync<EventStartPayload, EventStartSuccess, EventStartError>(
       test1.client,
       EVENT_GAME_START,
-      settings
+      GameSettings
     ).then((response) => {
       expect(response.success).toBe(true);
     });
@@ -186,7 +186,7 @@ describe("game loop helpers", () => {
     await emitAsync<EventStartPayload, EventStartSuccess, EventStartError>(
       test1.client,
       EVENT_GAME_START,
-      settings
+      GameSettings
     ).then((response) => {
       expect(response.success).toBe(true);
     });

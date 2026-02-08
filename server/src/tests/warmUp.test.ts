@@ -12,7 +12,7 @@ import type {
   EventWarmUpPayload,
   EventWarmUpSuccess,
   GameData,
-  Settings
+  GameSettings
 } from "@app/shared";
 import type { TestServerData } from "./types";
 
@@ -26,7 +26,7 @@ afterEach(async () => {
   await shutdownTestServer(ctx);
 });
 
-const settings: Settings = {
+const GameSettings: GameSettings = {
   tick: 300
 };
 
@@ -35,7 +35,7 @@ describe("invalid warm-up", () => {
     await emitAsync<EventWarmUpPayload, EventWarmUpSuccess, EventWarmUpError>(
       ctx.test1.client,
       EVENT_WARMUP_START,
-      settings
+      GameSettings
     ).then((response) => {
       expect(response.success).toBe(false);
     });
@@ -48,7 +48,7 @@ describe("invalid warm-up", () => {
     await emitAsync<EventWarmUpPayload, EventWarmUpSuccess, EventWarmUpError>(
       ctx.test1.client,
       EVENT_WARMUP_START,
-      settings
+      GameSettings
     ).then((response) => {
       expect(response.success).toBe(false);
     });
@@ -61,7 +61,7 @@ it("valid warm-up", async () => {
   await emitAsync<EventWarmUpPayload, EventWarmUpSuccess, EventWarmUpError>(
     ctx.test1.client,
     EVENT_WARMUP_START,
-    settings
+    GameSettings
   ).then((response) => {
     expect(response.success).toBe(true);
   });
@@ -83,7 +83,7 @@ it("warmup loop", async () => {
   await emitAsync<EventWarmUpPayload, EventWarmUpSuccess, EventWarmUpError>(
     test1.client,
     EVENT_WARMUP_START,
-    settings
+    GameSettings
   ).then((response) => {
     expect(response.success).toBe(true);
   });

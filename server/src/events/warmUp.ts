@@ -18,7 +18,7 @@ export function registerHandlers(io: AppServer, socket: ServerSocket) {
 
     console.log(`user ${result.current.name} started warm-up`);
     await result.current.setWarmUp();
-    warmUpLoop(io, result.current, result.settings);
+    warmUpLoop(io, result.current, result.GameSettings);
 
     callback({ success: true });
   });

@@ -20,7 +20,7 @@ import type {
   EventStartPayload,
   EventStartSuccess,
   RoomData,
-  Settings
+  GameSettings
 } from "@app/shared";
 import type { TestServerData } from "./types";
 
@@ -34,7 +34,7 @@ afterEach(async () => {
   await shutdownTestServer(ctx);
 });
 
-const settings: Settings = {
+const GameSettings: GameSettings = {
   tick: 300
 };
 
@@ -43,7 +43,7 @@ describe("invalid start", () => {
     await emitAsync<EventStartPayload, EventStartSuccess, EventStartError>(
       ctx.test1.client,
       EVENT_GAME_START,
-      settings
+      GameSettings
     ).then((response) => {
       expect(response.success).toBe(false);
     });
@@ -56,7 +56,7 @@ describe("invalid start", () => {
     await emitAsync<EventStartPayload, EventStartSuccess, EventStartError>(
       ctx.test1.client,
       EVENT_GAME_START,
-      settings
+      GameSettings
     ).then((response) => {
       expect(response.success).toBe(false);
     });
@@ -69,7 +69,7 @@ describe("invalid start", () => {
     await emitAsync<EventStartPayload, EventStartSuccess, EventStartError>(
       ctx.test1.client,
       EVENT_GAME_START,
-      settings
+      GameSettings
     ).then((response) => {
       expect(response.success).toBe(false);
     });
@@ -88,7 +88,7 @@ it("valid start", async () => {
   await emitAsync<EventStartPayload, EventStartSuccess, EventStartError>(
     ctx.test1.client,
     EVENT_GAME_START,
-    settings
+    GameSettings
   ).then((response) => {
     expect(response.success).toBe(true);
   });
