@@ -18,7 +18,7 @@ import type { Room } from "../objects/Room";
 import type { AppServer } from "../types/socket";
 import type { User } from "../objects/User";
 
-export async function gameLoop(io: AppServer, room: Room, GameSettings: GameSettings) {
+export async function gameLoop(io: AppServer, room: Room, settings: GameSettings) {
   const game = room.game;
   if (!game) throw new Error("Game not prepared!");
 
@@ -29,14 +29,10 @@ export async function gameLoop(io: AppServer, room: Room, GameSettings: GameSett
   await sleep(GAME_START_DELAY);
   game.ongoing = true;
 
-  const timer = setInterval(() => {
-    if (game.isFinished()) {
-      room.game = null;
-      io.to(room.name).emit(EVENT_GAME_FINISH, {});
-      clearInterval(timer);
-    } else {
-      game.players.forEach((player, id) => {
-        if (!player.alive) return;
+  while (game.ongoing) {
+    await sleep(settings.tick);
+    game.players.forEach((player, id) => {
+      if (player.alive) {
         if (player.isNextPositionValid()) {
           player.actualPiece.moveDown();
         } else {
@@ -48,37 +44,42 @@ export async function gameLoop(io: AppServer, room: Room, GameSettings: GameSett
           });
           io.to(room.name).emit(EVENT_GAME_PENALITY, { from: player.user.name });
         }
+        player.checkLost();
+      }
 
-        io.to(room.name).emit(EVENT_GAME_SPECTRUM, game.getGameSpectrums(id));
-        io.to(id).emit(EVENT_GAME_INFO, game.getGameInfo(id));
-      });
-    }
-  }, GameSettings.tick);
+      io.to(room.name).emit(EVENT_GAME_SPECTRUM, game.getGameSpectrums(id));
+      io.to(id).emit(EVENT_GAME_INFO, game.getGameInfo(id));
+    });
+    game.checkFinished();
+  }
+
+  io.to(room.name).emit(EVENT_GAME_FINISH, {});
+  room.game = null;
 }
 
-export async function warmUpLoop(io: AppServer, user: User, GameSettings: GameSettings) {
+export async function warmUpLoop(io: AppServer, user: User, settings: GameSettings) {
   const game = user.warmUp;
   if (!game) throw new Error("Game not prepared!");
 
   game.ongoing = true;
   io.to(user.id).emit(EVENT_WARMUP_INFO, game.getGameInfo(user.id));
 
-  const timer = setInterval(() => {
-    if (game.isFinished()) {
-      user.warmUp = null;
-      io.to(user.id).emit(EVENT_WARMUP_FINISH, {});
-      clearInterval(timer);
-    } else {
-      game.players.forEach((player, id) => {
-        if (player.isNextPositionValid()) {
-          player.actualPiece.moveDown();
-        } else {
-          player.attachCurrentPiece(game);
-        }
-        player.board.cleanLines();
+  while (game.ongoing) {
+    await sleep(settings.tick);
+    game.players.forEach((player, id) => {
+      if (player.isNextPositionValid()) {
+        player.actualPiece.moveDown();
+      } else {
+        player.attachCurrentPiece(game);
+      }
+      player.board.cleanLines();
+      player.checkLost();
 
-        io.to(id).emit(EVENT_WARMUP_INFO, game.getGameInfo(id));
-      });
-    }
-  }, GameSettings.tick);
+      io.to(id).emit(EVENT_WARMUP_INFO, game.getGameInfo(id));
+    });
+    game.checkFinished();
+  }
+
+  io.to(user.id).emit(EVENT_WARMUP_FINISH, {});
+  user.warmUp = null;
 }

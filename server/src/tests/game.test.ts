@@ -170,7 +170,7 @@ describe("game loop helpers", () => {
 
     expect(player1.alive).toBe(false);
     expect(player2.alive).toBe(false);
-    expect(game.isFinished()).toBe(true);
+    expect(game.ongoing).toBe(false);
 
     await vi.advanceTimersToNextTimerAsync();
 

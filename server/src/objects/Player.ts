@@ -21,10 +21,13 @@ export class Player {
     this.actualPiece = initPiece.clone();
   }
 
-  public hasLost(): boolean {
+  public checkLost() {
     // the new generated piece does not have valid position = lose
     const piece = this.actualPiece;
-    return !piece.alreadyMoved && !this.board.isValidPiece(piece);
+
+    if (!piece.alreadyMoved && !this.board.isValidPiece(piece)) {
+      this.alive = false;
+    }
   }
 
   public getInfo(): PlayerInfo {
@@ -49,13 +52,11 @@ export class Player {
   }
 
   public attachCurrentPiece(game: Game) {
-    this.board.place(this.actualPiece);
-    this.actualPiece = game.nextPiece(this.board.placedPieces);
-
-    if (this.hasLost()) {
-      this.alive = false;
-    } else {
+    if (this.alive) {
+      this.board.place(this.actualPiece);
+      this.actualPiece = game.nextPiece(this.board.placedPieces);
       this.score++;
+      this.checkLost();
     }
   }
 }
