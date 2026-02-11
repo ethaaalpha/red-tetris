@@ -50,15 +50,16 @@ export class Board {
     this.placedPieces++;
 
     // check lines to clear
-    const start = piece.x;
-    for (let i = start; i < start + piece.matrix.length; i++) {
-      const row = this.matrix[i];
+    piece.matrix
+      .map((_, offset) => piece.x + offset)
+      .forEach((i) => {
+        const row = this.matrix[i];
 
-      if (!row) continue;
-      if (row.every((cell) => cell != Colors.EMPTY)) {
-        this.filledRows.add(i);
-      }
-    }
+        if (!row) return;
+        if (row.every((cell) => cell != Colors.EMPTY)) {
+          this.filledRows.add(i);
+        }
+      });
   }
 
   public cleanLines(): number {
