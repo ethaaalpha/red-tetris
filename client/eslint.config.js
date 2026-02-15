@@ -15,6 +15,12 @@ export default defineConfig(
   prettier,
   ...svelte.configs.prettier,
   {
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname
+      }
+    },
     plugins: {
       "simple-import-sort": simpleImportSort
     },
@@ -49,8 +55,6 @@ export default defineConfig(
     languageOptions: {
       globals: { ...globals.browser, ...globals.node },
       parserOptions: {
-        projectService: true,
-        tsconfigRootDir: import.meta.dirname,
         extraFileExtensions: [".svelte"],
         parser: ts.parser,
         svelteConfig
