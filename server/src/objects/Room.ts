@@ -1,11 +1,12 @@
-import { ROOM_MAX_USERS } from "../constants/core";
-import { getRooms } from "../core/room";
-import { deleteUser } from "../core/user";
-import { Game } from "./Game";
-import { Colors } from "@app/shared";
-import { logger } from "../utils/log";
-
 import type { RoomData } from "@app/shared";
+import { Colors } from "@app/shared";
+
+import { ROOM_MAX_USERS } from "@app/constants/core";
+import { getRooms } from "@app/core/room";
+import { deleteUser } from "@app/core/user";
+
+import { logger } from "../utils/log";
+import { Game } from "./Game";
 import type { User } from "./User";
 
 export class Room {

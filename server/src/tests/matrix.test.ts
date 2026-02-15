@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { Piece } from "../objects/Piece";
+
 import { PIECES, PieceType } from "@app/shared";
+
+import { Piece } from "@app/objects/Piece";
 
 describe("matrix rotations", () => {
   it("invalid rotations", () => {

@@ -1,18 +1,16 @@
-// global
 import z from "zod";
 
-// intern
-import { ERROR_NOT_IN_A_ROOM } from "../constants/validateErrors";
-import { getRoomBySocket } from "../core/room";
-import { getUser } from "../core/user";
-import { Room } from "../objects/Room";
-import { formatSchemeError, messageValidation } from "./validation";
-
-// types
 import type { EventMessagePayload } from "@app/shared";
-import type { User } from "../objects/User";
-import type { ValidateError } from "../types/validate";
-import type { ServerSocket } from "../types/socket";
+
+import { ERROR_NOT_IN_A_ROOM } from "@app/constants/validateErrors";
+import { getRoomBySocket } from "@app/core/room";
+import { getUser } from "@app/core/user";
+import { Room } from "@app/objects/Room";
+import type { User } from "@app/objects/User";
+import type { ServerSocket } from "@app/types/socket";
+import type { ValidateError } from "@app/types/validate";
+
+import { formatSchemeError, messageValidation } from "./validation";
 
 const schema = z.object({
   message: messageValidation

@@ -1,5 +1,6 @@
 import { PieceType } from "@app/shared";
-import { Piece } from "../objects/Piece";
+
+import { Piece } from "@app/objects/Piece";
 
 function randint(max: number) {
   // max is excluded

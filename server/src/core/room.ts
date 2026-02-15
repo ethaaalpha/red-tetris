@@ -1,7 +1,9 @@
-import { Room } from "../objects/Room";
-import { User } from "../objects/User";
-import type { RoomData } from "@app/shared";
 import type { Socket } from "socket.io";
+
+import type { RoomData } from "@app/shared";
+
+import { Room } from "@app/objects/Room";
+import { User } from "@app/objects/User";
 
 const rooms: Map<string, Room> = new Map();
 

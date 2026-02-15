@@ -1,24 +1,22 @@
-// global
 import z from "zod";
 
-// intern
+import type { EventKickPayload } from "@app/shared";
+
 import {
   ERROR_KICK_PLAYING,
   ERROR_KICK_SELF,
   ERROR_NOT_HOST,
   ERROR_NOT_IN_A_ROOM,
   ERROR_USER_NOT_FOUND
-} from "../constants/validateErrors";
-import { getRoomBySocket } from "../core/room";
-import { getUser } from "../core/user";
-import { formatSchemeError, usernameValidation } from "./validation";
+} from "@app/constants/validateErrors";
+import { getRoomBySocket } from "@app/core/room";
+import { getUser } from "@app/core/user";
+import type { Room } from "@app/objects/Room";
+import type { User } from "@app/objects/User";
+import type { ServerSocket } from "@app/types/socket";
+import type { ValidateError } from "@app/types/validate";
 
-// types
-import type { EventKickPayload } from "@app/shared";
-import type { Room } from "../objects/Room";
-import type { User } from "../objects/User";
-import type { ValidateError } from "../types/validate";
-import type { ServerSocket } from "../types/socket";
+import { formatSchemeError, usernameValidation } from "./validation";
 
 const schema = z.object({
   username: usernameValidation

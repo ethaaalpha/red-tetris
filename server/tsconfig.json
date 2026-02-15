@@ -5,7 +5,6 @@
     "target": "ESNext",
     "module": "Preserve",
     "moduleDetection": "force",
-    "jsx": "react-jsx",
     "allowJs": true,
 
     // Bundler mode
@@ -26,7 +25,8 @@
     "noUnusedParameters": false,
     "noPropertyAccessFromIndexSignature": false,
     "paths": {
-      "@app/shared": ["../shared/index.ts"]
+      "@app/shared": ["../shared/index.ts"],
+      "@app/*": ["./src/*"]
     }
   }
 }

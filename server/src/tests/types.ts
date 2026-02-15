@@ -1,5 +1,6 @@
 import type { AppClientSocket } from "@app/shared";
-import type { AppServer, ServerSocket } from "../types/socket";
+
+import type { AppServer, ServerSocket } from "@app/types/socket";
 
 export interface TestServerData {
   io: AppServer;

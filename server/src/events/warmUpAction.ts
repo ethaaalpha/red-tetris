@@ -1,12 +1,8 @@
-// global
 import { EVENT_WARMUP_ACTION } from "@app/shared";
 
-// intern
-import { validateWarmUpAction } from "../validate/warmUpAction";
-import { applyMovement } from "../core/movements";
-
-// types
-import type { ServerSocket } from "../types/socket";
+import { applyMovement } from "@app/core/movements";
+import type { ServerSocket } from "@app/types/socket";
+import { validateWarmUpAction } from "@app/validate/warmUpAction";
 
 export function registerHandlers(socket: ServerSocket) {
   socket.on(EVENT_WARMUP_ACTION, (payload, callback) => {

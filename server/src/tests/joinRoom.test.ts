@@ -1,19 +1,21 @@
-// global
-import { Colors, EVENT_JOIN_ROOM, EVENT_ROOM_UPDATE, type EventJoinRoomPayload } from "@app/shared";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
-// intern
-import { ROOM_MAX, ROOM_MAX_USERS } from "../constants/core";
-import { sleep } from "../utils/sleep";
+import type { EventJoinRoomError, EventJoinRoomSuccess, RoomData } from "@app/shared";
+import { Colors, EVENT_JOIN_ROOM, EVENT_ROOM_UPDATE, type EventJoinRoomPayload } from "@app/shared";
+
+import { ROOM_MAX, ROOM_MAX_USERS } from "@app/constants/core";
 import {
   ERROR_ALREADY_IN_A_ROOM,
   ERROR_MAX_ROOMS,
   ERROR_PLAYING_ROOM,
   ERROR_ROOM_IS_FULL,
   ERROR_USERNAME_TAKEN
-} from "../constants/validateErrors";
-import { getRoom, setRoom } from "../core/room";
-import { Room } from "../objects/Room";
+} from "@app/constants/validateErrors";
+import { getRoom, setRoom } from "@app/core/room";
+import { Room } from "@app/objects/Room";
+import { sleep } from "@app/utils/sleep";
+
+import type { TestServerData } from "./types";
 import {
   createClient,
   emitAsync,
@@ -22,10 +24,6 @@ import {
   setupTestServer,
   shutdownTestServer
 } from "./utils";
-
-// types
-import type { EventJoinRoomError, EventJoinRoomSuccess, RoomData } from "@app/shared";
-import type { TestServerData } from "./types";
 
 let ctx: TestServerData;
 

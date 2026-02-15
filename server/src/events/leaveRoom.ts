@@ -1,13 +1,9 @@
-// global
 import { EVENT_LEAVE_ROOM, EVENT_ROOM_UPDATE } from "@app/shared";
 
-// intern
-import { removeUserFromRoom } from "../core/room";
-import { validateLeaveRoom } from "../validate/leaveRoom";
-import { logger } from "../utils/log";
-
-// types
-import type { AppServer, ServerSocket } from "../types/socket";
+import { removeUserFromRoom } from "@app/core/room";
+import type { AppServer, ServerSocket } from "@app/types/socket";
+import { logger } from "@app/utils/log";
+import { validateLeaveRoom } from "@app/validate/leaveRoom";
 
 export function registerHandlers(io: AppServer, socket: ServerSocket) {
   socket.on(EVENT_LEAVE_ROOM, (callback) => {

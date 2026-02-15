@@ -1,13 +1,9 @@
-// global
 import { EVENT_WARMUP_START } from "@app/shared";
 
-// intern
-import { validateWarmUp } from "../validate/warmUp";
-import { warmUpLoop } from "../core/runners";
-import { logger } from "../utils/log";
-
-// types
-import type { AppServer, ServerSocket } from "../types/socket";
+import { warmUpLoop } from "@app/core/runners";
+import type { AppServer, ServerSocket } from "@app/types/socket";
+import { logger } from "@app/utils/log";
+import { validateWarmUp } from "@app/validate/warmUp";
 
 export function registerHandlers(io: AppServer, socket: ServerSocket) {
   socket.on(EVENT_WARMUP_START, async (payload, callback) => {

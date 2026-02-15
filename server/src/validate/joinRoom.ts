@@ -1,22 +1,20 @@
-// global
 import z from "zod";
 
-// intern
-import { ROOM_MAX, ROOM_MAX_USERS } from "../constants/core";
+import type { EventJoinRoomPayload } from "@app/shared";
+
+import { ROOM_MAX, ROOM_MAX_USERS } from "@app/constants/core";
 import {
   ERROR_ALREADY_IN_A_ROOM,
   ERROR_MAX_ROOMS,
   ERROR_PLAYING_ROOM,
   ERROR_ROOM_IS_FULL,
   ERROR_USERNAME_TAKEN
-} from "../constants/validateErrors";
-import { getRoom, getRooms } from "../core/room";
-import { formatSchemeError, roomValidation, usernameValidation } from "./validation";
+} from "@app/constants/validateErrors";
+import { getRoom, getRooms } from "@app/core/room";
+import type { ServerSocket } from "@app/types/socket";
+import type { ValidateError } from "@app/types/validate";
 
-// types
-import type { EventJoinRoomPayload } from "@app/shared";
-import type { ValidateError } from "../types/validate";
-import type { ServerSocket } from "../types/socket";
+import { formatSchemeError, roomValidation, usernameValidation } from "./validation";
 
 const schema = z.object({
   username: usernameValidation,

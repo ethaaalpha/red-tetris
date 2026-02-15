@@ -1,47 +1,21 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { goto } from "$app/navigation";
-  import { page } from "$app/state";
   import { fade } from "svelte/transition";
-  import { resolve } from "$app/paths";
-
-  // components
-  import Piece from "$lib/components/Piece.svelte";
   import {
     Crown,
     DoorOpen,
-    LogOut,
-    UserX,
-    X,
-    Send,
     GamepadDirectional,
-    RotateCcw
+    LogOut,
+    RotateCcw,
+    Send,
+    UserX,
+    X
   } from "@lucide/svelte";
-  import Dialog from "$lib/components/Dialog.svelte";
-  import TextInput from "$lib/components/TextInput.svelte";
 
-  // state
-  import { kickState } from "$lib/state/kick.svelte";
-  import { roomState } from "$lib/state/room.svelte";
+  import { goto } from "$app/navigation";
+  import { resolve } from "$app/paths";
+  import { page } from "$app/state";
 
-  // socket
-  import { getSocket } from "$lib/socket/socket.svelte";
-
-  // shared
-  import {
-    Colors,
-    GameActions,
-    EVENT_JOIN_ROOM,
-    EVENT_LEAVE_ROOM,
-    EVENT_KICK,
-    EVENT_MESSAGE,
-    EVENT_WARMUP_START,
-    EVENT_WARMUP_ACTION,
-    EVENT_WARMUP_INFO,
-    EVENT_WARMUP_FINISH
-  } from "@app/shared";
-
-  // types
   import type {
     EventJoinRoomPayload,
     EventKickData,
@@ -52,14 +26,31 @@
     GameSettings,
     UserData
   } from "@app/shared";
-
-  // constants
   import {
+    Colors,
+    EVENT_JOIN_ROOM,
+    EVENT_KICK,
+    EVENT_LEAVE_ROOM,
+    EVENT_MESSAGE,
+    EVENT_WARMUP_ACTION,
+    EVENT_WARMUP_FINISH,
+    EVENT_WARMUP_INFO,
+    EVENT_WARMUP_START,
+    GameActions,
+    MESSAGE_MAX_LENGTH,
     pieceColors,
     REGEX_MESSAGE_SANITIZE,
-    USERNAME_MAX_LENGTH,
-    MESSAGE_MAX_LENGTH
+    USERNAME_MAX_LENGTH
   } from "@app/shared";
+
+  import Dialog from "$lib/components/Dialog.svelte";
+  import Piece from "$lib/components/Piece.svelte";
+  import TextInput from "$lib/components/TextInput.svelte";
+
+  import { kickState } from "$lib/state/kick.svelte";
+  import { roomState } from "$lib/state/room.svelte";
+
+  import { getSocket } from "$lib/socket/socket.svelte";
 
   // url params
   let room = $state(page.params.room || "");

@@ -1,8 +1,6 @@
 <script lang="ts">
+  import type { Component, Snippet } from "svelte";
   import { fade, scale } from "svelte/transition";
-
-  // types
-  import type { Snippet, Component } from "svelte";
 
   let {
     open = $bindable(false),

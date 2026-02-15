@@ -1,7 +1,9 @@
-import { describe, expect, it, beforeEach } from "vitest";
-import { Board } from "../objects/Board";
-import { Piece } from "../objects/Piece";
+import { beforeEach, describe, expect, it } from "vitest";
+
 import { Colors, PieceType } from "@app/shared";
+
+import { Board } from "@app/objects/Board";
+import { Piece } from "@app/objects/Piece";
 
 let board: Board;
 

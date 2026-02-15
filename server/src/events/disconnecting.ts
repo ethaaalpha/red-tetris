@@ -1,13 +1,9 @@
-// global
 import { EVENT_ROOM_UPDATE, EVENT_USER_DISCONNECT } from "@app/shared";
 
-// intern
-import { getRoomBySocket } from "../core/room";
-import { getUser } from "../core/user";
-import { logger } from "../utils/log";
-
-// types
-import type { AppServer, ServerSocket } from "../types/socket";
+import { getRoomBySocket } from "@app/core/room";
+import { getUser } from "@app/core/user";
+import type { AppServer, ServerSocket } from "@app/types/socket";
+import { logger } from "@app/utils/log";
 
 export function registerHandlers(io: AppServer, socket: ServerSocket) {
   socket.on(EVENT_USER_DISCONNECT, () => {

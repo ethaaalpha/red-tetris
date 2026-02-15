@@ -1,15 +1,11 @@
-// global
 import { EVENT_JOIN_ROOM, EVENT_ROOM_UPDATE } from "@app/shared";
 
-// intern
-import { joinOrCreateRoom } from "../core/room";
-import { setUser } from "../core/user";
-import { User } from "../objects/User";
-import { validateJoinRoom } from "../validate/joinRoom";
-import { logger } from "../utils/log";
-
-// types
-import type { AppServer, ServerSocket } from "../types/socket";
+import { joinOrCreateRoom } from "@app/core/room";
+import { setUser } from "@app/core/user";
+import { User } from "@app/objects/User";
+import type { AppServer, ServerSocket } from "@app/types/socket";
+import { logger } from "@app/utils/log";
+import { validateJoinRoom } from "@app/validate/joinRoom";
 
 export function registerHandlers(io: AppServer, socket: ServerSocket) {
   socket.on(EVENT_JOIN_ROOM, (payload, callback) => {

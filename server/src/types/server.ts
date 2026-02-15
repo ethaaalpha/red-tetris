@@ -1,7 +1,9 @@
-import { Server as HttpServer } from "node:http";
 import type { Express } from "express";
-import type { Board } from "../objects/Board";
-import type { Piece } from "../objects/Piece";
+import { Server as HttpServer } from "node:http";
+
+import type { Board } from "@app/objects/Board";
+import type { Piece } from "@app/objects/Piece";
+
 import type { AppServer } from "./socket";
 
 export interface ServerData {

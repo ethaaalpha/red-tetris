@@ -1,4 +1,3 @@
-// const
 import {
   EVENT_GAME_FINISH,
   EVENT_GAME_INFO,
@@ -8,15 +7,12 @@ import {
   EVENT_WARMUP_INFO,
   type GameSettings
 } from "@app/shared";
-import { GAME_START_DELAY } from "../constants/core";
 
-// intern
-import { sleep } from "../utils/sleep";
-
-// types
-import type { Room } from "../objects/Room";
-import type { AppServer } from "../types/socket";
-import type { User } from "../objects/User";
+import { GAME_START_DELAY } from "@app/constants/core";
+import type { Room } from "@app/objects/Room";
+import type { User } from "@app/objects/User";
+import type { AppServer } from "@app/types/socket";
+import { sleep } from "@app/utils/sleep";
 
 export async function gameLoop(io: AppServer, room: Room, settings: GameSettings) {
   const game = room.game;
