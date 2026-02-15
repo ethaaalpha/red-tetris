@@ -1,10 +1,18 @@
-// global
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
-// intern
+import type {
+  EventKickData,
+  EventKickError,
+  EventKickPayload,
+  EventKickSuccess,
+  RoomData
+} from "@app/shared";
 import { EVENT_KICK, EVENT_ROOM_UPDATE } from "@app/shared";
-import { getRoom } from "../core/room";
-import { setUser } from "../core/user";
+
+import { getRoom } from "@app/core/room";
+import { setUser } from "@app/core/user";
+
+import type { TestServerData } from "./types";
 import {
   createClient,
   emitAsync,
@@ -14,16 +22,6 @@ import {
   setupTestServer,
   shutdownTestServer
 } from "./utils";
-
-// types
-import type {
-  EventKickData,
-  EventKickError,
-  EventKickPayload,
-  EventKickSuccess,
-  RoomData
-} from "@app/shared";
-import type { TestServerData } from "./types";
 
 let ctx: TestServerData;
 

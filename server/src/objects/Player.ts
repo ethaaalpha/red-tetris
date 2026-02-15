@@ -1,11 +1,9 @@
-// type
-import type { PlayerInfo, Colors } from "@app/shared";
-import type { Piece } from "./Piece";
-import type { User } from "./User";
+import type { Colors, PlayerInfo } from "@app/shared";
 
-// intern
 import { Board } from "./Board";
 import type { Game } from "./Game";
+import type { Piece } from "./Piece";
+import type { User } from "./User";
 
 export class Player {
   public board = new Board();

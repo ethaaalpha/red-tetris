@@ -1,4 +1,4 @@
-import { ROOM_MAX_LENGTH, USERNAME_MAX_LENGTH, MESSAGE_MAX_LENGTH } from "@app/shared";
+import { MESSAGE_MAX_LENGTH, ROOM_MAX_LENGTH, USERNAME_MAX_LENGTH } from "@app/shared";
 
 export const Z_ERROR_ROOM_EMPTY = "Room name cannot be empty";
 export const Z_ERROR_ROOM_MAX = `Room name cannot be longer than ${ROOM_MAX_LENGTH} characters`;

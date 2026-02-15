@@ -1,12 +1,7 @@
-// global
 import { EVENT_MESSAGE } from "@app/shared";
 
-// intern
-import { validateMessage } from "../validate/message";
-import { logger } from "../utils/log";
-
-// types
-import type { AppServer, ServerSocket } from "../types/socket";
+import type { AppServer, ServerSocket } from "@app/types/socket";
+import { validateMessage } from "@app/validate/message";
 
 export function registerHandlers(io: AppServer, socket: ServerSocket) {
   socket.on(EVENT_MESSAGE, (payload, callback) => {

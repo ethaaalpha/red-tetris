@@ -1,25 +1,23 @@
-// global
+import type { AddressInfo } from "net";
+import type { Socket as ClientSocket } from "socket.io-client";
 import { io as ioc } from "socket.io-client";
 import { expect } from "vitest";
 
-// intern
-import { init } from "../../app";
-import { EVENT_JOIN_ROOM } from "@app/shared";
-import { getRoom, getRooms } from "../core/room";
-import { getUsers } from "../core/user";
-import { Room } from "../objects/Room";
-import { User } from "../objects/User";
-
-// types
-import type { AddressInfo } from "net";
-import type { Socket as ClientSocket } from "socket.io-client";
 import type {
   EventJoinRoomError,
   EventJoinRoomPayload,
   EventJoinRoomSuccess,
   SocketResponse
 } from "@app/shared";
-import type { AppServer, ServerSocket } from "../types/socket";
+import { EVENT_JOIN_ROOM } from "@app/shared";
+
+import { getRoom, getRooms } from "@app/core/room";
+import { getUsers } from "@app/core/user";
+import { Room } from "@app/objects/Room";
+import { User } from "@app/objects/User";
+import type { AppServer, ServerSocket } from "@app/types/socket";
+
+import { init } from "../../app";
 import type { TestServerData, TestSocket } from "./types";
 
 export function createClient(address: string, io: AppServer): Promise<TestSocket> {

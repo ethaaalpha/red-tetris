@@ -1,7 +1,13 @@
-// global
-import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, type Mock, vi } from "vitest";
 
-// intern
+import type {
+  EventGamePenalityData,
+  EventStartError,
+  EventStartPayload,
+  EventStartSuccess,
+  GameData,
+  GameSettings
+} from "@app/shared";
 import {
   EVENT_GAME_FINISH,
   EVENT_GAME_INFO,
@@ -9,8 +15,15 @@ import {
   EVENT_GAME_START,
   PieceType
 } from "@app/shared";
-import { BOARD_WIDTH } from "../constants/core";
-import { getRoomBySocket } from "../core/room";
+
+import { BOARD_WIDTH } from "@app/constants/core";
+import { getRoomBySocket } from "@app/core/room";
+import type { Game } from "@app/objects/Game";
+import { Piece } from "@app/objects/Piece";
+import { Player } from "@app/objects/Player";
+import type { Room } from "@app/objects/Room";
+
+import type { TestServerData, TestSocket } from "./types";
 import {
   createClient,
   emitAsync,
@@ -19,21 +32,6 @@ import {
   setupTestServer,
   shutdownTestServer
 } from "./utils";
-import { Piece } from "../objects/Piece";
-
-// types
-import type { TestServerData, TestSocket } from "./types";
-import type { Room } from "../objects/Room";
-import type { Game } from "../objects/Game";
-import type {
-  EventStartError,
-  EventStartPayload,
-  EventStartSuccess,
-  EventGamePenalityData,
-  GameData,
-  GameSettings
-} from "@app/shared";
-import { Player } from "../objects/Player";
 
 let ctx: TestServerData;
 

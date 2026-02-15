@@ -1,4 +1,4 @@
-import { type User } from "../objects/User";
+import { type User } from "@app/objects/User";
 
 const users: Map<string, User> = new Map();
 

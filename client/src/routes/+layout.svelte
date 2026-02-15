@@ -1,22 +1,17 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import "./layout.css";
-
-  // components
-  import Dialog from "$lib/components/Dialog.svelte";
-
-  // state
-  import { setRoomData } from "$lib/state/room.svelte";
-
-  // assets
-  import redPiece from "$lib/assets/red_piece.jpg";
-
-  // socket
-  import { getSocket } from "$lib/socket/socket.svelte";
   import { ServerOff } from "@lucide/svelte";
 
-  // events
   import { EVENT_ROOM_UPDATE, EVENT_USER_CONNECT, EVENT_USER_CONNECT_ERROR } from "@app/shared";
+
+  import Dialog from "$lib/components/Dialog.svelte";
+
+  import { setRoomData } from "$lib/state/room.svelte";
+
+  import redPiece from "$lib/assets/red_piece.jpg";
+  import { getSocket } from "$lib/socket/socket.svelte";
+
+  import "./layout.css";
 
   let { children } = $props();
 

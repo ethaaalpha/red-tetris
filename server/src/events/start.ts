@@ -1,12 +1,8 @@
-// global
 import { EVENT_GAME_START } from "@app/shared";
 
-// intern
-import { validateStart } from "../validate/start";
-
-// types
-import type { AppServer, ServerSocket } from "../types/socket";
-import { gameLoop } from "../core/runners";
+import { gameLoop } from "@app/core/runners";
+import type { AppServer, ServerSocket } from "@app/types/socket";
+import { validateStart } from "@app/validate/start";
 
 export function registerHandlers(io: AppServer, socket: ServerSocket) {
   socket.on(EVENT_GAME_START, (payload, callback) => {

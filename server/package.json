@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "bun --hot app.ts",
     "format": "bunx prettier . --write",
-    "lint": "bunx eslint . && bunx tsc --noEmit",
+    "lint": "bunx eslint . --fix && bunx tsc --noEmit",
     "coverage": "bunx vitest run --coverage"
   },
   "devDependencies": {
@@ -16,6 +16,7 @@
     "@vitest/coverage-v8": "4.0.18",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
     "prettier": "3.7.4",
     "socket.io-client": "^4.8.3",
     "typescript-eslint": "^8.53.1",

@@ -1,5 +1,6 @@
 import type { Matrix2D, NonEmptyArray } from "@app/shared";
-import type { Piece } from "../objects/Piece";
+
+import type { Piece } from "@app/objects/Piece";
 
 export function asMatrix(data: (number | undefined)[][]): Matrix2D<number> {
   const rows: NonEmptyArray<number>[] = data.map((row) => {

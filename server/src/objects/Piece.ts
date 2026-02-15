@@ -1,9 +1,7 @@
-// intern
+import type { Matrix2D, PieceData, PieceType } from "@app/shared";
 import { Colors, PIECES } from "@app/shared";
 
-// types
-import type { Matrix2D, PieceType, PieceData } from "@app/shared";
-import { asMatrix } from "../core/matrix";
+import { asMatrix } from "@app/core/matrix";
 
 export class Piece {
   public rotation: number = 0;

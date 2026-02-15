@@ -1,7 +1,9 @@
 import { Colors, type Matrix2D, type NonEmptyArray } from "@app/shared";
+
+import { BOARD } from "@app/constants/board";
+import { placePieceOnMatrix } from "@app/core/matrix";
+
 import { Piece } from "./Piece";
-import { BOARD } from "../constants/board";
-import { placePieceOnMatrix } from "../core/matrix";
 
 export class Board {
   public matrix: Matrix2D<number>; // row, column

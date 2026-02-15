@@ -1,29 +1,22 @@
-// global
+import type { Express } from "express";
 import express from "express";
 import { createServer } from "node:http";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { Server as IoServer } from "socket.io";
 
-// intern
-import { SERVER_PORT } from "./src/constants/core";
-import { logger } from "./src/utils/log";
-
-// handlers
-import { registerHandlers as disconnectingHandler } from "./src/events/disconnecting";
-import { registerHandlers as getRoomsHandler } from "./src/events/getRooms";
-import { registerHandlers as joinRoomHandler } from "./src/events/joinRoom";
-import { registerHandlers as kickHandler } from "./src/events/kick";
-import { registerHandlers as leaveRoomHandler } from "./src/events/leaveRoom";
-import { registerHandlers as startHandler } from "./src/events/start";
-import { registerHandlers as messageHandler } from "./src/events/message";
-import { registerHandlers as warmUpHandler } from "./src/events/warmUp";
-import { registerHandlers as warmUpActionHandler } from "./src/events/warmUpAction";
-
-// types
-import type { Express } from "express";
-import type { ServerData } from "./src/types/server";
-import type { AppServer, ServerSocket } from "./src/types/socket";
+import { SERVER_PORT } from "@app/constants/core";
+import { registerHandlers as disconnectingHandler } from "@app/events/disconnecting";
+import { registerHandlers as getRoomsHandler } from "@app/events/getRooms";
+import { registerHandlers as joinRoomHandler } from "@app/events/joinRoom";
+import { registerHandlers as kickHandler } from "@app/events/kick";
+import { registerHandlers as leaveRoomHandler } from "@app/events/leaveRoom";
+import { registerHandlers as messageHandler } from "@app/events/message";
+import { registerHandlers as startHandler } from "@app/events/start";
+import { registerHandlers as warmUpHandler } from "@app/events/warmUp";
+import { registerHandlers as warmUpActionHandler } from "@app/events/warmUpAction";
+import type { ServerData } from "@app/types/server";
+import type { AppServer, ServerSocket } from "@app/types/socket";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

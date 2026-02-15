@@ -9,8 +9,8 @@ import {
   USERNAME_MAX_LENGTH
 } from "@app/shared";
 
-import * as ZodSchemaErrors from "../constants/zodSchemaErrors";
-import { GAME_TICK_MAX, GAME_TICK_MIN } from "../constants/core";
+import { GAME_TICK_MAX, GAME_TICK_MIN } from "@app/constants/core";
+import * as ZodSchemaErrors from "@app/constants/zodSchemaErrors";
 
 export function formatSchemeError(error: ZodError) {
   return error.issues.reduce(

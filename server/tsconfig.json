@@ -26,7 +26,8 @@
     "noUnusedParameters": false,
     "noPropertyAccessFromIndexSignature": false,
     "paths": {
-      "@app/shared": ["../shared/index.ts"]
+      "@app/shared": ["../shared/index.ts"],
+      "@app/*": ["./src/*"]
     }
   }
 }

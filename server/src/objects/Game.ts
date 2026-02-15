@@ -1,13 +1,12 @@
-// types
-import type { Piece } from "./Piece";
-import type { User } from "./User";
 import type { GameData, PlayerInfo } from "@app/shared";
 import type { Colors } from "@app/shared";
 
-// intern
-import { createPiece } from "../core/piece";
+import { placePieceOnMatrix } from "@app/core/matrix";
+import { createPiece } from "@app/core/piece";
+
+import type { Piece } from "./Piece";
 import { Player } from "./Player";
-import { placePieceOnMatrix } from "../core/matrix";
+import type { User } from "./User";
 
 export class Game {
   public players: Map<string, Player> = new Map();

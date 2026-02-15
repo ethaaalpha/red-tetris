@@ -1,13 +1,10 @@
-// intern
-import { ERROR_INEXISTING_ROOM, ERROR_USER_NOT_FOUND } from "../constants/validateErrors";
-import { getRoomBySocket } from "../core/room";
-import { getUser } from "../core/user";
-
-// types
-import type { Room } from "../objects/Room";
-import type { User } from "../objects/User";
-import type { ValidateError } from "../types/validate";
-import type { ServerSocket } from "../types/socket";
+import { ERROR_INEXISTING_ROOM, ERROR_USER_NOT_FOUND } from "@app/constants/validateErrors";
+import { getRoomBySocket } from "@app/core/room";
+import { getUser } from "@app/core/user";
+import type { Room } from "@app/objects/Room";
+import type { User } from "@app/objects/User";
+import type { ServerSocket } from "@app/types/socket";
+import type { ValidateError } from "@app/types/validate";
 
 type ValidateLeaveRoomSuccess = {
   status: true;

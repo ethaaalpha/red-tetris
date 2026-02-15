@@ -1,18 +1,16 @@
-// global
 import z from "zod";
 
-// intern
-import { ERROR_NOT_IN_A_ROOM, ERROR_WARMUP_NOT_IN } from "../constants/validateErrors";
-import { actionValidation, formatSchemeError } from "./validation";
-import { getUser } from "../core/user";
-import { getRoomBySocket } from "../core/room";
-
-// types
 import type { EventWarmUpActionPayload, GameActions } from "@app/shared";
-import type { ServerSocket } from "../types/socket";
-import type { Game } from "../objects/Game";
-import type { ValidateError } from "../types/validate";
-import type { Player } from "../objects/Player";
+
+import { ERROR_NOT_IN_A_ROOM, ERROR_WARMUP_NOT_IN } from "@app/constants/validateErrors";
+import { getRoomBySocket } from "@app/core/room";
+import { getUser } from "@app/core/user";
+import type { Game } from "@app/objects/Game";
+import type { Player } from "@app/objects/Player";
+import type { ServerSocket } from "@app/types/socket";
+import type { ValidateError } from "@app/types/validate";
+
+import { actionValidation, formatSchemeError } from "./validation";
 
 const schema = z.object({
   action: actionValidation

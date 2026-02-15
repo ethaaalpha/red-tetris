@@ -1,10 +1,17 @@
-// global
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
-// intern
+import type {
+  EventLeaveRoomError,
+  EventLeaveRoomPayload,
+  EventLeaveRoomSuccess,
+  RoomData
+} from "@app/shared";
 import { EVENT_LEAVE_ROOM, EVENT_ROOM_UPDATE } from "@app/shared";
-import { getRoom, getRooms } from "../core/room";
-import { getUser, getUsers } from "../core/user";
+
+import { getRoom, getRooms } from "@app/core/room";
+import { getUser, getUsers } from "@app/core/user";
+
+import type { TestServerData } from "./types";
 import {
   createClient,
   emitAsync,
@@ -13,15 +20,6 @@ import {
   setupTestServer,
   shutdownTestServer
 } from "./utils";
-
-// types
-import type {
-  EventLeaveRoomError,
-  EventLeaveRoomPayload,
-  EventLeaveRoomSuccess,
-  RoomData
-} from "@app/shared";
-import type { TestServerData } from "./types";
 
 let ctx: TestServerData;
 

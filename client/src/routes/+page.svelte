@@ -1,32 +1,23 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { Gamepad2, Info } from "@lucide/svelte";
+
   import { goto } from "$app/navigation";
   import { resolve } from "$app/paths";
 
-  // assets
-  import bgTile from "$lib/assets/empty_piece.jpg";
+  import type { EventJoinRoomPayload, RoomListData } from "@app/shared";
+  import { Colors, EVENT_GET_ROOMS, EVENT_JOIN_ROOM } from "@app/shared";
+  import { REGEX_ROOM_AND_USER_SANITIZE, ROOM_MAX_LENGTH, USERNAME_MAX_LENGTH } from "@app/shared";
 
-  // components
   import Dialog from "$lib/components/Dialog.svelte";
   import Piece from "$lib/components/Piece.svelte";
   import TextInput from "$lib/components/TextInput.svelte";
-  import { Gamepad2, Info } from "@lucide/svelte";
 
-  // state
   import { kickState } from "$lib/state/kick.svelte";
   import { roomState } from "$lib/state/room.svelte";
 
-  // socket
+  import bgTile from "$lib/assets/empty_piece.jpg";
   import { getSocket } from "$lib/socket/socket.svelte";
-
-  // events
-  import { Colors, EVENT_GET_ROOMS, EVENT_JOIN_ROOM } from "@app/shared";
-
-  // types
-  import type { EventJoinRoomPayload, RoomListData } from "@app/shared";
-
-  // constants
-  import { REGEX_ROOM_AND_USER_SANITIZE, USERNAME_MAX_LENGTH, ROOM_MAX_LENGTH } from "@app/shared";
 
   // error
   let usernameError = $state<string>();

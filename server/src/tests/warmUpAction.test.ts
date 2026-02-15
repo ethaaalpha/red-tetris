@@ -1,23 +1,21 @@
-// global
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 
-// intern
-import { EVENT_WARMUP_ACTION, EVENT_WARMUP_START, GameActions } from "@app/shared";
-import { emitAsync, joinRoom, setupTestServer, shutdownTestServer } from "./utils";
-import * as MovementModule from "../core/movements";
-import { getUser } from "../core/user";
-
-// types
-import type { TestServerData } from "./types";
 import type {
   EventWarmUpActionError,
-  EventWarmUpActionSuccess,
   EventWarmUpActionPayload,
+  EventWarmUpActionSuccess,
   EventWarmUpError,
   EventWarmUpPayload,
   EventWarmUpSuccess,
   GameSettings
 } from "@app/shared";
+import { EVENT_WARMUP_ACTION, EVENT_WARMUP_START, GameActions } from "@app/shared";
+
+import * as MovementModule from "@app/core/movements";
+import { getUser } from "@app/core/user";
+
+import type { TestServerData } from "./types";
+import { emitAsync, joinRoom, setupTestServer, shutdownTestServer } from "./utils";
 
 let ctx: TestServerData;
 

@@ -1,12 +1,5 @@
-// global
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-// intern
-import { EVENT_WARMUP_INFO, EVENT_WARMUP_START } from "@app/shared";
-import { emitAsync, joinRoom, onceAsync, setupTestServer, shutdownTestServer } from "./utils";
-import { getUser } from "../core/user";
-
-// types
 import type {
   EventWarmUpError,
   EventWarmUpPayload,
@@ -14,7 +7,12 @@ import type {
   GameData,
   GameSettings
 } from "@app/shared";
+import { EVENT_WARMUP_INFO, EVENT_WARMUP_START } from "@app/shared";
+
+import { getUser } from "@app/core/user";
+
 import type { TestServerData } from "./types";
+import { emitAsync, joinRoom, onceAsync, setupTestServer, shutdownTestServer } from "./utils";
 
 let ctx: TestServerData;
 

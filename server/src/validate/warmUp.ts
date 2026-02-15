@@ -1,15 +1,15 @@
-// intern
-import { ERROR_NOT_IN_A_ROOM, ERROR_PLAYING_ROOM } from "../constants/validateErrors";
-import { getRoomBySocket } from "../core/room";
-import { getUser } from "../core/user";
 import z from "zod";
-import { formatSchemeError, tickValidation } from "./validation";
 
-// types
-import type { User } from "../objects/User";
-import type { ValidateError } from "../types/validate";
-import type { ServerSocket } from "../types/socket";
 import type { EventWarmUpPayload, GameSettings } from "@app/shared";
+
+import { ERROR_NOT_IN_A_ROOM, ERROR_PLAYING_ROOM } from "@app/constants/validateErrors";
+import { getRoomBySocket } from "@app/core/room";
+import { getUser } from "@app/core/user";
+import type { User } from "@app/objects/User";
+import type { ServerSocket } from "@app/types/socket";
+import type { ValidateError } from "@app/types/validate";
+
+import { formatSchemeError, tickValidation } from "./validation";
 
 const schema = z.object({
   tick: tickValidation

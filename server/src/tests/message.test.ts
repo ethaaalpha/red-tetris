@@ -1,8 +1,14 @@
-// global
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
-// intern
+import type {
+  EventMessageData,
+  EventMessageError,
+  EventMessagePayload,
+  EventMessageSuccess
+} from "@app/shared";
 import { EVENT_MESSAGE } from "@app/shared";
+
+import type { TestServerData } from "./types";
 import {
   createClient,
   emitAsync,
@@ -11,15 +17,6 @@ import {
   setupTestServer,
   shutdownTestServer
 } from "./utils";
-
-// types
-import type {
-  EventMessageData,
-  EventMessageError,
-  EventMessagePayload,
-  EventMessageSuccess
-} from "@app/shared";
-import type { TestServerData } from "./types";
 
 let ctx: TestServerData;
 

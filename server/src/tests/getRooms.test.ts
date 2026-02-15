@@ -1,16 +1,14 @@
-// global
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+
+import type { EventGetRoomsError, EventGetRoomsPayload, EventGetRoomsSuccess } from "@app/shared";
 import { EVENT_GET_ROOMS } from "@app/shared";
 
-// intern
-import { ROOM_MAX_USERS } from "../constants/core";
-import { getRoom, setRoom } from "../core/room";
-import { Room } from "../objects/Room";
-import { emitAsync, fakeUser, setupTestServer, shutdownTestServer } from "./utils";
+import { ROOM_MAX_USERS } from "@app/constants/core";
+import { getRoom, setRoom } from "@app/core/room";
+import { Room } from "@app/objects/Room";
 
-// types
-import type { EventGetRoomsError, EventGetRoomsPayload, EventGetRoomsSuccess } from "@app/shared";
 import type { TestServerData } from "./types";
+import { emitAsync, fakeUser, setupTestServer, shutdownTestServer } from "./utils";
 
 let ctx: TestServerData;
 

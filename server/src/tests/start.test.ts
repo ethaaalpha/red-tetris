@@ -1,9 +1,17 @@
-// global
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
-// intern
+import type {
+  EventStartError,
+  EventStartPayload,
+  EventStartSuccess,
+  GameSettings,
+  RoomData
+} from "@app/shared";
 import { EVENT_GAME_START } from "@app/shared";
-import { getRoom } from "../core/room";
+
+import { getRoom } from "@app/core/room";
+
+import type { TestServerData } from "./types";
 import {
   createClient,
   emitAsync,
@@ -13,16 +21,6 @@ import {
   setupTestServer,
   shutdownTestServer
 } from "./utils";
-
-// types
-import type {
-  EventStartError,
-  EventStartPayload,
-  EventStartSuccess,
-  RoomData,
-  GameSettings
-} from "@app/shared";
-import type { TestServerData } from "./types";
 
 let ctx: TestServerData;
 
