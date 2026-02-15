@@ -1,6 +1,7 @@
 import { EVENT_MESSAGE } from "@app/shared";
 
 import type { AppServer, ServerSocket } from "@app/types/socket";
+import { logger } from "@app/utils/log";
 import { validateMessage } from "@app/validate/message";
 
 export function registerHandlers(io: AppServer, socket: ServerSocket) {

@@ -2,6 +2,7 @@ import { EVENT_KICK, EVENT_ROOM_UPDATE } from "@app/shared";
 
 import { removeUserFromRoom } from "@app/core/room";
 import type { AppServer, ServerSocket } from "@app/types/socket";
+import { logger } from "@app/utils/log";
 import { validateKick } from "@app/validate/kick";
 
 export function registerHandlers(io: AppServer, socket: ServerSocket) {

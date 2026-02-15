@@ -2,6 +2,7 @@ import { EVENT_WARMUP_START } from "@app/shared";
 
 import { warmUpLoop } from "@app/core/runners";
 import type { AppServer, ServerSocket } from "@app/types/socket";
+import { logger } from "@app/utils/log";
 import { validateWarmUp } from "@app/validate/warmUp";
 
 export function registerHandlers(io: AppServer, socket: ServerSocket) {

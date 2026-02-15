@@ -4,6 +4,7 @@ import { joinOrCreateRoom } from "@app/core/room";
 import { setUser } from "@app/core/user";
 import { User } from "@app/objects/User";
 import type { AppServer, ServerSocket } from "@app/types/socket";
+import { logger } from "@app/utils/log";
 import { validateJoinRoom } from "@app/validate/joinRoom";
 
 export function registerHandlers(io: AppServer, socket: ServerSocket) {

@@ -17,6 +17,7 @@ import { registerHandlers as warmUpHandler } from "@app/events/warmUp";
 import { registerHandlers as warmUpActionHandler } from "@app/events/warmUpAction";
 import type { ServerData } from "@app/types/server";
 import type { AppServer, ServerSocket } from "@app/types/socket";
+import { logger } from "@app/utils/log";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
