@@ -25,7 +25,6 @@ export * from "./types/game";
 // [ CONSTANTS ]
 export * from "./constants/events";
 export * from "./constants/pieceColors";
-export * from "./constants/pieces";
 export * from "./constants/regex";
 export * from "./constants/limits";
 

@@ -20,16 +20,13 @@ export function asMatrix(data: (number | undefined)[][]): Matrix2D<number> {
 }
 
 export function placePieceOnMatrix(piece: Piece, matrix: Matrix2D<number>) {
-  piece.matrix.forEach((pieceRow, i) => {
-    // we skip empty piece lines
-    if (!pieceRow.find((v) => v === 1)) return;
-    const matrixRow = matrix[piece.x + i];
+  piece.blocks.forEach(([x, y]) => {
+    const row = piece.x + x;
+    const column = piece.y + y;
+
+    const matrixRow = matrix[row];
     if (!matrixRow) throw Error("Invalid row index!");
 
-    pieceRow.forEach((cell, j) => {
-      // skip zeros
-      if (!cell) return;
-      matrixRow[piece.y + j] = piece.color;
-    });
+    matrixRow[column] = piece.color;
   });
 }

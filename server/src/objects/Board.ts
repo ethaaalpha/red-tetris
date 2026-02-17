@@ -26,21 +26,16 @@ export class Board {
     // this check if a piece is does not have conflict
     // with others pieces / walls / restricted lines
     // useful to detect if a movement is valid or if a piece reach the bottom
-    if (!piece.matrix[0]) throw new Error("Invalid piece matrix!");
+    for (const [x, y] of piece.blocks) {
+      const row = piece.x + x;
+      const column = piece.y + y;
+      const boardRow = this.matrix[row];
 
-    return piece.matrix.every((pieceRow, i) => {
-      return pieceRow.every((pieceCell, j) => {
-        if (pieceCell != 0) {
-          const boardRow = this.matrix[piece.x + i];
-          // outside of board
-          if (!boardRow) return false;
-          const boardCell = boardRow[piece.y + j];
-          // outside of board or colisision
-          if (boardCell === undefined || boardCell != 0) return false;
-        }
-        return true;
-      });
-    });
+      if (boardRow === undefined) return false;
+      const boardCell = boardRow[column];
+      if (boardCell === undefined || boardCell != Colors.EMPTY) return false;
+    }
+    return true;
   }
 
   public place(piece: Piece) {
@@ -52,16 +47,16 @@ export class Board {
     this.placedPieces++;
 
     // check lines to clear
-    piece.matrix
-      .map((_, offset) => piece.x + offset)
-      .forEach((i) => {
-        const row = this.matrix[i];
+    // piece.matrix
+    //   .map((_, offset) => piece.x + offset)
+    //   .forEach((i) => {
+    //     const row = this.matrix[i];
 
-        if (!row) return;
-        if (row.every((cell) => cell != Colors.EMPTY)) {
-          this.completedRowIndices.add(i);
-        }
-      });
+    //     if (!row) return;
+    //     if (row.every((cell) => cell != Colors.EMPTY)) {
+    //       this.completedRowIndices.add(i);
+    //     }
+    //   });
   }
 
   public cleanLines(): number {

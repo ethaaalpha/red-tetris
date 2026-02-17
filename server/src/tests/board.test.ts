@@ -33,13 +33,13 @@ describe("invalid placements", () => {
   });
 
   it("bottom right", () => {
-    expect(board.isValidPiece(new Piece(PieceType.I, 18, 7))).toBe(false);
-    expect(board.isValidPiece(new Piece(PieceType.J, 17, 8))).toBe(false);
-    expect(board.isValidPiece(new Piece(PieceType.L, 17, 8))).toBe(false);
+    expect(board.isValidPiece(new Piece(PieceType.I, 19, 8))).toBe(false);
+    expect(board.isValidPiece(new Piece(PieceType.J, 17, 9))).toBe(false);
+    expect(board.isValidPiece(new Piece(PieceType.L, 17, 9))).toBe(false);
     expect(board.isValidPiece(new Piece(PieceType.O, 17, 9))).toBe(false);
-    expect(board.isValidPiece(new Piece(PieceType.S, 19, 7))).toBe(false);
-    expect(board.isValidPiece(new Piece(PieceType.T, 17, 8))).toBe(false);
-    expect(board.isValidPiece(new Piece(PieceType.Z, 17, 8))).toBe(false);
+    expect(board.isValidPiece(new Piece(PieceType.S, 19, 9))).toBe(false);
+    expect(board.isValidPiece(new Piece(PieceType.T, 17, 9))).toBe(false);
+    expect(board.isValidPiece(new Piece(PieceType.Z, 17, 9))).toBe(false);
   });
 
   it("bottom left", () => {
@@ -55,23 +55,23 @@ describe("invalid placements", () => {
 
 describe("valid placements", () => {
   it("top right", () => {
-    expect(board.isValidPiece(new Piece(PieceType.I, -1, 6))).toBe(true);
-    expect(board.isValidPiece(new Piece(PieceType.J, 0, 7))).toBe(true);
-    expect(board.isValidPiece(new Piece(PieceType.L, 0, 7))).toBe(true);
-    expect(board.isValidPiece(new Piece(PieceType.O, 0, 7))).toBe(true);
-    expect(board.isValidPiece(new Piece(PieceType.S, 0, 7))).toBe(true);
-    expect(board.isValidPiece(new Piece(PieceType.T, 0, 7))).toBe(true);
-    expect(board.isValidPiece(new Piece(PieceType.Z, 0, 7))).toBe(true);
+    expect(board.isValidPiece(new Piece(PieceType.I, 1, 6))).toBe(true);
+    expect(board.isValidPiece(new Piece(PieceType.J, 1, 7))).toBe(true);
+    expect(board.isValidPiece(new Piece(PieceType.L, 1, 7))).toBe(true);
+    expect(board.isValidPiece(new Piece(PieceType.O, 1, 7))).toBe(true);
+    expect(board.isValidPiece(new Piece(PieceType.S, 1, 7))).toBe(true);
+    expect(board.isValidPiece(new Piece(PieceType.T, 1, 7))).toBe(true);
+    expect(board.isValidPiece(new Piece(PieceType.Z, 1, 7))).toBe(true);
   });
 
   it("top left", () => {
-    expect(board.isValidPiece(new Piece(PieceType.I, -1, 0))).toBe(true);
-    expect(board.isValidPiece(new Piece(PieceType.J, 0, 0))).toBe(true);
-    expect(board.isValidPiece(new Piece(PieceType.L, 0, 0))).toBe(true);
-    expect(board.isValidPiece(new Piece(PieceType.O, 0, -1))).toBe(true);
-    expect(board.isValidPiece(new Piece(PieceType.S, 0, 0))).toBe(true);
-    expect(board.isValidPiece(new Piece(PieceType.T, 0, 0))).toBe(true);
-    expect(board.isValidPiece(new Piece(PieceType.Z, 0, 0))).toBe(true);
+    expect(board.isValidPiece(new Piece(PieceType.I, 1, 1))).toBe(true);
+    expect(board.isValidPiece(new Piece(PieceType.J, 1, 1))).toBe(true);
+    expect(board.isValidPiece(new Piece(PieceType.L, 1, 1))).toBe(true);
+    expect(board.isValidPiece(new Piece(PieceType.O, 1, 0))).toBe(true);
+    expect(board.isValidPiece(new Piece(PieceType.S, 1, 1))).toBe(true);
+    expect(board.isValidPiece(new Piece(PieceType.T, 1, 1))).toBe(true);
+    expect(board.isValidPiece(new Piece(PieceType.Z, 1, 1))).toBe(true);
   });
 
   it("bottom right", () => {
@@ -85,13 +85,13 @@ describe("valid placements", () => {
   });
 
   it("bottom left", () => {
-    expect(board.isValidPiece(new Piece(PieceType.I, 18, 0))).toBe(true);
-    expect(board.isValidPiece(new Piece(PieceType.J, 18, 0))).toBe(true);
-    expect(board.isValidPiece(new Piece(PieceType.L, 18, 0))).toBe(true);
-    expect(board.isValidPiece(new Piece(PieceType.O, 18, -1))).toBe(true);
-    expect(board.isValidPiece(new Piece(PieceType.S, 18, 0))).toBe(true);
-    expect(board.isValidPiece(new Piece(PieceType.T, 18, 0))).toBe(true);
-    expect(board.isValidPiece(new Piece(PieceType.Z, 18, 0))).toBe(true);
+    expect(board.isValidPiece(new Piece(PieceType.I, 18, 2))).toBe(true);
+    expect(board.isValidPiece(new Piece(PieceType.J, 18, 2))).toBe(true);
+    expect(board.isValidPiece(new Piece(PieceType.L, 18, 2))).toBe(true);
+    expect(board.isValidPiece(new Piece(PieceType.O, 18, 1))).toBe(true);
+    expect(board.isValidPiece(new Piece(PieceType.S, 18, 2))).toBe(true);
+    expect(board.isValidPiece(new Piece(PieceType.T, 18, 2))).toBe(true);
+    expect(board.isValidPiece(new Piece(PieceType.Z, 18, 2))).toBe(true);
   });
 });
 
@@ -101,24 +101,25 @@ it("valid placement", () => {
   expect(board.isValidPiece(piece)).toBe(true);
   board.place(piece);
 
-  expect(board.matrix[18]?.slice(4, 7)).toEqual([Colors.EMPTY, Colors.PURPLE, Colors.EMPTY]);
-  expect(board.matrix[19]?.slice(4, 7)).toEqual([Colors.PURPLE, Colors.PURPLE, Colors.PURPLE]);
+  console.log(board.matrix);
+  expect(board.matrix[17]?.slice(3, 6)).toEqual([Colors.EMPTY, Colors.PURPLE, Colors.EMPTY]);
+  expect(board.matrix[18]?.slice(3, 6)).toEqual([Colors.PURPLE, Colors.PURPLE, Colors.PURPLE]);
 });
 
 it("clear lines", () => {
   const board = new Board();
 
   // first incomplete line
-  board.place(new Piece(PieceType.I, -1, 0));
-  board.place(new Piece(PieceType.S, 0, 7));
+  board.place(new Piece(PieceType.I, 0, 1));
+  board.place(new Piece(PieceType.S, 1, 7));
 
   // two others random lines (filled)
-  board.place(new Piece(PieceType.I, 5, 0));
-  board.place(new Piece(PieceType.I, 5, 4));
-  board.place(new Piece(PieceType.S, 6, 7));
-  board.place(new Piece(PieceType.I, 10, 0));
-  board.place(new Piece(PieceType.I, 10, 4));
-  board.place(new Piece(PieceType.S, 11, 7));
+  board.place(new Piece(PieceType.I, 5, 1));
+  board.place(new Piece(PieceType.I, 5, 5));
+  board.place(new Piece(PieceType.S, 6, 8));
+  board.place(new Piece(PieceType.I, 10, 1));
+  board.place(new Piece(PieceType.I, 10, 5));
+  board.place(new Piece(PieceType.S, 11, 8));
 
   expect(board.cleanLines()).toEqual(2);
 
