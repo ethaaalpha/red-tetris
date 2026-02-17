@@ -130,6 +130,6 @@ it("clear lines", () => {
     Colors.CYAN,
     Colors.CYAN
   ]);
-  expect(board.matrix[2]?.slice(8, 10)).toEqual([Colors.GREEN, Colors.GREEN]);
-  expect(board.matrix[3]?.slice(7, 9)).toEqual([Colors.GREEN, Colors.GREEN]);
+  expect(board.matrix[2]?.slice(7, 9)).toEqual([Colors.GREEN, Colors.GREEN]);
+  expect(board.matrix[3]?.slice(6, 8)).toEqual([Colors.GREEN, Colors.GREEN]);
 });

@@ -17,22 +17,22 @@ describe("toGrid() rotations", () => {
     const rotationB = new Piece(PieceType.I).rotate90(2);
     const rotationC = new Piece(PieceType.I).rotate90(3);
     expect(rotationA.toGrid()).toEqual([
-      [0, 0, 1, 0],
-      [0, 0, 1, 0],
-      [0, 0, 1, 0],
-      [0, 0, 1, 0]
+      [7, 0, 0, 0],
+      [7, 0, 0, 0],
+      [7, 0, 0, 0],
+      [7, 0, 0, 0]
     ]);
     expect(rotationB.toGrid()).toEqual([
+      [7, 7, 7, 7],
       [0, 0, 0, 0],
       [0, 0, 0, 0],
-      [1, 1, 1, 1],
       [0, 0, 0, 0]
     ]);
     expect(rotationC.toGrid()).toEqual([
-      [0, 1, 0, 0],
-      [0, 1, 0, 0],
-      [0, 1, 0, 0],
-      [0, 1, 0, 0]
+      [7, 0, 0, 0],
+      [7, 0, 0, 0],
+      [7, 0, 0, 0],
+      [7, 0, 0, 0]
     ]);
   });
 
@@ -41,19 +41,19 @@ describe("toGrid() rotations", () => {
     const rotationB = new Piece(PieceType.J).rotate90(2);
     const rotationC = new Piece(PieceType.J).rotate90(3);
     expect(rotationA.toGrid()).toEqual([
-      [0, 1, 1],
-      [0, 1, 0],
-      [0, 1, 0]
+      [2, 2, 0],
+      [2, 0, 0],
+      [2, 0, 0]
     ]);
     expect(rotationB.toGrid()).toEqual([
-      [0, 0, 0],
-      [1, 1, 1],
-      [0, 0, 1]
+      [2, 2, 2],
+      [0, 0, 2],
+      [0, 0, 0]
     ]);
     expect(rotationC.toGrid()).toEqual([
-      [0, 1, 0],
-      [0, 1, 0],
-      [1, 1, 0]
+      [0, 2, 0],
+      [0, 2, 0],
+      [2, 2, 0]
     ]);
   });
 
@@ -62,19 +62,19 @@ describe("toGrid() rotations", () => {
     const rotationB = new Piece(PieceType.L).rotate90(2);
     const rotationC = new Piece(PieceType.L).rotate90(3);
     expect(rotationA.toGrid()).toEqual([
-      [0, 1, 0],
-      [0, 1, 0],
-      [0, 1, 1]
+      [6, 0, 0],
+      [6, 0, 0],
+      [6, 6, 0]
     ]);
     expect(rotationB.toGrid()).toEqual([
-      [0, 0, 0],
-      [1, 1, 1],
-      [1, 0, 0]
+      [6, 6, 6],
+      [6, 0, 0],
+      [0, 0, 0]
     ]);
     expect(rotationC.toGrid()).toEqual([
-      [1, 1, 0],
-      [0, 1, 0],
-      [0, 1, 0]
+      [6, 6, 0],
+      [0, 6, 0],
+      [0, 6, 0]
     ]);
   });
 
@@ -92,19 +92,19 @@ describe("toGrid() rotations", () => {
     const rotationB = new Piece(PieceType.S).rotate90(2);
     const rotationC = new Piece(PieceType.S).rotate90(3);
     expect(rotationA.toGrid()).toEqual([
-      [0, 1, 0],
-      [0, 1, 1],
-      [0, 0, 1]
+      [3, 0, 0],
+      [3, 3, 0],
+      [0, 3, 0]
     ]);
     expect(rotationB.toGrid()).toEqual([
-      [0, 0, 0],
-      [0, 1, 1],
-      [1, 1, 0]
+      [0, 3, 3],
+      [3, 3, 0],
+      [0, 0, 0]
     ]);
     expect(rotationC.toGrid()).toEqual([
-      [1, 0, 0],
-      [1, 1, 0],
-      [0, 1, 0]
+      [3, 0, 0],
+      [3, 3, 0],
+      [0, 3, 0]
     ]);
   });
 
@@ -113,19 +113,19 @@ describe("toGrid() rotations", () => {
     const rotationB = new Piece(PieceType.T).rotate90(2);
     const rotationC = new Piece(PieceType.T).rotate90(3);
     expect(rotationA.toGrid()).toEqual([
-      [0, 1, 0],
-      [0, 1, 1],
-      [0, 1, 0]
+      [5, 0, 0],
+      [5, 5, 0],
+      [5, 0, 0]
     ]);
     expect(rotationB.toGrid()).toEqual([
-      [0, 0, 0],
-      [1, 1, 1],
-      [0, 1, 0]
+      [5, 5, 5],
+      [0, 5, 0],
+      [0, 0, 0]
     ]);
     expect(rotationC.toGrid()).toEqual([
-      [0, 1, 0],
-      [1, 1, 0],
-      [0, 1, 0]
+      [0, 5, 0],
+      [5, 5, 0],
+      [0, 5, 0]
     ]);
   });
 
@@ -134,14 +134,14 @@ describe("toGrid() rotations", () => {
     const rotationB = new Piece(PieceType.Z).rotate90(2);
     const rotationC = new Piece(PieceType.Z).rotate90(3);
     expect(rotationA.toGrid()).toEqual([
-      [0, 0, 1],
-      [0, 1, 1],
-      [0, 1, 0]
+      [0, 1, 0],
+      [1, 1, 0],
+      [1, 0, 0]
     ]);
     expect(rotationB.toGrid()).toEqual([
-      [0, 0, 0],
       [1, 1, 0],
-      [0, 1, 1]
+      [0, 1, 1],
+      [0, 0, 0]
     ]);
     expect(rotationC.toGrid()).toEqual([
       [0, 1, 0],

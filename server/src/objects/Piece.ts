@@ -15,7 +15,10 @@ export class Piece {
     public x: number = 0,
     public y: number = 0
   ) {
-    ({ blocks: this.blocks, color: this.color } = PIECES[type]);
+    const piece = PIECES[type];
+
+    this.blocks = structuredClone(piece.blocks);
+    this.color = piece.color;
   }
 
   private addRotation() {
