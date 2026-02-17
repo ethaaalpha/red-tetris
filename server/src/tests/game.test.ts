@@ -50,8 +50,8 @@ describe("game loop helpers", () => {
   let game: Game;
   let attachCurrentPieceMock: Mock;
   let applyPenalityMock: Mock;
-  const pieceI = new Piece(PieceType.I, -1, 3);
-  const pieceO = new Piece(PieceType.O, 0, 3);
+  const pieceI = new Piece(PieceType.I, 0, 3);
+  const pieceO = new Piece(PieceType.O, 0, 0);
   const GameSettings: GameSettings = {
     tick: 300
   };
@@ -124,8 +124,9 @@ describe("game loop helpers", () => {
 
     player1.actualPiece = pieceO.clone();
 
-    // fake a line to be cleared
-    player1.board.matrix[3] = [1, ...Array(BOARD_WIDTH - 1).fill(1)];
+    // fake a line to be cleared (a stop line and a line to clear)
+    player1.board.matrix[2] = [0, 0, ...Array(BOARD_WIDTH - 3).fill(1)];
+    player1.board.matrix[3] = [0, ...Array(BOARD_WIDTH - 1).fill(1)];
 
     const listener1 = onceAsync<EventGamePenalityData>(test2.client, EVENT_GAME_PENALITY);
 
@@ -133,7 +134,7 @@ describe("game loop helpers", () => {
     await vi.advanceTimersToNextTimerAsync();
     await vi.advanceTimersToNextTimerAsync();
 
-    // piece should stop reach the line and generate a penality
+    // piece should stop, reach the line and generate a penality
     // expect(handleGravityMock).toBeCalledTimes(4);
     expect(attachCurrentPieceMock).toBeCalledTimes(1);
     expect(applyPenalityMock).toBeCalledTimes(1);

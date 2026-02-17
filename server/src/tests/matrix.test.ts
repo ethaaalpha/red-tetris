@@ -5,11 +5,6 @@ import { PieceType } from "@app/shared";
 import { PIECES } from "@app/constants/pieces";
 import { Piece } from "@app/objects/Piece";
 
-it.only("to grid", () => {
-  const p = new Piece(PieceType.I).rotate90();
-  console.log(p.toGrid());
-});
-
 describe("toGrid() rotations", () => {
   it("invalid rotations", () => {
     expect(() => new Piece(PieceType.I).rotate90(0)).toThrowError();

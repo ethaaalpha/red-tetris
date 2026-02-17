@@ -47,16 +47,14 @@ export class Board {
     this.placedPieces++;
 
     // check lines to clear
-    // piece.matrix
-    //   .map((_, offset) => piece.x + offset)
-    //   .forEach((i) => {
-    //     const row = this.matrix[i];
-
-    //     if (!row) return;
-    //     if (row.every((cell) => cell != Colors.EMPTY)) {
-    //       this.completedRowIndices.add(i);
-    //     }
-    //   });
+    piece.blocks.forEach(([x]) => {
+      const indice = piece.x + x;
+      const row = this.matrix[indice];
+      if (!row) return;
+      if (row.every((cell) => cell != Colors.EMPTY)) {
+        this.completedRowIndices.add(indice);
+      }
+    });
   }
 
   public cleanLines(): number {
