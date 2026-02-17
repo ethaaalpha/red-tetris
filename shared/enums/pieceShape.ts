@@ -1,4 +1,4 @@
-export enum PieceType {
+export enum PieceShape {
   I = "I",
   J = "J",
   L = "L",

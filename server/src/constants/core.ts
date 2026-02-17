@@ -11,6 +11,7 @@ export const BOARD_HEIGHT = 20;
 export const GAME_TICK_MIN = 100;
 export const GAME_TICK_MAX = 1000;
 export const GAME_START_DELAY = 3000;
+export const MAX_ROTATIONS = 4;
 
 // warmup
 export const WARMUP_CHECK_DELAY = 100;

@@ -18,18 +18,16 @@ export * from "./types/room";
 export * from "./types/socket";
 
 // game
-export * from "./types/matrix";
 export * from "./types/piece";
 export * from "./types/game";
 
 // [ CONSTANTS ]
 export * from "./constants/events";
 export * from "./constants/pieceColors";
-export * from "./constants/pieces";
 export * from "./constants/regex";
 export * from "./constants/limits";
 
 // [ ENUMS ]
 export * from "./enums/actions";
 export * from "./enums/colors";
-export * from "./enums/pieceType";
+export * from "./enums/pieceShape";

@@ -9,11 +9,12 @@ import type {
   GameSettings
 } from "@app/shared";
 import {
+  Colors,
   EVENT_GAME_FINISH,
   EVENT_GAME_INFO,
   EVENT_GAME_PENALITY,
   EVENT_GAME_START,
-  PieceType
+  PieceShape
 } from "@app/shared";
 
 import { BOARD_WIDTH } from "@app/constants/core";
@@ -50,8 +51,8 @@ describe("game loop helpers", () => {
   let game: Game;
   let attachCurrentPieceMock: Mock;
   let applyPenalityMock: Mock;
-  const pieceI = new Piece(PieceType.I, -1, 3);
-  const pieceO = new Piece(PieceType.O, 0, 3);
+  const pieceI = new Piece(PieceShape.I, 0, 3);
+  const pieceO = new Piece(PieceShape.O, 0, 0);
   const GameSettings: GameSettings = {
     tick: 300
   };
@@ -124,8 +125,9 @@ describe("game loop helpers", () => {
 
     player1.actualPiece = pieceO.clone();
 
-    // fake a line to be cleared
-    player1.board.matrix[3] = [1, ...Array(BOARD_WIDTH - 1).fill(1)];
+    // fake a line to be cleared (a stop line and a line to clear)
+    player1.board.matrix[2] = [0, 0, ...Array(BOARD_WIDTH - 3).fill(Colors.RED)];
+    player1.board.matrix[3] = [0, ...Array(BOARD_WIDTH - 1).fill(Colors.RED)];
 
     const listener1 = onceAsync<EventGamePenalityData>(test2.client, EVENT_GAME_PENALITY);
 
@@ -133,8 +135,7 @@ describe("game loop helpers", () => {
     await vi.advanceTimersToNextTimerAsync();
     await vi.advanceTimersToNextTimerAsync();
 
-    // piece should stop reach the line and generate a penality
-    // expect(handleGravityMock).toBeCalledTimes(4);
+    // piece should stop, reach the line and generate a penality
     expect(attachCurrentPieceMock).toBeCalledTimes(1);
     expect(applyPenalityMock).toBeCalledTimes(1);
     expect(player2.board.restrictedLines).toBe(1);
@@ -157,8 +158,8 @@ describe("game loop helpers", () => {
     player2.actualPiece = pieceI.clone();
 
     // to make game faster
-    player1.board.matrix[1] = [0, ...Array(BOARD_WIDTH - 1).fill(1)];
-    player2.board.matrix[1] = [0, ...Array(BOARD_WIDTH - 1).fill(1)];
+    player1.board.matrix[1] = [0, ...Array(BOARD_WIDTH - 1).fill(Colors.RED)];
+    player2.board.matrix[1] = [0, ...Array(BOARD_WIDTH - 1).fill(Colors.RED)];
 
     const listener1 = onceAsync<undefined>(test1.client, EVENT_GAME_FINISH);
     const listener2 = onceAsync<undefined>(test2.client, EVENT_GAME_FINISH);
