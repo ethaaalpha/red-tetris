@@ -15,8 +15,8 @@ export function createPiece() {
 
   // position spawn based on rules
   // see: https://tetris.wiki/Super_Rotation_System#Spawn_Orientation_and_Location
-  let offsetX = 0;
-  if (randomType === "I") offsetX--;
+  let offsetX = 1;
+  if (randomType === "I" || randomType === "O") offsetX--;
 
-  return new Piece(randomType, offsetX, 3);
+  return new Piece(randomType, offsetX, 4);
 }
