@@ -1,5 +1,6 @@
 import { GameActions } from "@app/shared";
 
+import { MAX_ROTATIONS } from "@app/constants/core";
 import { PIECES } from "@app/constants/pieces";
 import { Rotations } from "@app/enums/Rotations";
 import type { Game } from "@app/objects/Game";
@@ -10,9 +11,9 @@ import type { ActionData } from "@app/types/server";
 function superRotationSystem(data: ActionData): Piece {
   const offsets = PIECES[data.piece.type].offsets;
   const currentRotation: Rotations = data.piece.rotation;
-  const nextRotation: Rotations = (data.piece.rotation + 1) % 4;
+  const nextRotation: Rotations = (data.piece.rotation + 1) % MAX_ROTATIONS;
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < MAX_ROTATIONS + 1; i++) {
     const currentRotationOffset = offsets[currentRotation][i];
     const nextRotationOffset = offsets[nextRotation][i];
 

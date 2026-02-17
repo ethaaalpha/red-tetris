@@ -1,6 +1,7 @@
-import type { Coordinate, PieceData, PieceType } from "@app/shared";
+import type { Coordinate, PieceData, PieceShape } from "@app/shared";
 import { Colors } from "@app/shared";
 
+import { MAX_ROTATIONS } from "@app/constants/core";
 import { PIECES } from "@app/constants/pieces";
 import { Rotations } from "@app/enums/Rotations";
 
@@ -11,7 +12,7 @@ export class Piece {
   public color: Colors;
 
   constructor(
-    public type: PieceType,
+    public type: PieceShape,
     public x: number = 0,
     public y: number = 0
   ) {
@@ -22,7 +23,7 @@ export class Piece {
   }
 
   private addRotation() {
-    this.rotation = (this.rotation + 1) % 4;
+    this.rotation = (this.rotation + 1) % MAX_ROTATIONS;
   }
 
   public rotate90(nb: number = 1): Piece {
@@ -34,12 +35,12 @@ export class Piece {
     for (let i = 0; i < nb; i++) {
       this.addRotation();
 
-      for (const block of this.blocks) {
+      this.blocks.forEach((block) => {
         const oldX = block[0];
         const oldY = block[1];
         block[0] = oldY;
         block[1] = -oldX;
-      }
+      });
     }
 
     return this;

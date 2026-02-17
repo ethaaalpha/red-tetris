@@ -1,9 +1,8 @@
-import type { Coordinate } from "@app/shared";
+import type { Coordinate, PieceShape } from "@app/shared";
 
 import { Rotations } from "@app/enums/Rotations";
 
 import { Colors } from "../../../shared/enums/colors";
-import type { PieceType } from "../../../shared/enums/pieceType";
 
 const OFFSETS: Record<Rotations, Coordinate[]> = {
   // for J, L, S, T, Z
@@ -37,8 +36,39 @@ const OFFSETS: Record<Rotations, Coordinate[]> = {
   ]
 } as const;
 
+const I_OFFSETS: Record<Rotations, Coordinate[]> = {
+  [Rotations.SPAWN]: [
+    [0, 0],
+    [0, -1],
+    [0, 2],
+    [0, -1],
+    [0, 2]
+  ],
+  [Rotations.RIGHT]: [
+    [0, -1],
+    [0, 0],
+    [0, 0],
+    [-1, 0],
+    [2, 0]
+  ],
+  [Rotations.BOTTOM]: [
+    [-1, -1],
+    [-1, 1],
+    [-1, -2],
+    [1, 0],
+    [0, -2]
+  ],
+  [Rotations.LEFT]: [
+    [-1, 0],
+    [-1, 0],
+    [-1, 0],
+    [1, 0],
+    [-2, 0]
+  ]
+}
+
 export const PIECES: Record<
-  PieceType,
+  PieceShape,
   { blocks: Coordinate[]; color: Colors; offsets: Record<Rotations, Coordinate[]> }
 > = {
   I: {
@@ -49,36 +79,7 @@ export const PIECES: Record<
       [0, 2]
     ],
     color: Colors.CYAN,
-    offsets: {
-      [Rotations.SPAWN]: [
-        [0, 0],
-        [0, -1],
-        [0, 2],
-        [0, -1],
-        [0, 2]
-      ],
-      [Rotations.RIGHT]: [
-        [0, -1],
-        [0, 0],
-        [0, 0],
-        [-1, 0],
-        [2, 0]
-      ],
-      [Rotations.BOTTOM]: [
-        [-1, -1],
-        [-1, 1],
-        [-1, -2],
-        [1, 0],
-        [0, -2]
-      ],
-      [Rotations.LEFT]: [
-        [-1, 0],
-        [-1, 0],
-        [-1, 0],
-        [1, 0],
-        [-2, 0]
-      ]
-    }
+    offsets: I_OFFSETS
   },
   J: {
     blocks: [
