@@ -19,6 +19,7 @@ export const EVENT_GAME_INFO = "game_info";
 export const EVENT_GAME_SPECTRUM = "game_spectrum";
 export const EVENT_GAME_PENALITY = "game_penality";
 export const EVENT_GAME_FINISH = "game_finish";
+export const EVENT_GAME_ACTION = "game_action";
 
 // warm up
 export const EVENT_WARMUP_START = "warmup_start";
