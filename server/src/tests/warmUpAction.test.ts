@@ -3,19 +3,20 @@ import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import type {
   EventWarmUpActionError,
   EventWarmUpActionPayload,
-  EventWarmUpActionSuccess,
-  EventWarmUpError,
-  EventWarmUpPayload,
-  EventWarmUpSuccess,
-  GameSettings
+  EventWarmUpActionSuccess
 } from "@app/shared";
-import { EVENT_WARMUP_ACTION, EVENT_WARMUP_START, GameActions } from "@app/shared";
+import { EVENT_WARMUP_ACTION, GameActions } from "@app/shared";
 
 import * as MovementModule from "@app/core/movements";
-import { getUser } from "@app/core/user";
 
 import type { TestServerData } from "./types";
-import { emitAsync, joinRoom, setupTestServer, shutdownTestServer } from "./utils";
+import {
+  emitAsync,
+  setupTestServer,
+  shutdownTestServer,
+  testJoinRoom,
+  testStartWarmup
+} from "./utils";
 
 let ctx: TestServerData;
 
@@ -28,34 +29,12 @@ afterEach(async () => {
 });
 
 it("warm up perform action", async () => {
-  const GameSettings: GameSettings = {
-    tick: 300
-  };
   const applyMovement = vi.spyOn(MovementModule, "applyMovement");
   const test1 = ctx.test1;
-  await joinRoom(test1, "example1", "user1");
-
-  const user = getUser(test1.server.id);
-  expect(user).toBeDefined();
-  if (!user) return;
-
   vi.useFakeTimers();
 
-  await emitAsync<EventWarmUpPayload, EventWarmUpSuccess, EventWarmUpError>(
-    test1.client,
-    EVENT_WARMUP_START,
-    GameSettings
-  ).then(({ success }) => {
-    expect(success).toBe(true);
-  });
-
-  // get variables
-  const game = user.warmUp;
-  expect(game).toBeTruthy();
-  if (!game) return;
-  const player = game.players.get(user.id);
-  expect(player).toBeDefined();
-  if (!player) return;
+  await testJoinRoom(test1, "example", "user");
+  const { game, player } = await testStartWarmup(test1);
 
   // make on fall tick
   await vi.advanceTimersToNextTimerAsync();

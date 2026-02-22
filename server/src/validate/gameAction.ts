@@ -1,8 +1,8 @@
 import z from "zod";
 
-import type { EventWarmUpActionPayload, GameActions } from "@app/shared";
+import type { EventGameActionPayload, GameActions } from "@app/shared";
 
-import { ERROR_NOT_IN_A_ROOM, ERROR_NOT_IN_WARMUP } from "@app/constants/validateErrors";
+import { ERROR_NOT_IN_A_ROOM, ERROR_NOT_IN_GAME } from "@app/constants/validateErrors";
 import { getRoomBySocket } from "@app/core/room";
 import { getUser } from "@app/core/user";
 import type { Game } from "@app/objects/Game";
@@ -16,19 +16,19 @@ const schema = z.object({
   action: actionValidation
 });
 
-type ValidateWarmUpActionSuccess = {
+type ValidateGameActionSuccess = {
   status: true;
   game: Game;
   player: Player;
   action: GameActions;
 };
 
-type ValidateWarmUpActionResult = ValidateWarmUpActionSuccess | ValidateError;
+type ValidateGameActionResult = ValidateGameActionSuccess | ValidateError;
 
-export function validateWarmUpAction(
+export function validateGameAction(
   socket: ServerSocket,
-  payload: EventWarmUpActionPayload
-): ValidateWarmUpActionResult {
+  payload: EventGameActionPayload
+): ValidateGameActionResult {
   const result = schema.safeParse(payload);
 
   if (!result.success) {
@@ -42,11 +42,11 @@ export function validateWarmUpAction(
     return { status: false, error: { room: ERROR_NOT_IN_A_ROOM } };
   }
 
-  if (!current.warmUp || !current.warmUp.ongoing) {
-    return { status: false, error: { user: ERROR_NOT_IN_WARMUP } };
+  if (!room.game || !room.game.ongoing) {
+    return { status: false, error: { user: ERROR_NOT_IN_GAME } };
   }
 
-  const player = current.warmUp.getPlayer(socket.id);
+  const player = room.game.getPlayer(socket.id);
 
-  return { status: true, game: current.warmUp, player: player, action: result.data.action };
+  return { status: true, game: room.game, player: player, action: result.data.action };
 }

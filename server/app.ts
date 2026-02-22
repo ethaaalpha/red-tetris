@@ -7,6 +7,7 @@ import { Server as IoServer } from "socket.io";
 
 import { SERVER_PORT } from "@app/constants/core";
 import { registerHandlers as disconnectingHandler } from "@app/events/disconnecting";
+import { registerHandlers as gameActionHandler } from "@app/events/gameAction";
 import { registerHandlers as getRoomsHandler } from "@app/events/getRooms";
 import { registerHandlers as joinRoomHandler } from "@app/events/joinRoom";
 import { registerHandlers as kickHandler } from "@app/events/kick";
@@ -44,6 +45,7 @@ function configureSocket(io: AppServer) {
     leaveRoomHandler(io, socket);
     warmUpHandler(io, socket);
     warmUpActionHandler(socket);
+    gameActionHandler(socket);
   });
 }
 
@@ -61,6 +63,6 @@ if (import.meta.main) {
   const struct = init();
 
   struct.server.listen(SERVER_PORT, () => {
-    console.log(`Server running at http://localhost:${SERVER_PORT}`);
+    logger.info(`Server running at http://localhost:${SERVER_PORT}`);
   });
 }

@@ -60,13 +60,17 @@ export interface ClientToServerEvents {
     shared.EventWarmUpActionSuccess,
     shared.EventWarmUpActionError
   >;
+  [shared.EVENT_GAME_ACTION]: SocketEvent<
+    shared.EventGameActionPayload,
+    shared.EventGameActionSuccess,
+    shared.EventGameActionError
+  >;
 }
 
 export interface ServerToClientEvents {
   [shared.EVENT_ROOM_UPDATE]: (data: shared.RoomData) => void;
   [shared.EVENT_KICK]: (data: shared.EventKickData) => void;
   [shared.EVENT_MESSAGE]: (data: shared.EventMessageData) => void;
-  [shared.EVENT_WARMUP_INFO]: (data: shared.GameData) => void;
   [shared.EVENT_WARMUP_INFO]: (data: shared.GameData) => void;
   [shared.EVENT_WARMUP_FINISH]: (data: {}) => void;
   [shared.EVENT_GAME_START]: (data: shared.RoomData) => void;

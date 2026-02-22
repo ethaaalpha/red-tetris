@@ -12,6 +12,7 @@ export * from "./types/events/start";
 export * from "./types/events/warmUp";
 export * from "./types/events/warmUpAction";
 export * from "./types/events/gamePenality";
+export * from "./types/events/gameAction";
 
 export * from "./types/user";
 export * from "./types/room";

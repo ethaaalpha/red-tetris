@@ -8,17 +8,17 @@ import type {
 } from "@app/shared";
 import { EVENT_LEAVE_ROOM, EVENT_ROOM_UPDATE } from "@app/shared";
 
-import { getRoom, getRooms } from "@app/core/room";
+import { getRooms } from "@app/core/room";
 import { getUser, getUsers } from "@app/core/user";
 
 import type { TestServerData } from "./types";
 import {
   createClient,
   emitAsync,
-  joinRoom,
   onceAsync,
   setupTestServer,
-  shutdownTestServer
+  shutdownTestServer,
+  testJoinRoom
 } from "./utils";
 
 let ctx: TestServerData;
@@ -42,7 +42,7 @@ describe("invalid leave room", () => {
   });
 
   it("inexisting room", async () => {
-    await joinRoom(ctx.test1, "example", "test");
+    await testJoinRoom(ctx.test1, "example", "test");
     getRooms().clear();
 
     await emitAsync<EventLeaveRoomPayload, EventLeaveRoomError, EventLeaveRoomSuccess>(
@@ -57,11 +57,8 @@ describe("invalid leave room", () => {
 it("valid leave room", async () => {
   const test2 = await createClient(ctx.address, ctx.io);
 
-  await joinRoom(ctx.test1, "example", "test");
-  await joinRoom(test2, "example", "test2");
-
-  const userBefore = getUser(ctx.test1.server.id);
-  expect(userBefore).toBeDefined();
+  await testJoinRoom(ctx.test1, "example", "test");
+  const { room } = await testJoinRoom(test2, "example", "test2");
   expect(getUsers().size).toBe(2);
 
   const listener = onceAsync<RoomData>(test2.client, EVENT_ROOM_UPDATE);
@@ -74,7 +71,7 @@ it("valid leave room", async () => {
   });
 
   // check that the action is effective and host updated here
-  const roomInfo = getRoom("example")?.asInfo();
+  const roomInfo = room.asInfo();
   expect(roomInfo?.host).toEqual("test2");
   expect(roomInfo?.players.length).toEqual(1);
 

@@ -12,10 +12,10 @@ import type { TestServerData } from "./types";
 import {
   createClient,
   emitAsync,
-  joinRoom,
   onceAsync,
   setupTestServer,
-  shutdownTestServer
+  shutdownTestServer,
+  testJoinRoom
 } from "./utils";
 
 let ctx: TestServerData;
@@ -47,8 +47,8 @@ describe("invalid chat", () => {
     const chatListener1 = onceAsync<EventMessageData>(ctx.test1.client, "message");
     const chatListener2 = onceAsync<EventMessageData>(test2.client, "message");
 
-    await joinRoom(ctx.test1, "example", "user1");
-    await joinRoom(test2, "example", "user2");
+    await testJoinRoom(ctx.test1, "example", "user1");
+    await testJoinRoom(test2, "example", "user2");
 
     // users talks
     await emitAsync<EventMessagePayload, EventMessageError, EventMessageSuccess>(
