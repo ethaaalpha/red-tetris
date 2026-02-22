@@ -2,6 +2,7 @@
   let {
     value = $bindable(""),
     input = $bindable(),
+    focused = $bindable(false),
     maxlength,
     placeholder = "",
     error = undefined,
@@ -15,6 +16,7 @@
   }: {
     value: string;
     input?: HTMLInputElement;
+    focused?: boolean;
     maxlength: number;
     placeholder?: string;
     error?: string;
@@ -26,8 +28,6 @@
     bright?: boolean;
     regex?: RegExp;
   } = $props();
-
-  let isFocused = $state(false);
 
   function format(v: string) {
     if (regex !== undefined) {
@@ -48,8 +48,8 @@
       bind:this={input}
       bind:value
       oninput={() => (value = format(value))}
-      onfocus={() => (isFocused = true)}
-      onblur={() => (isFocused = false)}
+      onfocus={() => (focused = true)}
+      onblur={() => (focused = false)}
       class="w-full outline-red-primary py-2 pl-4 pr-18
       {bright ? 'bg-dark-accent' : ' bg-dark-secondary'}
       {outline ? `focus:outline-2` : 'outline-none'}
@@ -61,7 +61,7 @@
       type="text"
       {placeholder}
     />
-    {#if isFocused}
+    {#if focused}
       <span
         class="absolute right-4 top-1/2 -translate-y-1/2 text-sm {value.length >= maxlength
           ? 'text-red-400'
