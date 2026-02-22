@@ -374,7 +374,7 @@
         <div class="h-10 border-t border-border mt-auto flex">
           <TextInput
             bind:value={message}
-            bind:focus={inputFocused}
+            bind:focused={inputFocused}
             maxlength={MESSAGE_MAX_LENGTH}
             placeholder="Type your message..."
             border={false}
