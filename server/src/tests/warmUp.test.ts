@@ -10,7 +10,7 @@ import type {
 import { EVENT_WARMUP_INFO, EVENT_WARMUP_START } from "@app/shared";
 
 import type { TestServerData } from "./types";
-import { emitAsync, joinRoom, onceAsync, setupTestServer, shutdownTestServer } from "./utils";
+import { emitAsync, onceAsync, setupTestServer, shutdownTestServer, testJoinRoom } from "./utils";
 
 let ctx: TestServerData;
 
@@ -38,7 +38,7 @@ describe("invalid warm-up", () => {
   });
 
   it("user room is playing", async () => {
-    const { room } = await joinRoom(ctx.test1, "example", "user1");
+    const { room } = await testJoinRoom(ctx.test1, "example", "user1");
     room.start();
 
     await emitAsync<EventWarmUpPayload, EventWarmUpSuccess, EventWarmUpError>(
@@ -52,7 +52,7 @@ describe("invalid warm-up", () => {
 });
 
 it("valid warm-up", async () => {
-  await joinRoom(ctx.test1, "example", "user1");
+  await testJoinRoom(ctx.test1, "example", "user1");
 
   await emitAsync<EventWarmUpPayload, EventWarmUpSuccess, EventWarmUpError>(
     ctx.test1.client,
@@ -65,7 +65,7 @@ it("valid warm-up", async () => {
 
 it("warmup loop", async () => {
   const test1 = ctx.test1;
-  const { user } = await joinRoom(test1, "example1", "user1");
+  const { user } = await testJoinRoom(test1, "example1", "user1");
 
   const listener1 = onceAsync<GameData>(test1.client, EVENT_WARMUP_INFO);
 

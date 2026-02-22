@@ -15,10 +15,10 @@ import type { TestServerData } from "./types";
 import {
   createClient,
   emitAsync,
-  joinRoom,
   onceAsync,
   setupTestServer,
-  shutdownTestServer
+  shutdownTestServer,
+  testJoinRoom
 } from "./utils";
 
 let ctx: TestServerData;
@@ -42,7 +42,7 @@ describe("invalid leave room", () => {
   });
 
   it("inexisting room", async () => {
-    await joinRoom(ctx.test1, "example", "test");
+    await testJoinRoom(ctx.test1, "example", "test");
     getRooms().clear();
 
     await emitAsync<EventLeaveRoomPayload, EventLeaveRoomError, EventLeaveRoomSuccess>(
@@ -57,8 +57,8 @@ describe("invalid leave room", () => {
 it("valid leave room", async () => {
   const test2 = await createClient(ctx.address, ctx.io);
 
-  await joinRoom(ctx.test1, "example", "test");
-  const { room } = await joinRoom(test2, "example", "test2");
+  await testJoinRoom(ctx.test1, "example", "test");
+  const { room } = await testJoinRoom(test2, "example", "test2");
   expect(getUsers().size).toBe(2);
 
   const listener = onceAsync<RoomData>(test2.client, EVENT_ROOM_UPDATE);

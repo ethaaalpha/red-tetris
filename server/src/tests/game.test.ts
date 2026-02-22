@@ -27,10 +27,10 @@ import type { TestServerData, TestSocket } from "./types";
 import {
   createClient,
   emitAsync,
-  joinRoom,
   onceAsync,
   setupTestServer,
-  shutdownTestServer
+  shutdownTestServer,
+  testJoinRoom
 } from "./utils";
 
 let ctx: TestServerData;
@@ -63,8 +63,8 @@ describe("game loop helpers", () => {
     test1 = ctx.test1;
     test2 = await createClient(ctx.address, ctx.io);
 
-    await joinRoom(test1, "example", "user1");
-    room = (await joinRoom(test2, "example", "user2")).room;
+    await testJoinRoom(test1, "example", "user1");
+    room = (await testJoinRoom(test2, "example", "user2")).room;
 
     const listener1 = onceAsync<GameData>(test1.client, EVENT_GAME_INFO);
     const listener2 = onceAsync<GameData>(test2.client, EVENT_GAME_INFO);

@@ -84,7 +84,7 @@ export async function shutdownTestServer(ctx: TestServerData): Promise<void> {
   getUsers().clear();
 }
 
-export async function joinRoom(
+export async function testJoinRoom(
   test: TestSocket,
   roomName: string,
   username: string

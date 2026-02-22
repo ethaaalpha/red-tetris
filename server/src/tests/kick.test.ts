@@ -16,10 +16,10 @@ import {
   createClient,
   emitAsync,
   fakeUser,
-  joinRoom,
   onceAsync,
   setupTestServer,
-  shutdownTestServer
+  shutdownTestServer,
+  testJoinRoom
 } from "./utils";
 
 let ctx: TestServerData;
@@ -46,7 +46,7 @@ describe("invalid kick", () => {
   });
 
   it("not host", async () => {
-    const { room } = await joinRoom(ctx.test1, "example", "user1");
+    const { room } = await testJoinRoom(ctx.test1, "example", "user1");
 
     room.host = fakeUser("dumb", "someone");
     await emitAsync<EventKickPayload, EventKickSuccess, EventKickError>(
@@ -61,7 +61,7 @@ describe("invalid kick", () => {
   });
 
   it("him self", async () => {
-    await joinRoom(ctx.test1, "example", "user1");
+    await testJoinRoom(ctx.test1, "example", "user1");
     await emitAsync<EventKickPayload, EventKickSuccess, EventKickError>(
       ctx.test1.client,
       EVENT_KICK,
@@ -74,7 +74,7 @@ describe("invalid kick", () => {
   });
 
   it("an user not in the room", async () => {
-    await joinRoom(ctx.test1, "example", "user1");
+    await testJoinRoom(ctx.test1, "example", "user1");
 
     setUser("test", fakeUser("test", "user3"));
     await emitAsync<EventKickPayload, EventKickSuccess, EventKickError>(
@@ -92,9 +92,9 @@ describe("invalid kick", () => {
     const test2 = await createClient(ctx.address, ctx.io);
     const test3 = await createClient(ctx.address, ctx.io);
 
-    await joinRoom(ctx.test1, "example", "user1");
-    await joinRoom(test2, "example", "user2");
-    await joinRoom(test3, "example", "user2");
+    await testJoinRoom(ctx.test1, "example", "user1");
+    await testJoinRoom(test2, "example", "user2");
+    await testJoinRoom(test3, "example", "user2");
 
     // try to usurpate another room with an host
     // with the same name
@@ -106,7 +106,7 @@ describe("invalid kick", () => {
   });
 
   it("room already started", async () => {
-    const { room } = await joinRoom(ctx.test1, "example", "user1");
+    const { room } = await testJoinRoom(ctx.test1, "example", "user1");
     room.start();
 
     await emitAsync<EventKickPayload, EventKickSuccess, EventKickError>(
@@ -128,8 +128,8 @@ it("valid kick", async () => {
 
   // basic
   roomListener = onceAsync<RoomData>(ctx.test1.client, EVENT_ROOM_UPDATE);
-  await joinRoom(ctx.test1, "example", "user1");
-  const { room } = await joinRoom(test2, "example", "user2");
+  await testJoinRoom(ctx.test1, "example", "user1");
+  const { room } = await testJoinRoom(test2, "example", "user2");
 
   roomListener = onceAsync<RoomData>(ctx.test1.client, EVENT_ROOM_UPDATE);
   await emitAsync<EventKickPayload, EventKickSuccess, EventKickError>(

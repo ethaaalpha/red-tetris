@@ -15,7 +15,7 @@ import * as MovementModule from "@app/core/movements";
 import { getRoom } from "@app/core/room";
 
 import type { TestServerData } from "./types";
-import { emitAsync, joinRoom, setupTestServer, shutdownTestServer } from "./utils";
+import { emitAsync, setupTestServer, shutdownTestServer, testJoinRoom } from "./utils";
 
 let ctx: TestServerData;
 
@@ -33,7 +33,7 @@ it("game perform action", async () => {
   };
   const applyMovement = vi.spyOn(MovementModule, "applyMovement");
   const test1 = ctx.test1;
-  const { user } = await joinRoom(test1, "example1", "user1");
+  const { user } = await testJoinRoom(test1, "example1", "user1");
 
   vi.useFakeTimers();
 
