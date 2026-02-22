@@ -154,6 +154,7 @@
 
   // messages
   let message = $state<string>("");
+  let inputFocused = $state<boolean>(false);
   let messages = $state<Array<EventMessageData>>([]);
   let messagesContainer = $state<HTMLDivElement>();
 
@@ -207,17 +208,17 @@
   };
 
   function onWarmUpKeydown(event: KeyboardEvent) {
-    // TO UNCOMMENT WHEN FINISHED
-    // if (warmUp === false) return;
-    const action = keyToActionMap[event.key.toLocaleUpperCase()];
+    if (warmUp && !inputFocused) {
+      const action = keyToActionMap[event.key.toLocaleUpperCase()];
 
-    if (action === undefined) return;
+      if (action === undefined) return;
 
-    socket.emit(EVENT_WARMUP_ACTION, { action }, (response) => {
-      if (response.success) {
-        gameData = response.data;
-      }
-    });
+      socket.emit(EVENT_WARMUP_ACTION, { action }, (response) => {
+        if (response.success) {
+          gameData = response.data;
+        }
+      });
+    }
   }
 
   function onWarmUpInfo(data: GameData) {
@@ -373,6 +374,7 @@
         <div class="h-10 border-t border-border mt-auto flex">
           <TextInput
             bind:value={message}
+            bind:focus={inputFocused}
             maxlength={MESSAGE_MAX_LENGTH}
             placeholder="Type your message..."
             border={false}
