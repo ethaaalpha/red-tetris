@@ -16,7 +16,7 @@ export const ERROR_KICK_SELF = "You can't kick yourself";
 export const ERROR_KICK_PLAYING = "You can't kick while the game is in progress";
 
 // game
-export const ERROR_GAME_NOT_IN = "You are not currently playing";
+export const ERROR_NOT_IN_GAME = "You are not currently playing";
 
 // warm-up
-export const ERROR_WARMUP_NOT_IN = "You are not currently doing a warm-up";
+export const ERROR_NOT_IN_WARNING = "You are not currently doing a warm-up";
