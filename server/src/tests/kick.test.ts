@@ -9,7 +9,6 @@ import type {
 } from "@app/shared";
 import { EVENT_KICK, EVENT_ROOM_UPDATE } from "@app/shared";
 
-import { getRoom } from "@app/core/room";
 import { setUser } from "@app/core/user";
 
 import type { TestServerData } from "./types";
@@ -47,7 +46,7 @@ describe("invalid kick", () => {
   });
 
   it("not host", async () => {
-    const room = await joinRoom(ctx.test1, "example", "user1");
+    const { room } = await joinRoom(ctx.test1, "example", "user1");
 
     room.host = fakeUser("dumb", "someone");
     await emitAsync<EventKickPayload, EventKickSuccess, EventKickError>(
@@ -107,8 +106,8 @@ describe("invalid kick", () => {
   });
 
   it("room already started", async () => {
-    await joinRoom(ctx.test1, "example", "user1");
-    getRoom("example")?.start();
+    const { room } = await joinRoom(ctx.test1, "example", "user1");
+    room.start();
 
     await emitAsync<EventKickPayload, EventKickSuccess, EventKickError>(
       ctx.test1.client,
@@ -130,7 +129,7 @@ it("valid kick", async () => {
   // basic
   roomListener = onceAsync<RoomData>(ctx.test1.client, EVENT_ROOM_UPDATE);
   await joinRoom(ctx.test1, "example", "user1");
-  await joinRoom(test2, "example", "user2");
+  const { room } = await joinRoom(test2, "example", "user2");
 
   roomListener = onceAsync<RoomData>(ctx.test1.client, EVENT_ROOM_UPDATE);
   await emitAsync<EventKickPayload, EventKickSuccess, EventKickError>(
@@ -145,7 +144,7 @@ it("valid kick", async () => {
   });
   await roomListener.then((data) => {
     // update of room trigered
-    expect(data).toEqual(getRoom("example")?.asInfo());
+    expect(data).toEqual(room.asInfo());
   });
 
   // victim is warned

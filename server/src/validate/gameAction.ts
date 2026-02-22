@@ -2,7 +2,7 @@ import z from "zod";
 
 import type { EventGameActionPayload, GameActions } from "@app/shared";
 
-import { ERROR_NOT_IN_GAME, ERROR_NOT_IN_A_ROOM } from "@app/constants/validateErrors";
+import { ERROR_NOT_IN_A_ROOM, ERROR_NOT_IN_GAME } from "@app/constants/validateErrors";
 import { getRoomBySocket } from "@app/core/room";
 import { getUser } from "@app/core/user";
 import type { Game } from "@app/objects/Game";

@@ -88,7 +88,7 @@ export async function joinRoom(
   test: TestSocket,
   roomName: string,
   username: string
-): Promise<Room> {
+): Promise<{ room: Room; user: User }> {
   await emitAsync<EventJoinRoomPayload, EventJoinRoomSuccess, EventJoinRoomError>(
     test.client,
     EVENT_JOIN_ROOM,
@@ -99,12 +99,15 @@ export async function joinRoom(
   );
 
   const room = getRoom(roomName);
-
   if (!room) {
     expect.fail("Room isn't defined!");
   }
+  const user = room.get(username);
+  if (!user) {
+    expect.fail("User isn't defined!");
+  }
 
-  return room;
+  return { room: room, user: user };
 }
 
 export function fakeUser(id: string, name: string): User {

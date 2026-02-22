@@ -18,7 +18,6 @@ import {
 } from "@app/shared";
 
 import { BOARD_WIDTH } from "@app/constants/core";
-import { getRoomBySocket } from "@app/core/room";
 import type { Game } from "@app/objects/Game";
 import { Piece } from "@app/objects/Piece";
 import { Player } from "@app/objects/Player";
@@ -65,11 +64,7 @@ describe("game loop helpers", () => {
     test2 = await createClient(ctx.address, ctx.io);
 
     await joinRoom(test1, "example", "user1");
-    await joinRoom(test2, "example", "user2");
-
-    const retrieveRoom = getRoomBySocket(test1.server);
-    expect(retrieveRoom).toBeDefined();
-    if (retrieveRoom) room = retrieveRoom;
+    room = (await joinRoom(test2, "example", "user2")).room;
 
     const listener1 = onceAsync<GameData>(test1.client, EVENT_GAME_INFO);
     const listener2 = onceAsync<GameData>(test2.client, EVENT_GAME_INFO);

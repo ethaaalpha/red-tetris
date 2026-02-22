@@ -9,8 +9,6 @@ import type {
 } from "@app/shared";
 import { EVENT_WARMUP_INFO, EVENT_WARMUP_START } from "@app/shared";
 
-import { getUser } from "@app/core/user";
-
 import type { TestServerData } from "./types";
 import { emitAsync, joinRoom, onceAsync, setupTestServer, shutdownTestServer } from "./utils";
 
@@ -40,7 +38,7 @@ describe("invalid warm-up", () => {
   });
 
   it("user room is playing", async () => {
-    const room = await joinRoom(ctx.test1, "example", "user1");
+    const { room } = await joinRoom(ctx.test1, "example", "user1");
     room.start();
 
     await emitAsync<EventWarmUpPayload, EventWarmUpSuccess, EventWarmUpError>(
@@ -67,11 +65,7 @@ it("valid warm-up", async () => {
 
 it("warmup loop", async () => {
   const test1 = ctx.test1;
-  await joinRoom(test1, "example1", "user1");
-
-  const user = getUser(test1.server.id);
-  expect(user).toBeDefined();
-  if (!user) return;
+  const { user } = await joinRoom(test1, "example1", "user1");
 
   const listener1 = onceAsync<GameData>(test1.client, EVENT_WARMUP_INFO);
 

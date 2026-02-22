@@ -12,7 +12,6 @@ import type {
 import { EVENT_WARMUP_ACTION, EVENT_WARMUP_START, GameActions } from "@app/shared";
 
 import * as MovementModule from "@app/core/movements";
-import { getUser } from "@app/core/user";
 
 import type { TestServerData } from "./types";
 import { emitAsync, joinRoom, setupTestServer, shutdownTestServer } from "./utils";
@@ -33,11 +32,7 @@ it("warm up perform action", async () => {
   };
   const applyMovement = vi.spyOn(MovementModule, "applyMovement");
   const test1 = ctx.test1;
-  await joinRoom(test1, "example1", "user1");
-
-  const user = getUser(test1.server.id);
-  expect(user).toBeDefined();
-  if (!user) return;
+  const { user } = await joinRoom(test1, "example1", "user1");
 
   vi.useFakeTimers();
 
