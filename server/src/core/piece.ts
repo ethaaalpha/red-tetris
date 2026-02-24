@@ -1,22 +1,20 @@
+import { shuffle } from "fast-shuffle";
+
 import { PieceShape } from "@app/shared";
 
 import { Piece } from "@app/objects/Piece";
 
-function randint(max: number) {
-  // max is excluded
-  return Math.floor(Math.random() * max);
-}
-
-export function createPiece() {
+export function createBagOfPieces() {
   const values = Object.values(PieceShape);
-  const randomType = values[randint(values.length)];
+  const bag: Piece[] = [];
 
-  if (!randomType) throw new Error("Piece generation failed!");
+  values.forEach((shape) => {
+    // position spawn based on rules
+    // see: https://tetris.wiki/Super_Rotation_System#Spawn_Orientation_and_Location
+    let offsetX = 1;
+    if (shape === PieceShape.I || shape === PieceShape.O) offsetX--;
 
-  // position spawn based on rules
-  // see: https://tetris.wiki/Super_Rotation_System#Spawn_Orientation_and_Location
-  let offsetX = 1;
-  if (randomType === PieceShape.I || randomType === PieceShape.O) offsetX--;
-
-  return new Piece(randomType, offsetX, 4);
+    bag.push(new Piece(shape, offsetX, 4));
+  });
+  return shuffle(bag);
 }
