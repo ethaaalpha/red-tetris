@@ -2,7 +2,7 @@ import type { GameData, PlayerInfo } from "@app/shared";
 import type { Colors } from "@app/shared";
 
 import { placePieceOnMatrix } from "@app/core/matrix";
-import { createPiece } from "@app/core/piece";
+import { createBagOfPieces } from "@app/core/piece";
 
 import type { Piece } from "./Piece";
 import { Player } from "./Player";
@@ -40,14 +40,16 @@ export class Game {
 
   public nextPiece(i: number): Piece {
     if (this.pieces.length < i) throw new Error("Too high index!");
-
-    let piece = this.pieces.at(i);
+    const piece = this.pieces.at(i);
 
     if (!piece) {
-      piece = createPiece();
-      this.pieces.push(piece);
+      createBagOfPieces().forEach((p) => {
+        this.pieces.push(p);
+      });
+      return this.nextPiece(i);
+    } else {
+      return piece;
     }
-    return piece;
   }
 
   public getGameInfo(id: string): GameData {
