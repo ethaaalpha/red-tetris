@@ -28,7 +28,7 @@ export function registerHandlers(io: AppServer, socket: ServerSocket) {
       })
     );
 
-    io.to(result.room.name).emit(EVENT_GAME_START, room.asInfo());
+    io.to(result.room.name).emit(EVENT_GAME_START);
     gameLoop(io, room, result.GameSettings);
     callback({ success: true });
   });

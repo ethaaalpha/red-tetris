@@ -50,7 +50,7 @@ export async function gameLoop(io: AppServer, room: Room, settings: GameSettings
     game.checkFinished();
   }
 
-  io.to(room.name).emit(EVENT_GAME_FINISH, {});
+  io.to(room.name).emit(EVENT_GAME_FINISH);
   room.game = null;
   io.to(room.name).emit(EVENT_ROOM_UPDATE, room.asInfo());
 }
@@ -78,6 +78,6 @@ export async function warmUpLoop(io: AppServer, user: User, settings: GameSettin
     game.checkFinished();
   }
 
-  io.to(user.id).emit(EVENT_WARMUP_FINISH, {});
+  io.to(user.id).emit(EVENT_WARMUP_FINISH);
   user.warmUp = null;
 }

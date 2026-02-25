@@ -34,7 +34,7 @@
   let roomInput = $state<HTMLInputElement>();
   let emitting = $state(false);
 
-  function canJoinRoom() {
+  function joinRoom() {
     emitting = true;
     localStorage.setItem("username", username);
     const data: EventJoinRoomPayload = { username, room };
@@ -60,7 +60,7 @@
   function joinSelectedRoom(selectedRoom: string) {
     room = selectedRoom;
     showRoomsDialog = false;
-    canJoinRoom();
+    joinRoom();
   }
 
   // get rooms
@@ -118,7 +118,7 @@
           placeholder="Enter room name..."
           error={roomError}
           onEnter={() => {
-            canJoinRoom();
+            joinRoom();
           }}
           regex={REGEX_ROOM_AND_USER_SANITIZE}
           label="Room Name"
@@ -127,7 +127,7 @@
       <div class="flex flex-col space-y-4 w-xs">
         <button
           disabled={emitting}
-          onclick={canJoinRoom}
+          onclick={joinRoom}
           class="btn btn-primary text-3xl py-4"
           style="--btn-depth: 6px;"
         >

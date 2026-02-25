@@ -55,10 +55,15 @@ export interface ClientToServerEvents {
     shared.EventWarmUpSuccess,
     shared.EventWarmUpError
   >;
+  [shared.EVENT_GAME_START]: SocketEvent<
+    shared.EventWarmUpPayload,
+    shared.EventWarmUpSuccess,
+    shared.EventWarmUpError
+  >;
   [shared.EVENT_WARMUP_ACTION]: SocketEvent<
-    shared.EventWarmUpActionPayload,
-    shared.EventWarmUpActionSuccess,
-    shared.EventWarmUpActionError
+    shared.EventGameActionPayload,
+    shared.EventGameActionSuccess,
+    shared.EventGameActionError
   >;
   [shared.EVENT_GAME_ACTION]: SocketEvent<
     shared.EventGameActionPayload,
@@ -72,10 +77,10 @@ export interface ServerToClientEvents {
   [shared.EVENT_KICK]: (data: shared.EventKickData) => void;
   [shared.EVENT_MESSAGE]: (data: shared.EventMessageData) => void;
   [shared.EVENT_WARMUP_INFO]: (data: shared.GameData) => void;
-  [shared.EVENT_WARMUP_FINISH]: (data: {}) => void;
-  [shared.EVENT_GAME_START]: (data: shared.RoomData) => void;
+  [shared.EVENT_WARMUP_FINISH]: () => void;
+  [shared.EVENT_GAME_START]: () => void;
   [shared.EVENT_GAME_INFO]: (data: shared.GameData) => void;
   [shared.EVENT_GAME_PENALITY]: (data: shared.EventGamePenalityData) => void;
-  [shared.EVENT_GAME_FINISH]: (data: {}) => void;
+  [shared.EVENT_GAME_FINISH]: () => void;
   [shared.EVENT_GAME_SPECTRUM]: (data: shared.PlayerInfo[]) => void;
 }
