@@ -79,6 +79,7 @@ export interface ServerToClientEvents {
   [shared.EVENT_WARMUP_INFO]: (data: shared.GameData) => void;
   [shared.EVENT_WARMUP_FINISH]: () => void;
   [shared.EVENT_GAME_START]: () => void;
+  [shared.EVENT_GAME_COUNTDOWN]: (countdown: number) => void;
   [shared.EVENT_GAME_INFO]: (data: shared.GameData) => void;
   [shared.EVENT_GAME_PENALITY]: (data: shared.GameData) => void;
   [shared.EVENT_GAME_FINISH]: () => void;

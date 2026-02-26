@@ -16,6 +16,7 @@ export const EVENT_KICK = "kick";
 // game
 export const EVENT_GAME_START = "game_start";
 export const EVENT_GAME_INFO = "game_info";
+export const EVENT_GAME_COUNTDOWN = "game_countdown";
 export const EVENT_GAME_SPECTRUM = "game_spectrum";
 export const EVENT_GAME_PENALITY = "game_penality";
 export const EVENT_GAME_FINISH = "game_finish";

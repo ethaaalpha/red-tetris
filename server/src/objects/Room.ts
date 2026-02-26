@@ -31,7 +31,7 @@ export class Room {
     host.color = userColor;
   }
 
-  public exist(user: User) {
+  public userExists(user: User) {
     return this.users.has(user.id);
   }
 
@@ -53,7 +53,7 @@ export class Room {
   }
 
   public add(user: User) {
-    if (this.exist(user)) throw new Error("User already exists");
+    if (this.userExists(user)) throw new Error("User already exists");
     else if (this.users.size >= ROOM_MAX_USERS) throw new Error("Room is full");
 
     const color = this.getColor();

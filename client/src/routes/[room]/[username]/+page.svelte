@@ -29,6 +29,7 @@
   import {
     Colors,
     EVENT_GAME_ACTION,
+    EVENT_GAME_COUNTDOWN,
     EVENT_GAME_FINISH,
     EVENT_GAME_INFO,
     EVENT_GAME_START,
@@ -56,25 +57,24 @@
 
   import { getSocket } from "$lib/socket/socket.svelte";
 
-  // url params
+  // url params & user infos
   let room = $state(page.params.room || "");
   let username = $state(page.params.username || "");
+
+  // user color
+  let userColor = $derived(roomState.color);
+  let userHexColor = $derived(getColor(userColor));
 
   // errors
   let roomError = $state<string>();
   let userError = $state<string>();
   let unusualError = $state<string>();
-  let countdown = $state(5);
+  let redirectCountdown = $state(5);
 
   let errors = $derived([roomError, userError, unusualError].filter((e) => e));
 
   // socket
-  const socket = getSocket();
-
-  // color
-  let userColor = $state<string>(getColor(roomState.color));
-
-  // matrix
+  const socket = getSocket(); // matrix
   let gameData = $state<GameData>();
 
   function getColor(color: Colors) {
@@ -101,8 +101,8 @@
         if (!userError && !roomError) unusualError = "Failed to join room";
 
         const interval = setInterval(() => {
-          countdown--;
-          if (countdown <= 0) {
+          redirectCountdown--;
+          if (redirectCountdown <= 0) {
             clearInterval(interval);
             goto(resolve("/"));
           }
@@ -110,7 +110,7 @@
       } else {
         username = response.data.username;
         room = response.data.room;
-        userColor = getColor(response.data.color);
+        roomState.color = response.data.color;
 
         roomState.joined = true;
       }
@@ -239,6 +239,7 @@
 
   // game
   let game = $state(false);
+  let gameCountdown = $state(0);
 
   function startGame() {
     const data: GameSettings = {
@@ -250,6 +251,10 @@
 
   function onGameStart() {
     game = true;
+  }
+
+  function onGameCountdown(countdown: number) {
+    gameCountdown = countdown;
   }
 
   function onGameFinish() {
@@ -268,6 +273,7 @@
     socket.on(EVENT_WARMUP_FINISH, onWarmUpFinish);
     socket.on(EVENT_GAME_START, onGameStart);
     socket.on(EVENT_GAME_INFO, onGameInfo);
+    socket.on(EVENT_GAME_COUNTDOWN, onGameCountdown);
     socket.on(EVENT_GAME_FINISH, onGameFinish);
 
     return () => {
@@ -278,6 +284,7 @@
       socket.off(EVENT_GAME_START, onGameStart);
       socket.off(EVENT_GAME_INFO, onGameInfo);
       socket.off(EVENT_GAME_FINISH, onGameFinish);
+      socket.off(EVENT_GAME_COUNTDOWN, onGameCountdown);
 
       leaveRoom();
     };
@@ -307,7 +314,7 @@
           {#if unusualError}
             <p class="text-red-400 text-xl mb-2">{unusualError}</p>
           {/if}
-          <p>Redirecting in {countdown} second{countdown !== 1 ? "s" : ""}...</p>
+          <p>Redirecting in {redirectCountdown} second{redirectCountdown !== 1 ? "s" : ""}...</p>
         {:else}
           <p class="text-xl">Joining room "{room}" as "{username}"...</p>
         {/if}
@@ -330,7 +337,7 @@
                   ? `border-l-2`
                   : ''} {index % 2 === 0 ? 'bg-dark-accent' : ''}"
                 style={username === player.username
-                  ? `border-color: ${userColor}; color: ${userColor};`
+                  ? `border-color: ${userHexColor}; color: ${userHexColor};`
                   : ""}
               >
                 <Piece color={player.color} size={24} />
@@ -503,6 +510,7 @@
         {/each}
       {/if}
 
+      <!--BOARD BOTTOM INFO / ACTION -->
       {#if !game}
         <button
           in:fade={{ duration: 200 }}
@@ -520,6 +528,26 @@
             warmup
           {/if}
         </button>
+      {:else}
+        <span
+          class="absolute right-1/2 translate-x-1/2 -bottom-12 text-nowrap flex gap-2 items-center text-lg"
+        >
+          <Piece color={userColor} size={20} />
+          <span style="color: {userHexColor}">
+            {username}
+          </span>
+        </span>
+      {/if}
+
+      <!-- COUNTDOWN -->
+      {#if gameCountdown > 0}
+        {#key gameCountdown}
+          <div
+            class="countdown-pop absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 text-7xl"
+          >
+            {gameCountdown}
+          </div>
+        {/key}
       {/if}
     </div>
   {/if}
@@ -561,3 +589,23 @@
 >
   <p class="text-white/75">Are you sure you want to leave the room?</p>
 </Dialog>
+
+<style>
+  @keyframes countdown-pop {
+    0% {
+      transform: scale(2.42);
+      opacity: 0;
+    }
+    30% {
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .countdown-pop {
+    animation: countdown-pop 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+</style>

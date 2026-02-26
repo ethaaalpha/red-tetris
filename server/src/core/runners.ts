@@ -1,4 +1,5 @@
 import {
+  EVENT_GAME_COUNTDOWN,
   EVENT_GAME_FINISH,
   EVENT_GAME_INFO,
   EVENT_GAME_PENALITY,
@@ -23,11 +24,14 @@ export async function gameLoop(io: AppServer, room: Room, settings: GameSettings
     io.to(id).emit(EVENT_GAME_INFO, game.getGameInfo(id));
   });
 
-  await sleep(GAME_START_DELAY);
+  for (let i = GAME_START_DELAY / 1000; i >= 0; i--) {
+    io.to(room.name).emit(EVENT_GAME_COUNTDOWN, i);
+    if (i) await sleep(1000);
+  }
+
   game.ongoing = true;
 
   while (game.ongoing) {
-    await sleep(settings.tick);
     game.players.forEach((player, id) => {
       if (player.alive) {
         if (player.isNextPositionValid()) {
@@ -51,6 +55,7 @@ export async function gameLoop(io: AppServer, room: Room, settings: GameSettings
       io.to(id).emit(EVENT_GAME_INFO, game.getGameInfo(id));
     });
     game.checkFinished();
+    await sleep(settings.tick);
   }
 
   io.to(room.name).emit(EVENT_GAME_FINISH);
