@@ -80,7 +80,7 @@ export interface ServerToClientEvents {
   [shared.EVENT_WARMUP_FINISH]: () => void;
   [shared.EVENT_GAME_START]: () => void;
   [shared.EVENT_GAME_INFO]: (data: shared.GameData) => void;
-  [shared.EVENT_GAME_PENALITY]: (data: shared.EventGamePenalityData) => void;
+  [shared.EVENT_GAME_PENALITY]: (data: shared.GameData) => void;
   [shared.EVENT_GAME_FINISH]: () => void;
   [shared.EVENT_GAME_SPECTRUM]: (data: shared.PlayerInfo[]) => void;
 }
