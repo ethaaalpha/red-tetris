@@ -12,6 +12,7 @@ export const EVENT_GET_ROOMS = "get_rooms";
 export const EVENT_ROOM_UPDATE = "room_update";
 export const EVENT_MESSAGE = "message";
 export const EVENT_KICK = "kick";
+export const EVENT_CHANGE_COLOR = "change_color";
 
 // game
 export const EVENT_GAME_START = "game_start";

@@ -18,7 +18,7 @@ export function registerHandlers(io: AppServer, socket: ServerSocket) {
     room.start();
 
     await Promise.all(
-      room.users.values().map(async ({ user }) => {
+      room.users.values().map(async (user) => {
         while (user.warmUp != null) {
           if (user.warmUp.ongoing) {
             user.warmUp.ongoing = false;

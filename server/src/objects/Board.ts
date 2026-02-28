@@ -1,4 +1,4 @@
-import { Colors } from "@app/shared";
+import { PieceColor } from "@app/shared";
 
 import { BOARD_HEIGHT, BOARD_WIDTH } from "@app/constants/core";
 import { placePieceOnMatrix } from "@app/core/matrix";
@@ -12,7 +12,9 @@ export class Board {
   public completedRowIndices: Set<number> = new Set();
 
   constructor() {
-    this.matrix = Array.from({ length: BOARD_HEIGHT }, () => Array(BOARD_WIDTH).fill(Colors.EMPTY));
+    this.matrix = Array.from({ length: BOARD_HEIGHT }, () =>
+      Array(BOARD_WIDTH).fill(PieceColor.EMPTY)
+    );
   }
 
   private getRow(index: number): number[] {
@@ -32,7 +34,7 @@ export class Board {
 
       if (boardRow === undefined) return false;
       const boardCell = boardRow[column];
-      if (boardCell === undefined || boardCell != Colors.EMPTY) return false;
+      if (boardCell === undefined || boardCell != PieceColor.EMPTY) return false;
     }
     return true;
   }
@@ -50,7 +52,7 @@ export class Board {
       const indice = piece.x + x;
       const row = this.matrix[indice];
       if (!row) return;
-      if (row.every((cell) => cell != Colors.EMPTY)) {
+      if (row.every((cell) => cell != PieceColor.EMPTY)) {
         this.completedRowIndices.add(indice);
       }
     });
@@ -61,7 +63,7 @@ export class Board {
 
     this.completedRowIndices.forEach((row_i) => {
       this.matrix.splice(row_i, 1);
-      this.matrix.unshift(Array(BOARD_WIDTH).fill(Colors.EMPTY));
+      this.matrix.unshift(Array(BOARD_WIDTH).fill(PieceColor.EMPTY));
     });
     this.completedRowIndices.clear();
     return size;
@@ -73,7 +75,7 @@ export class Board {
 
       const row = this.getRow(this.playableLines);
       row.forEach((_, col) => {
-        row[col] = Colors.GREY;
+        row[col] = PieceColor.GREY;
       });
       this.playableLines--;
     }

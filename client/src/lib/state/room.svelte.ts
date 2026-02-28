@@ -1,10 +1,9 @@
-import type { RoomData } from "@app/shared";
-import { Colors } from "@app/shared";
+import { PieceColor, type RoomData, type UserColor } from "@app/shared";
 
-export const roomState = $state(<{ data: RoomData | null; joined: boolean; color: Colors }>{
+export const roomState = $state(<{ data: RoomData | null; joined: boolean; color: UserColor }>{
   data: null,
   joined: false,
-  color: Colors.GREY
+  color: PieceColor.GREY
 });
 
 export const setRoomData = (data: RoomData) => {

@@ -24,10 +24,11 @@
     EventMessagePayload,
     GameData,
     GameSettings,
+    UserColor,
     UserData
   } from "@app/shared";
   import {
-    Colors,
+    EVENT_CHANGE_COLOR,
     EVENT_GAME_ACTION,
     EVENT_GAME_COUNTDOWN,
     EVENT_GAME_FINISH,
@@ -43,7 +44,8 @@
     EVENT_WARMUP_START,
     GameActions,
     MESSAGE_MAX_LENGTH,
-    pieceColors,
+    PIECE_COLORS,
+    PieceColor,
     REGEX_MESSAGE_SANITIZE,
     USERNAME_MAX_LENGTH
   } from "@app/shared";
@@ -51,19 +53,18 @@
   import Dialog from "$lib/components/Dialog.svelte";
   import Piece from "$lib/components/Piece.svelte";
   import TextInput from "$lib/components/TextInput.svelte";
+  import UserColorPicker from "$lib/components/UserColorPicker.svelte";
 
   import { kickState } from "$lib/state/kick.svelte";
   import { roomState } from "$lib/state/room.svelte";
+
+  import { clickOutside } from "$lib/utils/clickOutside";
 
   import { getSocket } from "$lib/socket/socket.svelte";
 
   // url params & user infos
   let room = $state(page.params.room || "");
   let username = $state(page.params.username || "");
-
-  // user color
-  let userColor = $derived(roomState.color);
-  let userHexColor = $derived(getColor(userColor));
 
   // errors
   let roomError = $state<string>();
@@ -77,8 +78,8 @@
   const socket = getSocket(); // matrix
   let gameData = $state<GameData>();
 
-  function getColor(color: Colors) {
-    return pieceColors[color].light;
+  function getColor(color: PieceColor) {
+    return PIECE_COLORS[color].light;
   }
 
   function isCurrentUser(name: string) {
@@ -121,6 +122,20 @@
     });
   }
 
+  // colors
+  let userColor = $derived(roomState.color);
+  let userHexColor = $derived(getColor(userColor));
+  let showColorChoice = $state(false);
+
+  function handleColorChange(color: UserColor) {
+    socket.emit(EVENT_CHANGE_COLOR, { color }, (response) => {
+      if (response.success) {
+        showColorChoice = false;
+        roomState.color = response.data.color;
+      }
+    });
+  }
+
   // leave
   let showLeaveDialog = $state(false);
 
@@ -135,13 +150,13 @@
   // kick
   let showKickDialog = $state(false);
   let userToKick = $state<string>();
-  let userToKickColor = $state<Colors>(Colors.EMPTY);
+  let userToKickColor = $state<UserColor>(PieceColor.GREY);
   let userToKickPieceColor = $state("#e6e6e6");
 
   function handleKickUser(user: UserData) {
     userToKick = user.username;
     userToKickColor = user.color;
-    userToKickPieceColor = pieceColors[user.color].light;
+    userToKickPieceColor = PIECE_COLORS[user.color].light;
     showKickDialog = true;
   }
 
@@ -340,15 +355,22 @@
             <!-- PLAYER LIST -->
             {#each roomState.data.players as player, index (player.color)}
               <li
-                class="p-2 text-lg flex items-center gap-2 group/list
-                {isCurrentUser(player.username) ? `border-l-2` : ''} {index % 2 === 0
-                  ? 'bg-dark-accent'
-                  : ''}"
+                class="p-2 text-lg flex items-center gap-2 group/list border-l-2
+                {index % 2 === 0 ? 'bg-dark-accent' : ''}"
                 style={isCurrentUser(player.username)
                   ? `border-color: ${userHexColor}; color: ${userHexColor};`
-                  : ""}
+                  : `border-color: transparent;`}
               >
-                <Piece color={player.color} size={24} />
+                <button
+                  onclick={() => {
+                    if (isCurrentUser(player.username)) {
+                      showColorChoice = true;
+                    }
+                  }}
+                  class={isCurrentUser(player.username) ? "piece-select hover-darken" : ""}
+                >
+                  <Piece color={player.color} size={24} />
+                </button>
                 <span class="overflow-hidden text-ellipsis">
                   {player.username}
                 </span>
@@ -367,6 +389,12 @@
                   </button>
                 {/if}
               </li>
+
+              {#if showColorChoice && isCurrentUser(player.username)}
+                <div class="absolute" use:clickOutside={() => (showColorChoice = false)}>
+                  <UserColorPicker onclick={handleColorChange}></UserColorPicker>
+                </div>
+              {/if}
             {/each}
           </ul>
           <div class="mt-auto space-y-4">
@@ -414,7 +442,7 @@
                 <div
                   class="flex items-center gap-2
               {isCurrentUser(m.from) ? 'ml-auto pr-2' : 'pl-2'}"
-                  style="color: {isCurrentUser(m.from) ? pieceColors[m.color].light : ''}"
+                  style="color: {isCurrentUser(m.from) ? PIECE_COLORS[m.color].light : ''}"
                 >
                   <Piece color={m.color} size={16} />
                   {m.from}
@@ -423,7 +451,9 @@
                 <div
                   class="p-2 wrap-break-word w-fit max-w-64 text-white text-sm
               {isCurrentUser(m.from) ? 'ml-auto' : ' bg-dark-accent'}"
-                  style="background-color: {isCurrentUser(m.from) ? pieceColors[m.color].dark : ''}"
+                  style="background-color: {isCurrentUser(m.from)
+                    ? PIECE_COLORS[m.color].dark
+                    : ''}"
                 >
                   {m.message}
                 </div>
@@ -463,15 +493,15 @@
         {#each gameData.matrix as row, index_row (index_row)}
           <div class="flex">
             {#each row as cell, index_cell (index_cell)}
-              {#if cell !== Colors.EMPTY}
+              {#if cell !== PieceColor.EMPTY}
                 <Piece color={cell} size={32} />
               {:else if isShadowCell(gameData, index_row, index_cell)}
                 <!-- Shadow piece preview -->
                 <div class="relative">
-                  <Piece color={Colors.EMPTY} size={32} />
+                  <Piece color={PieceColor.EMPTY} size={32} />
                   <div
                     class="absolute inset-0.5 border-2 rounded-xs opacity-75"
-                    style="border-color: {pieceColors[gameData.shadowPiece.color].light};"
+                    style="border-color: {PIECE_COLORS[gameData.shadowPiece.color].light};"
                   ></div>
                 </div>
               {:else}
@@ -498,7 +528,7 @@
                     {#each row as cell, index_cell (index_cell)}
                       {#if !row.some((cell) => cell)}
                         <!-- do nothing if none of the cells are filled -->
-                      {:else if cell !== Colors.EMPTY}
+                      {:else if cell !== PieceColor.EMPTY}
                         <Piece color={piece.color} size={32} />
                       {:else}
                         <div class="h-[32px] w-[32px]"></div>
@@ -514,7 +544,7 @@
         {#each { length: 20 }, index_row (index_row)}
           <div class="flex">
             {#each { length: 10 }, index_cell (index_cell)}
-              <Piece color={Colors.EMPTY} size={32} />
+              <Piece color={PieceColor.EMPTY} size={32} />
             {/each}
           </div>
         {/each}

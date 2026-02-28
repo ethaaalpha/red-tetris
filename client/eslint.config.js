@@ -42,7 +42,9 @@ export default defineConfig(
             ["^\\$lib/components"],
             // 5. Internal $lib/state
             ["^\\$lib/state"],
-            // 6. Other $lib/ imports
+            // 6. Internal $lib/utils
+            ["^\\$lib/utils"],
+            // 7. Other $lib/ imports
             ["^\\$lib/"]
           ]
         }

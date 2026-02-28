@@ -6,8 +6,14 @@
   import { resolve } from "$app/paths";
 
   import type { EventJoinRoomPayload, RoomListData } from "@app/shared";
-  import { Colors, EVENT_GET_ROOMS, EVENT_JOIN_ROOM } from "@app/shared";
-  import { REGEX_ROOM_AND_USER_SANITIZE, ROOM_MAX_LENGTH, USERNAME_MAX_LENGTH } from "@app/shared";
+  import {
+    EVENT_GET_ROOMS,
+    EVENT_JOIN_ROOM,
+    PieceColor,
+    REGEX_ROOM_AND_USER_SANITIZE,
+    ROOM_MAX_LENGTH,
+    USERNAME_MAX_LENGTH
+  } from "@app/shared";
 
   import Dialog from "$lib/components/Dialog.svelte";
   import Piece from "$lib/components/Piece.svelte";
@@ -95,7 +101,7 @@
         class="py-2 text-6xl text-red-primary text-shadow-red-secondary text-shadow-[4px_4px_4px] text-center relative flex items-center gap-5"
       >
         RED
-        <Piece color={Colors.RED} size={32} />
+        <Piece color={PieceColor.RED} size={32} />
         TETRIS
       </h1>
 
@@ -161,27 +167,27 @@
         </a>
       </div>
       <div class="absolute grid grid-cols-2 top-0" style="left: {-lobbyPieceSize * 2}px;">
-        <Piece color={Colors.YELLOW} size={lobbyPieceSize} />
-        <Piece color={Colors.YELLOW} size={lobbyPieceSize} />
-        <Piece color={Colors.YELLOW} size={lobbyPieceSize} />
-        <Piece color={Colors.YELLOW} size={lobbyPieceSize} />
+        <Piece color={PieceColor.YELLOW} size={lobbyPieceSize} />
+        <Piece color={PieceColor.YELLOW} size={lobbyPieceSize} />
+        <Piece color={PieceColor.YELLOW} size={lobbyPieceSize} />
+        <Piece color={PieceColor.YELLOW} size={lobbyPieceSize} />
       </div>
 
       <div class="absolute flex" style="top: {-lobbyPieceSize}px; left: {-lobbyPieceSize}px;">
-        <Piece color={Colors.CYAN} size={lobbyPieceSize} />
-        <Piece color={Colors.CYAN} size={lobbyPieceSize} />
-        <Piece color={Colors.CYAN} size={lobbyPieceSize} />
-        <Piece color={Colors.CYAN} size={lobbyPieceSize} />
+        <Piece color={PieceColor.CYAN} size={lobbyPieceSize} />
+        <Piece color={PieceColor.CYAN} size={lobbyPieceSize} />
+        <Piece color={PieceColor.CYAN} size={lobbyPieceSize} />
+        <Piece color={PieceColor.CYAN} size={lobbyPieceSize} />
       </div>
 
       <div class="absolute flex" style="top: {-lobbyPieceSize}px; right: {-lobbyPieceSize}px;">
         <div>
-          <Piece color={Colors.ORANGE} size={lobbyPieceSize} />
+          <Piece color={PieceColor.ORANGE} size={lobbyPieceSize} />
         </div>
         <div>
-          <Piece color={Colors.ORANGE} size={lobbyPieceSize} />
-          <Piece color={Colors.ORANGE} size={lobbyPieceSize} />
-          <Piece color={Colors.ORANGE} size={lobbyPieceSize} />
+          <Piece color={PieceColor.ORANGE} size={lobbyPieceSize} />
+          <Piece color={PieceColor.ORANGE} size={lobbyPieceSize} />
+          <Piece color={PieceColor.ORANGE} size={lobbyPieceSize} />
         </div>
       </div>
 
@@ -189,24 +195,24 @@
         class="absolute flex"
         style="right: {-lobbyPieceSize * 2}px; bottom: {-lobbyPieceSize}px;"
       >
-        <Piece color={Colors.PURPLE} size={lobbyPieceSize} />
-        <Piece color={Colors.PURPLE} size={lobbyPieceSize} />
-        <Piece color={Colors.PURPLE} size={lobbyPieceSize} />
+        <Piece color={PieceColor.PURPLE} size={lobbyPieceSize} />
+        <Piece color={PieceColor.PURPLE} size={lobbyPieceSize} />
+        <Piece color={PieceColor.PURPLE} size={lobbyPieceSize} />
       </div>
       <div class="absolute bottom-0 flex" style="right: {-lobbyPieceSize}px;">
-        <Piece color={Colors.PURPLE} size={lobbyPieceSize} />
+        <Piece color={PieceColor.PURPLE} size={lobbyPieceSize} />
       </div>
 
       <div
         class="absolute flex flex-col"
         style="bottom: {-lobbyPieceSize}px; left: {-lobbyPieceSize}px;"
       >
-        <Piece color={Colors.GREEN} size={lobbyPieceSize} />
-        <Piece color={Colors.GREEN} size={lobbyPieceSize} />
+        <Piece color={PieceColor.GREEN} size={lobbyPieceSize} />
+        <Piece color={PieceColor.GREEN} size={lobbyPieceSize} />
       </div>
       <div class="absolute left-0 flex flex-col" style="bottom: {-lobbyPieceSize * 2}px; ">
-        <Piece color={Colors.GREEN} size={lobbyPieceSize} />
-        <Piece color={Colors.GREEN} size={lobbyPieceSize} />
+        <Piece color={PieceColor.GREEN} size={lobbyPieceSize} />
+        <Piece color={PieceColor.GREEN} size={lobbyPieceSize} />
       </div>
     </div>
   </div>

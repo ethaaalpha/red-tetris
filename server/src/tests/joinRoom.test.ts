@@ -1,7 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import type { EventJoinRoomError, EventJoinRoomSuccess, RoomData } from "@app/shared";
-import { Colors, EVENT_JOIN_ROOM, EVENT_ROOM_UPDATE, type EventJoinRoomPayload } from "@app/shared";
+import {
+  EVENT_JOIN_ROOM,
+  EVENT_ROOM_UPDATE,
+  type EventJoinRoomPayload,
+  PieceColor
+} from "@app/shared";
 
 import { ROOM_MAX, ROOM_MAX_USERS } from "@app/constants/core";
 import {
@@ -211,8 +216,8 @@ it("host changed", async () => {
   expect(getRoom("example")?.asInfo()).toEqual({
     name: "example",
     players: [
-      { username: "user2", color: Colors.BLUE },
-      { username: "user3", color: Colors.GREEN }
+      { username: "user2", color: PieceColor.BLUE },
+      { username: "user3", color: PieceColor.GREEN }
     ],
     userCount: 2,
     max: ROOM_MAX_USERS,

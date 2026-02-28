@@ -40,6 +40,11 @@ export interface ClientToServerEvents {
     shared.EventKickSuccess,
     shared.EventKickError
   >;
+  [shared.EVENT_CHANGE_COLOR]: SocketEvent<
+    shared.EventChangeColorPayload,
+    shared.EventChangeColorSuccess,
+    shared.EventChangeColorError
+  >;
   [shared.EVENT_LEAVE_ROOM]: SocketEvent<
     shared.EventLeaveRoomPayload,
     shared.EventLeaveRoomSuccess,

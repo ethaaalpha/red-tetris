@@ -4,17 +4,14 @@ import type {
   EventStartError,
   EventStartPayload,
   EventStartSuccess,
-  GameSettings,
-  RoomData
+  GameSettings
 } from "@app/shared";
 import { EVENT_GAME_START } from "@app/shared";
 
 import type { TestServerData } from "./types";
 import {
-  createClient,
   emitAsync,
   fakeUser,
-  onceAsync,
   setupTestServer,
   shutdownTestServer,
   testJoinRoom,

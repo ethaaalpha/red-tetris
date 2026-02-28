@@ -1,6 +1,8 @@
-import { Colors } from "../enums/colors";
+import { PieceColor } from "../enums/colors";
 
 export type UserData = {
-  color: Colors;
+  color: UserColor;
   username: string;
 };
+
+export type UserColor = Exclude<PieceColor, PieceColor.EMPTY>;

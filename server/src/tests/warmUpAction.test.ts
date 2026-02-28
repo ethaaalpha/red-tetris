@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 
 import type {
-  EventWarmUpActionError,
-  EventWarmUpActionPayload,
-  EventWarmUpActionSuccess
+  EventGameActionError,
+  EventGameActionPayload,
+  EventGameActionSuccess
 } from "@app/shared";
 import { EVENT_WARMUP_ACTION, GameActions } from "@app/shared";
 
@@ -43,7 +43,7 @@ it("warm up perform action", async () => {
   const pieceBeforeY = player.actualPiece.y;
 
   // perform simple action
-  await emitAsync<EventWarmUpActionPayload, EventWarmUpActionSuccess, EventWarmUpActionError>(
+  await emitAsync<EventGameActionPayload, EventGameActionSuccess, EventGameActionError>(
     test1.client,
     EVENT_WARMUP_ACTION,
     { action: GameActions.RIGHT }
