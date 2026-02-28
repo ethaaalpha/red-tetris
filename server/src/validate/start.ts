@@ -1,6 +1,6 @@
 import z from "zod";
 
-import type { EventStartPayload, GameSettings } from "@app/shared";
+import { type EventStartPayload, GAME_MIN_PLAYERS, type GameSettings } from "@app/shared";
 
 import {
   ERROR_GAME_NOT_ENOUGH_PLAYER,
@@ -47,7 +47,7 @@ export function validateStart(socket: ServerSocket, payload: EventStartPayload):
   if (room.game) {
     return { status: false, error: { room: ERROR_PLAYING_ROOM } };
   }
-  if (room.users.size <= 1) {
+  if (room.users.size < GAME_MIN_PLAYERS) {
     return { status: false, error: { room: ERROR_GAME_NOT_ENOUGH_PLAYER } };
   }
 

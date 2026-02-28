@@ -36,6 +36,7 @@
     EVENT_WARMUP_FINISH,
     EVENT_WARMUP_INFO,
     EVENT_WARMUP_START,
+    GAME_MIN_PLAYERS,
     GameActions,
     MESSAGE_MAX_LENGTH,
     pieceColors,
@@ -330,6 +331,7 @@
           {/if}
           {#if roomState.data.host === username}
             <button
+              disabled={roomState.data.players.length < GAME_MIN_PLAYERS}
               class="btn btn-primary w-full text-3xl py-3 flex items-center justify-center gap-4"
               style="--btn-depth: 6px;"
             >
