@@ -81,6 +81,10 @@
     return pieceColors[color].light;
   }
 
+  function isCurrentUser(name: string) {
+    return username === name;
+  }
+
   function isShadowCell(data: GameData, rowIndex: number, cellIndex: number): boolean {
     const { blocks } = data.shadowPiece;
 
@@ -336,10 +340,11 @@
             <!-- PLAYER LIST -->
             {#each roomState.data.players as player, index (player.color)}
               <li
-                class="p-2 text-lg flex items-center gap-2 group/list {username === player.username
-                  ? `border-l-2`
-                  : ''} {index % 2 === 0 ? 'bg-dark-accent' : ''}"
-                style={username === player.username
+                class="p-2 text-lg flex items-center gap-2 group/list
+                {isCurrentUser(player.username) ? `border-l-2` : ''} {index % 2 === 0
+                  ? 'bg-dark-accent'
+                  : ''}"
+                style={isCurrentUser(player.username)
                   ? `border-color: ${userHexColor}; color: ${userHexColor};`
                   : ""}
               >
@@ -350,7 +355,9 @@
                 {#if roomState.data.host === player.username}
                   <Crown color="#FFC832" />
                 {/if}
-                {#if roomState.data.host === username && player.username !== username}
+
+                <!-- kick button -->
+                {#if isCurrentUser(roomState.data.host) && !isCurrentUser(player.username)}
                   <button
                     onclick={() => handleKickUser(player)}
                     class="ml-auto btn btn-secondary group/button group-hover/list:opacity-100 opacity-0 duration-75 p-1"
@@ -363,7 +370,7 @@
             {/each}
           </ul>
           <div class="mt-auto space-y-4">
-            {#if roomState.data.host === username}
+            {#if isCurrentUser(roomState.data.host)}
               <button
                 onclick={() => (showLeaveDialog = true)}
                 class="btn btn-secondary text-lg py-1.5 w-full"
@@ -373,7 +380,7 @@
             {:else}
               <p class="text-center text-white/70">Waiting for the host to start...</p>
             {/if}
-            {#if roomState.data.host === username}
+            {#if isCurrentUser(roomState.data.host)}
               <button
                 onclick={startGame}
                 class="btn btn-primary w-full text-3xl py-3 flex items-center justify-center gap-4"
@@ -406,8 +413,8 @@
               <div class="space-y-1 flex flex-col">
                 <div
                   class="flex items-center gap-2
-              {username === m.from ? 'ml-auto pr-2' : 'pl-2'}"
-                  style="color: {username === m.from ? pieceColors[m.color].light : ''}"
+              {isCurrentUser(m.from) ? 'ml-auto pr-2' : 'pl-2'}"
+                  style="color: {isCurrentUser(m.from) ? pieceColors[m.color].light : ''}"
                 >
                   <Piece color={m.color} size={16} />
                   {m.from}
@@ -415,8 +422,8 @@
 
                 <div
                   class="p-2 wrap-break-word w-fit max-w-64 text-white text-sm
-              {username === m.from ? 'ml-auto' : ' bg-dark-accent'}"
-                  style="background-color: {username === m.from ? pieceColors[m.color].dark : ''}"
+              {isCurrentUser(m.from) ? 'ml-auto' : ' bg-dark-accent'}"
+                  style="background-color: {isCurrentUser(m.from) ? pieceColors[m.color].dark : ''}"
                 >
                   {m.message}
                 </div>
