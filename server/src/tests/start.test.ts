@@ -84,7 +84,9 @@ describe("invalid start", () => {
 });
 
 it("valid start", async () => {
-  await testJoinRoom(ctx.test1, "example", "user1");
+  const roomName = "example";
+  await testJoinRoom(ctx.socket1, roomName, "user1");
+  await testJoinRoom(ctx.socket2, roomName, "user2");
 
-  await testStartGame(ctx.test1);
+  await testStartGame(ctx.socket1);
 });
