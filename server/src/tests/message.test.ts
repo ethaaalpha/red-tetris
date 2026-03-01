@@ -42,11 +42,11 @@ describe("invalid chat", () => {
   });
 
   it("empty message", async () => {
-    await testJoinRoom(ctx.test1, "test", "test");
+    await testJoinRoom(ctx.socket1, "test", "test");
     const message = "";
 
     await emitAsync<EventMessagePayload, EventMessageError, EventMessageSuccess>(
-      ctx.test1.client,
+      ctx.socket1.client,
       EVENT_MESSAGE,
       {
         message: message
@@ -57,11 +57,11 @@ describe("invalid chat", () => {
   });
 
   it("blank message", async () => {
-    await testJoinRoom(ctx.test1, "test", "test");
+    await testJoinRoom(ctx.socket1, "test", "test");
     const message = "      ";
 
     await emitAsync<EventMessagePayload, EventMessageError, EventMessageSuccess>(
-      ctx.test1.client,
+      ctx.socket1.client,
       EVENT_MESSAGE,
       {
         message: message
@@ -72,11 +72,11 @@ describe("invalid chat", () => {
   });
 
   it("message too long", async () => {
-    await testJoinRoom(ctx.test1, "test", "test");
+    await testJoinRoom(ctx.socket1, "test", "test");
     const message = "a".repeat(MESSAGE_MAX_LENGTH + 1);
 
     await emitAsync<EventMessagePayload, EventMessageError, EventMessageSuccess>(
-      ctx.test1.client,
+      ctx.socket1.client,
       EVENT_MESSAGE,
       {
         message: message

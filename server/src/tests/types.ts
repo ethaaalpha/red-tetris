@@ -7,6 +7,8 @@ export interface TestServerData {
   address: string;
   socket1: TestSocket;
   socket2: TestSocket;
+  socket3: TestSocket;
+  socket4: TestSocket;
 }
 
 export interface TestSocket {

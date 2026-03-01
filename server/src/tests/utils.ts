@@ -78,14 +78,18 @@ export async function setupTestServer(): Promise<TestServerData> {
   });
 
   const address = `http://localhost:${(struct.server.address() as AddressInfo).port}`;
-  const test1 = await createClient(address, io);
-  const test2 = await createClient(address, io);
+  const socket1 = await createClient(address, io);
+  const socket2 = await createClient(address, io);
+  const socket3 = await createClient(address, io);
+  const socket4 = await createClient(address, io);
 
   return {
     io,
     address,
-    socket1: test1,
-    socket2: test2
+    socket1: socket1,
+    socket2: socket2,
+    socket3: socket3,
+    socket4: socket4
   };
 }
 
