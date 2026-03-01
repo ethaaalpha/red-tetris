@@ -8,6 +8,7 @@
     LogOut,
     RotateCcw,
     Send,
+    Settings,
     UserX,
     X
   } from "@lucide/svelte";
@@ -43,6 +44,9 @@
     EVENT_WARMUP_INFO,
     EVENT_WARMUP_START,
     GAME_MIN_PLAYERS,
+    GAME_TICK_DEFAULT,
+    GAME_TICK_MAX,
+    GAME_TICK_MIN,
     GameActions,
     MESSAGE_MAX_LENGTH,
     PIECE_COLORS,
@@ -79,6 +83,7 @@
   const socket = getSocket(); // matrix
   let gameData = $state<GameData>();
 
+  // utils
   function getColor(color: PieceColor) {
     return PIECE_COLORS[color].light;
   }
@@ -86,6 +91,10 @@
   function isCurrentUser(name: string) {
     return username === name;
   }
+
+  const isCurrentUserHost = $derived.by(() => {
+    return roomState.data && isCurrentUser(roomState.data.host);
+  });
 
   function isShadowCell(data: GameData, rowIndex: number, cellIndex: number): boolean {
     const { blocks } = data.shadowPiece;
@@ -245,7 +254,7 @@
 
   function startWarmUp() {
     const data: GameSettings = {
-      tick: 500
+      tick: GAME_TICK_DEFAULT
     };
     socket.emit(EVENT_WARMUP_START, data, (response) => {
       if (response.success) {
@@ -266,7 +275,7 @@
 
   function startGame() {
     const data: GameSettings = {
-      tick: 500 // TODO: CAN BE CHANGED BY HOST
+      tick: gameTick * 100
     };
 
     socket.emit(EVENT_GAME_START, data, () => {});
@@ -288,6 +297,10 @@
     game = false;
     gameData = undefined;
   }
+
+  // settings
+  let showSettings = $state(false);
+  let gameTick = $state(GAME_TICK_DEFAULT / 100);
 
   onMount(() => {
     if (!roomState.joined) joinRoom();
@@ -351,8 +364,19 @@
     {#if !game}
       <div class="h-[640px] flex">
         <div class="p-4 bg-dark-secondary border border-border w-[360px] h-full flex flex-col">
-          <h1 class="text-center text-red-primary overflow-hidden text-ellipsis text-3xl">
+          <h1
+            class="text-center text-red-primary overflow-hidden text-ellipsis text-3xl relative
+            {isCurrentUserHost ? 'px-8' : ''}"
+          >
             {room}
+            {#if isCurrentUserHost}
+              <button
+                onclick={() => (showSettings = true)}
+                class="absolute right-0 top-1/2 -translate-y-1/2 text-white/42 hover:text-white/74 hover:bg-dark-accent duration-100 p-1 rounded-lg"
+              >
+                <Settings />
+              </button>
+            {/if}
           </h1>
           <span class="py-2 text-center text-xl">
             {roomState.data.userCount} / {roomState.data.max}
@@ -385,7 +409,7 @@
                 {/if}
 
                 <!-- kick button -->
-                {#if isCurrentUser(roomState.data.host) && !isCurrentUser(player.username)}
+                {#if isCurrentUserHost && !isCurrentUser(player.username)}
                   <button
                     onclick={() => handleKickUser(player)}
                     class="ml-auto btn btn-secondary group/button group-hover/list:opacity-100 opacity-0 duration-75 p-1"
@@ -404,7 +428,7 @@
             {/each}
           </ul>
           <div class="mt-auto space-y-4">
-            {#if isCurrentUser(roomState.data.host)}
+            {#if isCurrentUserHost}
               <button
                 onclick={() => (showLeaveDialog = true)}
                 class="btn btn-secondary text-lg py-1.5 w-full"
@@ -414,7 +438,7 @@
             {:else}
               <p class="text-center text-white/70">Waiting for the host to start...</p>
             {/if}
-            {#if isCurrentUser(roomState.data.host)}
+            {#if isCurrentUserHost}
               <button
                 disabled={roomState.data.players.length < GAME_MIN_PLAYERS}
                 onclick={startGame}
@@ -637,6 +661,31 @@
   bind:open={showLeaveDialog}
 >
   <p class="text-white/75">Are you sure you want to leave the room?</p>
+</Dialog>
+
+<!-- settings dialog -->
+<Dialog
+  icon={Settings}
+  confirm="exit"
+  confirmCallback={() => (showSettings = false)}
+  title="Game Settings"
+  bind:open={showSettings}
+>
+  <div class="flex justify-between w-full px-16">
+    <div class="flex gap-4">
+      <label for="game_tick">Game tick</label>
+      <input
+        type="range"
+        min={GAME_TICK_MIN / 100}
+        max={GAME_TICK_MAX / 100}
+        bind:value={gameTick}
+        name="game_tick"
+      />
+    </div>
+    <span class="text-red-accent w-4">
+      {gameTick < 10 ? `0.${gameTick}` : gameTick / 10}
+    </span>
+  </div>
 </Dialog>
 
 <style>
