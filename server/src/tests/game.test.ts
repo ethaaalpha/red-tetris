@@ -16,7 +16,7 @@ import {
   PieceShape
 } from "@app/shared";
 
-import { BOARD_WIDTH } from "@app/constants/core";
+import { BOARD_HEIGHT, BOARD_WIDTH } from "@app/constants/core";
 import type { Game } from "@app/objects/Game";
 import { Piece } from "@app/objects/Piece";
 import { Player } from "@app/objects/Player";
@@ -24,9 +24,9 @@ import type { Room } from "@app/objects/Room";
 
 import type { TestServerData, TestSocket } from "./types";
 import {
-  createClient,
   emitAsync,
   onceAsync,
+  passGameCountdown,
   setupTestServer,
   shutdownTestServer,
   testJoinRoom
@@ -60,7 +60,7 @@ describe("game loop helpers", () => {
     applyPenalityMock = vi.spyOn(Player.prototype, "applyPenality");
 
     test1 = ctx.socket1;
-    test2 = await createClient(ctx.address, ctx.io);
+    test2 = ctx.socket2;
 
     await testJoinRoom(test1, "example", "user1");
     room = (await testJoinRoom(test2, "example", "user2")).room;
@@ -98,7 +98,7 @@ describe("game loop helpers", () => {
   });
 
   it("check fall of a piece", async () => {
-    await vi.advanceTimersToNextTimerAsync();
+    await passGameCountdown();
     expect(game.ongoing).toBe(true);
 
     // check that gravity is called for each player
@@ -112,7 +112,7 @@ describe("game loop helpers", () => {
   });
 
   it("check penality generation", async () => {
-    await vi.advanceTimersToNextTimerAsync();
+    await passGameCountdown();
     expect(game.ongoing).toBe(true);
 
     const player1 = game.getPlayer(test1.server.id);
@@ -128,18 +128,17 @@ describe("game loop helpers", () => {
 
     // there is 2 round because of the "last time" movement delay
     await vi.advanceTimersToNextTimerAsync();
+    const dataToCheck = game.getGameInfo(player2.user.id);
     await vi.advanceTimersToNextTimerAsync();
 
     // piece should stop, reach the line and generate a penality
     expect(attachCurrentPieceMock).toBeCalledTimes(1);
     expect(applyPenalityMock).toBeCalledTimes(1);
-    expect(player2.board.restrictedLines).toBe(1);
+    expect(player2.board.playableLines).toBe(BOARD_HEIGHT - 1);
 
     // check socket
     await listener1.then((data) => {
-      expect(data).toStrictEqual({
-        from: player1.user.name
-      });
+      expect(data).toStrictEqual(dataToCheck);
     });
   });
 
@@ -160,7 +159,7 @@ describe("game loop helpers", () => {
     const listener2 = onceAsync<undefined>(test2.client, EVENT_GAME_FINISH);
 
     // instant death
-    await vi.advanceTimersToNextTimerAsync();
+    await passGameCountdown();
 
     expect(player1.alive).toBe(false);
     expect(player2.alive).toBe(false);

@@ -4,11 +4,9 @@ import type { EventGetRoomsError, EventGetRoomsPayload, EventGetRoomsSuccess } f
 import { EVENT_GET_ROOMS } from "@app/shared";
 
 import { ROOM_MAX_USERS } from "@app/constants/core";
-import { getRoom, setRoom } from "@app/core/room";
-import { Room } from "@app/objects/Room";
 
 import type { TestServerData } from "./types";
-import { emitAsync, fakeUser, setupTestServer, shutdownTestServer } from "./utils";
+import { emitAsync, setupTestServer, shutdownTestServer, testJoinRoom } from "./utils";
 
 let ctx: TestServerData;
 
@@ -21,42 +19,30 @@ afterEach(async () => {
 });
 
 describe(EVENT_GET_ROOMS, () => {
-  it("simple", async () => {
-    setRoom("example", new Room("example", fakeUser("id", "example")));
+  it("room list", async () => {
+    await testJoinRoom(ctx.socket1, "test", "user1");
+    await testJoinRoom(ctx.socket2, "test2", "user2");
+    const { room } = await testJoinRoom(ctx.socket3, "test2", "user3");
+    room.start();
 
     await emitAsync<EventGetRoomsPayload, EventGetRoomsSuccess, EventGetRoomsError>(
-      ctx.socket1.client,
+      ctx.socket4.client,
       EVENT_GET_ROOMS
     ).then((response) => {
       expect(response.success).toBe(true);
       if (response.success) {
         expect(response.data).toEqual([
           {
-            name: "example",
+            name: "test",
             userCount: 1,
-            max: ROOM_MAX_USERS
-          }
-        ]);
-      }
-    });
-  });
-
-  it("ignore rooms in game", async () => {
-    setRoom("example", new Room("example", fakeUser("id", "example")));
-    setRoom("example2", new Room("example2", fakeUser("id2", "example2")));
-    getRoom("example2")?.start();
-
-    await emitAsync<EventGetRoomsPayload, EventGetRoomsSuccess, EventGetRoomsError>(
-      ctx.socket1.client,
-      EVENT_GET_ROOMS
-    ).then((response) => {
-      expect(response.success).toBe(true);
-      if (response.success) {
-        expect(response.data).toEqual([
+            max: ROOM_MAX_USERS,
+            playing: false
+          },
           {
-            name: "example",
-            userCount: 1,
-            max: ROOM_MAX_USERS
+            name: "test2",
+            userCount: 2,
+            max: ROOM_MAX_USERS,
+            playing: true
           }
         ]);
       }

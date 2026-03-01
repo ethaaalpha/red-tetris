@@ -21,14 +21,7 @@ import { Room } from "@app/objects/Room";
 import { sleep } from "@app/utils/sleep";
 
 import type { TestServerData } from "./types";
-import {
-  createClient,
-  emitAsync,
-  fakeUser,
-  onceAsync,
-  setupTestServer,
-  shutdownTestServer
-} from "./utils";
+import { emitAsync, fakeUser, onceAsync, setupTestServer, shutdownTestServer } from "./utils";
 
 let ctx: TestServerData;
 
@@ -177,8 +170,6 @@ it("valid join", async () => {
 });
 
 it("host changed", async () => {
-  const test2 = await createClient(ctx.address, ctx.io);
-  const test3 = await createClient(ctx.address, ctx.io);
   const roomListener = onceAsync<RoomData>(ctx.socket1.client, EVENT_ROOM_UPDATE);
 
   await emitAsync<EventJoinRoomPayload, EventJoinRoomSuccess, EventJoinRoomError>(
@@ -190,7 +181,7 @@ it("host changed", async () => {
     }
   );
   await emitAsync<EventJoinRoomPayload, EventJoinRoomSuccess, EventJoinRoomError>(
-    test2.client,
+    ctx.socket2.client,
     EVENT_JOIN_ROOM,
     {
       username: "user2",
@@ -198,7 +189,7 @@ it("host changed", async () => {
     }
   );
   await emitAsync<EventJoinRoomPayload, EventJoinRoomSuccess, EventJoinRoomError>(
-    test3.client,
+    ctx.socket3.client,
     EVENT_JOIN_ROOM,
     {
       username: "user3",
@@ -224,7 +215,4 @@ it("host changed", async () => {
     host: "user2",
     playing: false
   });
-
-  test2.client.close();
-  test3.client.close();
 });

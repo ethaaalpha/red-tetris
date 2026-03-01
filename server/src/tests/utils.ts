@@ -1,7 +1,7 @@
 import type { AddressInfo } from "net";
 import type { Socket as ClientSocket } from "socket.io-client";
 import { io as ioc } from "socket.io-client";
-import { expect } from "vitest";
+import { expect, vi } from "vitest";
 
 import type {
   EventJoinRoomError,
@@ -18,6 +18,7 @@ import type {
 } from "@app/shared";
 import { EVENT_GAME_START, EVENT_JOIN_ROOM, EVENT_WARMUP_START } from "@app/shared";
 
+import { GAME_START_DELAY } from "@app/constants/core";
 import { getRoom, getRoomBySocket, getRooms } from "@app/core/room";
 import { getUser, getUsers } from "@app/core/user";
 import type { Game } from "@app/objects/Game";
@@ -29,7 +30,7 @@ import type { AppServer, ServerSocket } from "@app/types/socket";
 import { init } from "../../app";
 import type { TestServerData, TestSocket } from "./types";
 
-export function createClient(address: string, io: AppServer): Promise<TestSocket> {
+function createClient(address: string, io: AppServer): Promise<TestSocket> {
   return new Promise((resolve) => {
     const client = ioc(address);
     let server: ServerSocket;
@@ -78,14 +79,18 @@ export async function setupTestServer(): Promise<TestServerData> {
   });
 
   const address = `http://localhost:${(struct.server.address() as AddressInfo).port}`;
-  const test1 = await createClient(address, io);
-  const test2 = await createClient(address, io);
+  const socket1 = await createClient(address, io);
+  const socket2 = await createClient(address, io);
+  const socket3 = await createClient(address, io);
+  const socket4 = await createClient(address, io);
 
   return {
     io,
     address,
-    socket1: test1,
-    socket2: test2
+    socket1: socket1,
+    socket2: socket2,
+    socket3: socket3,
+    socket4: socket4
   };
 }
 
@@ -173,4 +178,10 @@ export async function testStartGame(test: TestSocket): Promise<{ game: Game; pla
 
 export function fakeUser(id: string, name: string): User {
   return new User(id, name, {} as ServerSocket);
+}
+
+export async function passGameCountdown() {
+  for (let i = GAME_START_DELAY / 1000; i >= 0; i--) {
+    if (i) await vi.advanceTimersToNextTimerAsync();
+  }
 }

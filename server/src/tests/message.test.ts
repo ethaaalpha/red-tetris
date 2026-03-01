@@ -9,14 +9,7 @@ import type {
 import { EVENT_MESSAGE, MESSAGE_MAX_LENGTH } from "@app/shared";
 
 import type { TestServerData } from "./types";
-import {
-  createClient,
-  emitAsync,
-  onceAsync,
-  setupTestServer,
-  shutdownTestServer,
-  testJoinRoom
-} from "./utils";
+import { emitAsync, onceAsync, setupTestServer, shutdownTestServer, testJoinRoom } from "./utils";
 
 let ctx: TestServerData;
 
@@ -42,11 +35,11 @@ describe("invalid chat", () => {
   });
 
   it("empty message", async () => {
-    await testJoinRoom(ctx.test1, "test", "test");
+    await testJoinRoom(ctx.socket1, "test", "test");
     const message = "";
 
     await emitAsync<EventMessagePayload, EventMessageError, EventMessageSuccess>(
-      ctx.test1.client,
+      ctx.socket1.client,
       EVENT_MESSAGE,
       {
         message: message
@@ -57,11 +50,11 @@ describe("invalid chat", () => {
   });
 
   it("blank message", async () => {
-    await testJoinRoom(ctx.test1, "test", "test");
+    await testJoinRoom(ctx.socket1, "test", "test");
     const message = "      ";
 
     await emitAsync<EventMessagePayload, EventMessageError, EventMessageSuccess>(
-      ctx.test1.client,
+      ctx.socket1.client,
       EVENT_MESSAGE,
       {
         message: message
@@ -72,11 +65,11 @@ describe("invalid chat", () => {
   });
 
   it("message too long", async () => {
-    await testJoinRoom(ctx.test1, "test", "test");
+    await testJoinRoom(ctx.socket1, "test", "test");
     const message = "a".repeat(MESSAGE_MAX_LENGTH + 1);
 
     await emitAsync<EventMessagePayload, EventMessageError, EventMessageSuccess>(
-      ctx.test1.client,
+      ctx.socket1.client,
       EVENT_MESSAGE,
       {
         message: message
@@ -89,13 +82,12 @@ describe("invalid chat", () => {
 
 describe("valid chat", () => {
   it("conversation", async () => {
-    const test2 = await createClient(ctx.address, ctx.io);
     const message = "c'est un super message!";
     const chatListener1 = onceAsync<EventMessageData>(ctx.socket1.client, "message");
-    const chatListener2 = onceAsync<EventMessageData>(test2.client, "message");
+    const chatListener2 = onceAsync<EventMessageData>(ctx.socket2.client, "message");
 
     await testJoinRoom(ctx.socket1, "example", "user1");
-    await testJoinRoom(test2, "example", "user2");
+    await testJoinRoom(ctx.socket2, "example", "user2");
 
     // users talks
     await emitAsync<EventMessagePayload, EventMessageError, EventMessageSuccess>(
