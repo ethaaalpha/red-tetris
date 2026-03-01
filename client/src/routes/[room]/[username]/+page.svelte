@@ -114,6 +114,8 @@
           }
         }, 1000);
       } else {
+        localStorage.setItem("username", username.substring(0, USERNAME_MAX_LENGTH));
+
         username = response.data.username;
         room = response.data.room;
         roomState.color = response.data.color;
@@ -288,8 +290,6 @@
   }
 
   onMount(() => {
-    localStorage.setItem("username", username.substring(0, USERNAME_MAX_LENGTH));
-
     if (!roomState.joined) joinRoom();
 
     socket.on(EVENT_KICK, onKick);

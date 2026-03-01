@@ -2,8 +2,8 @@ import type { EventChangeColorPayload, UserColor } from "@app/shared";
 
 import {
   ERROR_COLOR_UNAVAILABLE,
-  ERROR_INEXISTING_ROOM,
-  ERROR_USER_NOT_FOUND
+  ERROR_NOT_IN_A_ROOM,
+  ERROR_PLAYING_ROOM
 } from "@app/constants/validateErrors";
 import { getRoomBySocket } from "@app/core/room";
 import { getUser } from "@app/core/user";
@@ -20,21 +20,20 @@ type ValidateChangeColorSuccess = {
   color: UserColor;
 };
 
-type ValidateChangeColorResult = ValidateChangeColorSuccess | ValidateError;
+type ValidateChangeColorResult = ValidateChangeColorSuccess | ValidateError<{ room: string }>;
 
 export function validateChangeColor(
   socket: ServerSocket,
   payload: EventChangeColorPayload
 ): ValidateChangeColorResult {
   const current = getUser(socket.id);
-
-  if (current === undefined) {
-    return { status: false, error: { room: ERROR_USER_NOT_FOUND } };
-  }
-
   const room = getRoomBySocket(socket);
-  if (room === undefined) {
-    return { status: false, error: { room: ERROR_INEXISTING_ROOM } };
+
+  if (!current || !room) {
+    return { status: false, error: { room: ERROR_NOT_IN_A_ROOM } };
+  }
+  if (room.game) {
+    return { status: false, error: { room: ERROR_PLAYING_ROOM } };
   }
 
   const index = room.colors.indexOf(payload.color);

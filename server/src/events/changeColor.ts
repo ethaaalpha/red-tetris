@@ -7,7 +7,7 @@ export function registerHandlers(io: AppServer, socket: ServerSocket) {
   socket.on(EVENT_CHANGE_COLOR, (payload, callback) => {
     const result = validateChangeColor(socket, payload);
     if (!result.status) {
-      callback({ success: false });
+      callback({ success: false, error: result.error });
       return;
     }
 

@@ -8,4 +8,6 @@ export type EventChangeColorSuccess = {
   color: UserColor;
 };
 
-export type EventChangeColorError = void;
+export type EventChangeColorError = {
+  room: string;
+};

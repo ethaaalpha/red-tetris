@@ -1,7 +1,6 @@
 // commons
 export const ERROR_NOT_IN_A_ROOM = "You do not belong to a room";
-export const ERROR_PLAYING_ROOM = "This room is already playing";
-export const ERROR_INEXISTING_ROOM = "This room does not exist";
+export const ERROR_PLAYING_ROOM = "This room is currently playing";
 export const ERROR_NOT_HOST = "You are not the host of the room";
 export const ERROR_USER_NOT_FOUND = "User not found";
 
