@@ -135,7 +135,6 @@ it("all valid colors", async () => {
     }
 
     const roomData = await roomListener;
-    console.log(roomData.players);
     expect(roomData.players[0]).toStrictEqual({ username: data.user.name, color: color });
   }
 });

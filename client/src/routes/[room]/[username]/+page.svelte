@@ -80,7 +80,9 @@
   let errors = $derived([roomError, userError, unusualError].filter((e) => e));
 
   // socket
-  const socket = getSocket(); // matrix
+  const socket = getSocket();
+
+  // game data
   let gameData = $state<GameData>();
 
   // utils
