@@ -416,6 +416,7 @@
             {/if}
             {#if isCurrentUser(roomState.data.host)}
               <button
+                disabled={roomState.data.players.length < GAME_MIN_PLAYERS}
                 onclick={startGame}
                 class="btn btn-primary w-full text-3xl py-3 flex items-center justify-center gap-4"
                 style="--btn-depth: 6px;"
