@@ -678,6 +678,7 @@
       <label for="game_tick">Game tick</label>
       <input
         type="range"
+        class="accent-red-primary"
         min={GAME_TICK_MIN / 100}
         max={GAME_TICK_MAX / 100}
         bind:value={gameTick}
