@@ -1,4 +1,4 @@
-import { defineConfig } from "eslint/config";
+import { defineConfig, globalIgnores } from "eslint/config";
 import prettier from "eslint-config-prettier";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 import svelte from "eslint-plugin-svelte";
@@ -62,5 +62,6 @@ export default defineConfig(
         svelteConfig
       }
     }
-  }
+  },
+  [globalIgnores([".svelte-kit/"])]
 );
