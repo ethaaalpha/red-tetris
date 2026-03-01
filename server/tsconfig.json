@@ -38,5 +38,5 @@
     "eslint.config.js",
     "vitest.config.ts",
     "app.ts"
-  ],
+  ]
 }
