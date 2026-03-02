@@ -50,5 +50,9 @@ export function validateGameAction(
 
   const player = room.game.getPlayer(socket.id);
 
+  if (!player.alive) {
+    return { status: false, error: { user: ERROR_NOT_IN_GAME } };
+  }
+
   return { status: true, game: room.game, player: player, action: result.data.action, room: room };
 }
