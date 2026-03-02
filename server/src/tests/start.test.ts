@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import type { EventStartError, EventStartPayload, EventStartSuccess } from "@app/shared";
-import { DEFAULT_GAME_SETTINGS, EVENT_GAME_START } from "@app/shared";
+import { EVENT_GAME_START } from "@app/shared";
 
 import type { TestServerData } from "./types";
 import {
@@ -28,7 +28,7 @@ describe("invalid start", () => {
     await emitAsync<EventStartPayload, EventStartSuccess, EventStartError>(
       ctx.socket1.client,
       EVENT_GAME_START,
-      DEFAULT_GAME_SETTINGS
+      {}
     ).then((response) => {
       expect(response.success).toBe(false);
     });
@@ -41,7 +41,7 @@ describe("invalid start", () => {
     await emitAsync<EventStartPayload, EventStartSuccess, EventStartError>(
       ctx.socket1.client,
       EVENT_GAME_START,
-      DEFAULT_GAME_SETTINGS
+      {}
     ).then((response) => {
       expect(response.success).toBe(false);
     });
@@ -49,12 +49,12 @@ describe("invalid start", () => {
 
   it("already started", async () => {
     const { room } = await testJoinRoom(ctx.socket1, "example", "user1");
-    room.start(DEFAULT_GAME_SETTINGS);
+    room.start();
 
     await emitAsync<EventStartPayload, EventStartSuccess, EventStartError>(
       ctx.socket1.client,
       EVENT_GAME_START,
-      DEFAULT_GAME_SETTINGS
+      {}
     ).then((response) => {
       expect(response.success).toBe(false);
     });
@@ -66,7 +66,7 @@ describe("invalid start", () => {
     await emitAsync<EventStartPayload, EventStartSuccess, EventStartError>(
       ctx.socket1.client,
       EVENT_GAME_START,
-      DEFAULT_GAME_SETTINGS
+      {}
     ).then((response) => {
       expect(response.success).toBe(false);
     });

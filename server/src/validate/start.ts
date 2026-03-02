@@ -1,6 +1,11 @@
 import z from "zod";
 
-import { type EventStartPayload, GAME_MIN_PLAYERS, type GameSettings } from "@app/shared";
+import {
+  DEFAULT_GAME_SETTINGS,
+  type EventStartPayload,
+  GAME_MIN_PLAYERS,
+  type GameSettings
+} from "@app/shared";
 
 import {
   ERROR_GAME_NOT_ENOUGH_PLAYERS,
@@ -16,10 +21,12 @@ import type { ValidateError } from "@app/types/validate";
 
 import { destructiblePenalityValidation, formatSchemeError, tickValidation } from "./validation";
 
-const schema = z.object({
-  tick: tickValidation,
-  destructiblePenality: destructiblePenalityValidation
-});
+const schema = z
+  .object({
+    tick: tickValidation,
+    destructiblePenality: destructiblePenalityValidation
+  })
+  .default(DEFAULT_GAME_SETTINGS);
 
 type ValidateStartSuccess = {
   status: true;
@@ -30,7 +37,7 @@ type ValidateStartSuccess = {
 type ValideStartResult = ValidateStartSuccess | ValidateError;
 
 export function validateStart(socket: ServerSocket, payload: EventStartPayload): ValideStartResult {
-  const result = schema.safeParse(payload);
+  const result = schema.safeParse(payload.settings);
 
   if (!result.success) {
     return { status: false, error: formatSchemeError(result.error) };

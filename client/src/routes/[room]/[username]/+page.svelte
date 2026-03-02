@@ -204,7 +204,7 @@
       destructiblePenality: destructiblePenality
     };
 
-    socket.emit(EVENT_GAME_START, data, () => {});
+    socket.emit(EVENT_GAME_START, { settings: data }, () => {});
   }
 
   function onSocketGameStart() {

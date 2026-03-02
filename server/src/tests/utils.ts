@@ -15,12 +15,7 @@ import type {
   EventWarmUpSuccess,
   SocketResponse
 } from "@app/shared";
-import {
-  DEFAULT_GAME_SETTINGS,
-  EVENT_GAME_START,
-  EVENT_JOIN_ROOM,
-  EVENT_WARMUP_START
-} from "@app/shared";
+import { EVENT_GAME_START, EVENT_JOIN_ROOM, EVENT_WARMUP_START } from "@app/shared";
 
 import { GAME_START_DELAY } from "@app/constants/core";
 import { getRoom, getRoomBySocket, getRooms } from "@app/core/room";
@@ -159,7 +154,7 @@ export async function testStartGame(test: TestSocket): Promise<{ game: Game; pla
   await emitAsync<EventStartPayload, EventStartSuccess, EventStartError>(
     test.client,
     EVENT_GAME_START,
-    DEFAULT_GAME_SETTINGS
+    {}
   ).then(({ success }) => {
     expect(success).toBe(true);
   });

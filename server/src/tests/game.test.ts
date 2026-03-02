@@ -1,13 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, type Mock, vi } from "vitest";
 
-import type { EventStartError, EventStartPayload, EventStartSuccess, GameData } from "@app/shared";
+import type { GameData } from "@app/shared";
 import {
-  DEFAULT_GAME_SETTINGS,
   EVENT_GAME_DEAD,
   EVENT_GAME_FINISH,
   EVENT_GAME_INFO,
   EVENT_GAME_PENALITY,
-  EVENT_GAME_START,
   PieceColor,
   PieceShape
 } from "@app/shared";
@@ -20,7 +18,6 @@ import type { Room } from "@app/objects/Room";
 
 import type { TestServerData, TestSocket } from "./types";
 import {
-  emitAsync,
   onceAsync,
   passGameCountdown,
   setupTestServer,
@@ -66,13 +63,7 @@ describe("game loop helpers", () => {
     vi.useFakeTimers();
 
     // start game
-    await emitAsync<EventStartPayload, EventStartSuccess, EventStartError>(
-      test1.client,
-      EVENT_GAME_START,
-      DEFAULT_GAME_SETTINGS
-    ).then((response) => {
-      expect(response.success).toBe(true);
-    });
+    await testStartGame(test1);
 
     const retrievedGame = room.game;
     expect(retrievedGame).toBeDefined();
@@ -172,17 +163,7 @@ describe("game loop helpers", () => {
     const listener5 = onceAsync<GameData>(test1.client, EVENT_GAME_INFO);
     const listener6 = onceAsync<GameData>(test2.client, EVENT_GAME_INFO);
 
-    await emitAsync<EventStartPayload, EventStartSuccess, EventStartError>(
-      test1.client,
-      EVENT_GAME_START,
-      DEFAULT_GAME_SETTINGS
-    ).then((response) => {
-      expect(response.success).toBe(true);
-    });
-    const retrievedGame = room.game;
-    expect(retrievedGame).toBeDefined();
-    if (!retrievedGame) return;
-
+    const retrievedGame = (await testStartGame(test1)).game;
     await listener5.then((data) => {
       expect(data).toEqual(retrievedGame.getGameInfo(test1.server.id));
     });
