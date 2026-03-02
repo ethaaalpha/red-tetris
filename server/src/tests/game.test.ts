@@ -198,6 +198,7 @@ describe("game loop helpers", () => {
 it("warmup running and starting game", async () => {
   await testJoinRoom(ctx.socket1, "test", "user1");
   await testJoinRoom(ctx.socket2, "test", "user2");
+  await testJoinRoom(ctx.socket3, "test", "user3");
 
   const listener1 = onceAsync(ctx.socket1.client, EVENT_GAME_INFO);
   const listener2 = onceAsync(ctx.socket2.client, EVENT_GAME_INFO);
