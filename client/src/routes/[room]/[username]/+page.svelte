@@ -370,27 +370,30 @@
   title="Game Settings"
   bind:open={showSettings}
 >
-  <div class="flex flex-col px-16 gap-3">
-    <div class="flex justify-between gap-4">
+  <div class="flex flex-col px-16 py-4 gap-3 w-full">
+    <div class="flex justify-between gap-8">
+      <label for="game_tick" class="text-nowrap">Game tick</label>
       <div class="flex gap-4">
-        <label for="game_tick">Game tick</label>
         <input
+          id="game_tick"
+          name="game_tick"
           type="range"
-          class="accent-red-primary"
+          class="accent-red-primary w-32"
           min={GAME_TICK_MIN / 100}
           max={GAME_TICK_MAX / 100}
           bind:value={gameTick}
-          name="game_tick"
         />
+        <span class="text-red-accent w-8 text-center">
+          {gameTick < 10 ? `0.${gameTick}` : gameTick / 10}
+        </span>
       </div>
-      <span class="text-red-accent w-4">
-        {gameTick < 10 ? `0.${gameTick}` : gameTick / 10}
-      </span>
     </div>
 
-    <div class="flex justify-between gap-4">
+    <div class="flex justify-between">
       <label for="dynamic_clean">Dynamic clean</label>
-      <Checkbox id="dynamic_clean" bind:checked={destructiblePenality} />
+      <div class="w-8 flex items-center justify-center">
+        <Checkbox id="dynamic_clean" bind:checked={destructiblePenality} />
+      </div>
     </div>
   </div>
 </Dialog>
