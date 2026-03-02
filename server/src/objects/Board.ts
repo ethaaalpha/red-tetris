@@ -1,4 +1,4 @@
-import { BOARD_HEIGHT, BOARD_WIDTH,PieceColor } from "@app/shared";
+import { BOARD_HEIGHT, BOARD_WIDTH, PieceColor } from "@app/shared";
 
 import { placePieceOnMatrix } from "@app/core/matrix";
 
