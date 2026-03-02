@@ -301,10 +301,10 @@
       {/if}
 
       {#if game && spectrums}
-        <div class="absolute top-0 -left-16 space-y-8">
+        <div class="absolute top-0 -left-32 space-y-8">
           {#each spectrums as spectrum (spectrum.name)}
             <div class="border border-border/42">
-              <Board matrix={spectrum.matrix} pieceSize={4} spectrumColor={spectrum.color} />
+              <Board matrix={spectrum.matrix} pieceSize={8} spectrumColor={spectrum.color} />
             </div>
           {/each}
         </div>
