@@ -29,7 +29,9 @@ import {
   passGameCountdown,
   setupTestServer,
   shutdownTestServer,
-  testJoinRoom
+  testJoinRoom,
+  testStartGame,
+  testStartWarmup
 } from "./utils";
 
 let ctx: TestServerData;
@@ -136,7 +138,6 @@ describe("game loop helpers", () => {
     expect(applyPenalityMock).toBeCalledTimes(1);
     expect(player2.board.playableLines).toBe(BOARD_HEIGHT - 1);
 
-    // check socket
     await listener1.then((data) => {
       expect(data).toStrictEqual(dataToCheck);
     });
@@ -185,12 +186,37 @@ describe("game loop helpers", () => {
     expect(retrievedGame).toBeDefined();
     if (!retrievedGame) return;
 
-    // check listeners
     await listener5.then((data) => {
       expect(data).toEqual(retrievedGame.getGameInfo(test1.server.id));
     });
     await listener6.then((data) => {
       expect(data).toEqual(retrievedGame.getGameInfo(test2.server.id));
     });
+  });
+});
+
+it("warmup running and starting game", async () => {
+  await testJoinRoom(ctx.socket1, "test", "user1");
+  await testJoinRoom(ctx.socket2, "test", "user2");
+  await testJoinRoom(ctx.socket3, "test", "user3");
+
+  const listener1 = onceAsync(ctx.socket1.client, EVENT_GAME_INFO);
+  const listener2 = onceAsync(ctx.socket2.client, EVENT_GAME_INFO);
+
+  const warmUp1 = await testStartWarmup(ctx.socket2);
+  const warmUp2 = await testStartWarmup(ctx.socket3);
+  expect(warmUp1.game.ongoing).toBe(true);
+  expect(warmUp2.game.ongoing).toBe(true);
+
+  const { game } = await testStartGame(ctx.socket1);
+
+  expect(warmUp1.game.ongoing).toBe(false);
+  expect(warmUp2.game.ongoing).toBe(false);
+
+  await listener1.then((data) => {
+    expect(data).toEqual(game.getGameInfo(ctx.socket1.server.id));
+  });
+  await listener2.then((data) => {
+    expect(data).toEqual(game.getGameInfo(ctx.socket2.server.id));
   });
 });
