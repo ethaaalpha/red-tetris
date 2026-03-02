@@ -26,6 +26,7 @@ export class Player {
     if (!piece.alreadyMoved && !this.board.isValidPiece(piece)) {
       this.alive = false;
     }
+    return this.alive;
   }
 
   public getInfo(): PlayerInfo {

@@ -1,5 +1,6 @@
 import {
   EVENT_GAME_COUNTDOWN,
+  EVENT_GAME_DEAD,
   EVENT_GAME_FINISH,
   EVENT_GAME_INFO,
   EVENT_GAME_PENALITY,
@@ -48,11 +49,15 @@ export async function gameLoop(io: AppServer, room: Room, settings: GameSettings
             }
           });
         }
-        player.checkLost();
+
+        if (player.checkLost()) {
+          io.to(id).emit(EVENT_GAME_INFO, game.getGameInfo(id));
+        } else {
+          io.to(id).emit(EVENT_GAME_DEAD);
+        }
       }
 
       io.to(room.name).emit(EVENT_GAME_SPECTRUM, game.getGameSpectrums(id));
-      io.to(id).emit(EVENT_GAME_INFO, game.getGameInfo(id));
     });
     game.checkFinished();
     await sleep(settings.tick);
