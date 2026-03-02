@@ -31,9 +31,9 @@ afterEach(async () => {
 it("warm up perform action", async () => {
   const applyMovement = vi.spyOn(MovementModule, "applyMovement");
   const test1 = ctx.socket1;
-  vi.useFakeTimers();
 
   await testJoinRoom(test1, "example", "user");
+  vi.useFakeTimers();
   const { game, player } = await testStartWarmup(test1);
 
   // make on fall tick

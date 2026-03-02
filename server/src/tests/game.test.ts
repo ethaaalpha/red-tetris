@@ -29,7 +29,9 @@ import {
   passGameCountdown,
   setupTestServer,
   shutdownTestServer,
-  testJoinRoom
+  testJoinRoom,
+  testStartGame,
+  testStartWarmup
 } from "./utils";
 
 let ctx: TestServerData;
@@ -192,5 +194,27 @@ describe("game loop helpers", () => {
     await listener6.then((data) => {
       expect(data).toEqual(retrievedGame.getGameInfo(test2.server.id));
     });
+  });
+});
+
+it("warmup running and starting game", async () => {
+  await testJoinRoom(ctx.socket1, "test", "user1");
+  await testJoinRoom(ctx.socket2, "test", "user2");
+
+  const listener1 = onceAsync(ctx.socket1.client, EVENT_GAME_INFO);
+  const listener2 = onceAsync(ctx.socket2.client, EVENT_GAME_INFO);
+
+  const warmUp = await testStartWarmup(ctx.socket2);
+  expect(warmUp.game.ongoing).toBe(true);
+
+  const { game } = await testStartGame(ctx.socket1);
+  // warnup have been stopped
+  expect(warmUp.game.ongoing).toBe(false);
+
+  await listener1.then((data) => {
+    expect(data).toEqual(game.getGameInfo(ctx.socket1.server.id));
+  });
+  await listener2.then((data) => {
+    expect(data).toEqual(game.getGameInfo(ctx.socket2.server.id));
   });
 });
