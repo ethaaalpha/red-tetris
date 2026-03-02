@@ -2,25 +2,23 @@
   import { fade } from "svelte/transition";
   import { GamepadDirectional, RotateCcw } from "@lucide/svelte";
 
-  import type { PieceColor } from "@app/shared";
-
   import Piece from "$lib/components/Piece.svelte";
 
   import { roomState } from "$lib/state/room.svelte";
 
+  import { getLightColor } from "$lib/utils/getLightColor";
+
   let {
     game,
     warmUp,
-    userColor,
-    userHexColor,
     startWarmUp
   }: {
     game: boolean;
     warmUp: boolean;
-    userColor: PieceColor;
-    userHexColor: string;
     startWarmUp: () => void;
   } = $props();
+
+  let userHexColor = $derived(getLightColor(roomState.color));
 </script>
 
 {#if !game}
@@ -44,7 +42,7 @@
   <span
     class="absolute right-1/2 translate-x-1/2 -bottom-12 text-nowrap flex gap-2 items-center text-lg"
   >
-    <Piece color={userColor} size={20} />
+    <Piece color={roomState.color} size={20} />
     <span style="color: {userHexColor}">
       {roomState.username}
     </span>

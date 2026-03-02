@@ -9,10 +9,10 @@
 
   import { roomState } from "$lib/state/room.svelte";
 
+  import { getLightColor } from "$lib/utils/getLightColor";
   import { isCurrentUserHost } from "$lib/utils/isCurrentUser";
 
   let {
-    userHexColor,
     showLeaveDialog = $bindable(false),
     showSettings = $bindable(false),
     handleKickUser,
@@ -22,7 +22,6 @@
     messageInputFocused = $bindable(false),
     onSendMessage
   }: {
-    userHexColor: string;
     showLeaveDialog: boolean;
     showSettings: boolean;
     handleKickUser: (user: UserData) => void;
@@ -33,6 +32,7 @@
     onSendMessage: (message: string) => Promise<boolean>;
   } = $props();
 
+  let userHexColor = $derived(getLightColor(roomState.color));
   let showColorChoice = $state(false);
   let message = $state("");
 
@@ -75,7 +75,13 @@
       </span>
 
       <!-- PLAYER LIST -->
-      <PlayerList {userHexColor} bind:showColorChoice {handleKickUser} {handleColorChange} />
+      <PlayerList
+        players={roomState.data.players}
+        {userHexColor}
+        bind:showColorChoice
+        {handleKickUser}
+        {handleColorChange}
+      />
       <div class="mt-auto space-y-4">
         {#if isCurrentUserHost()}
           <button

@@ -12,11 +12,13 @@
   import { isCurrentUser, isCurrentUserHost } from "$lib/utils/isCurrentUser";
 
   let {
+    players,
     userHexColor,
     showColorChoice = $bindable(false),
     handleKickUser,
     handleColorChange
   }: {
+    players: UserData[];
     userHexColor: string;
     showColorChoice: boolean;
     handleKickUser: (user: UserData) => void;
@@ -25,7 +27,7 @@
 </script>
 
 <ul class="py-6">
-  {#each roomState.data!.players as player, index (player.color)}
+  {#each players as player, index (player.color)}
     <li
       class="p-2 text-lg flex items-center gap-2 group/list border-l-2 border-l-transparent
         {index % 2 === 0 ? 'bg-dark-accent' : ''}"

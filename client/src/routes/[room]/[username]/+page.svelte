@@ -53,8 +53,6 @@
   import { kickState } from "$lib/state/kick.svelte";
   import { roomState } from "$lib/state/room.svelte";
 
-  import { getLightColor } from "$lib/utils/getLightColor";
-
   import { keyToAction } from "$lib/constants/keyToActions";
   import { getSocket } from "$lib/socket/socket.svelte";
 
@@ -91,10 +89,6 @@
     });
   }
 
-  // colors
-  let userColor = $derived(roomState.color);
-  let userHexColor = $derived(getLightColor(userColor));
-
   function onColorChange(color: UserColor): Promise<boolean> {
     return new Promise((resolve) => {
       socket.emit(EVENT_CHANGE_COLOR, { color }, (response) => {
@@ -121,12 +115,12 @@
   let showKickDialog = $state(false);
   let userToKick = $state<string>();
   let userToKickColor = $state<UserColor>(PieceColor.GREY);
-  let userToKickPieceColor = $state("#e6e6e6");
+  let userToKickHexColor = $state("#e6e6e6");
 
   function handleKickUser(user: UserData) {
     userToKick = user.username;
     userToKickColor = user.color;
-    userToKickPieceColor = PIECE_COLORS[user.color].light;
+    userToKickHexColor = PIECE_COLORS[user.color].light;
     showKickDialog = true;
   }
 
@@ -273,7 +267,6 @@
   {:else}
     {#if !game}
       <Lobby
-        {userHexColor}
         bind:showLeaveDialog
         bind:showSettings
         {handleKickUser}
@@ -296,7 +289,7 @@
       {/if}
 
       <!-- BOARD BOTTOM INFO / ACTION -->
-      <BoardActions {game} {warmUp} {userColor} {userHexColor} startWarmUp={emitStartWarmUp} />
+      <BoardActions {game} {warmUp} startWarmUp={emitStartWarmUp} />
 
       <!-- GAME COUNTDOWN -->
       {#if gameCountdown > 0 || showGo}
@@ -326,7 +319,7 @@
       Do you want to kick
       <span class="px-1 space-x-1 text-nowrap">
         <Piece color={userToKickColor} size="1em" inline />
-        <span style="color: {userToKickPieceColor}">
+        <span style="color: {userToKickHexColor}">
           {userToKick}
         </span>
       </span>
