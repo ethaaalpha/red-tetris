@@ -180,10 +180,7 @@
   let warmUp = $state(false);
 
   function emitStartWarmUp() {
-    const data: GameSettings = {
-      tick: GAME_TICK_DEFAULT
-    };
-    socket.emit(EVENT_WARMUP_START, data, (response) => {
+    socket.emit(EVENT_WARMUP_START, (response) => {
       if (response.success) {
         warmUp = true;
       }
@@ -202,7 +199,8 @@
 
   function emitStartGame() {
     const data: GameSettings = {
-      tick: gameTick * 100
+      tick: gameTick * 100,
+      destructiblePenality: false // add checkbox ?
     };
 
     socket.emit(EVENT_GAME_START, data, () => {});

@@ -5,9 +5,9 @@ import type {
   EventStartPayload,
   EventStartSuccess,
   GameData,
-  GameSettings
 } from "@app/shared";
 import {
+  DEFAULT_GAME_SETTINGS,
   EVENT_GAME_DEAD,
   EVENT_GAME_FINISH,
   EVENT_GAME_INFO,
@@ -54,9 +54,6 @@ describe("game loop helpers", () => {
   let applyPenalityMock: Mock;
   const pieceI = new Piece(PieceShape.I, 0, 3);
   const pieceO = new Piece(PieceShape.O, 0, 0);
-  const GameSettings: GameSettings = {
-    tick: 300
-  };
 
   beforeEach(async () => {
     attachCurrentPieceMock = vi.spyOn(Player.prototype, "attachCurrentPiece");
@@ -77,7 +74,7 @@ describe("game loop helpers", () => {
     await emitAsync<EventStartPayload, EventStartSuccess, EventStartError>(
       test1.client,
       EVENT_GAME_START,
-      GameSettings
+      DEFAULT_GAME_SETTINGS
     ).then((response) => {
       expect(response.success).toBe(true);
     });
@@ -183,7 +180,7 @@ describe("game loop helpers", () => {
     await emitAsync<EventStartPayload, EventStartSuccess, EventStartError>(
       test1.client,
       EVENT_GAME_START,
-      GameSettings
+      DEFAULT_GAME_SETTINGS
     ).then((response) => {
       expect(response.success).toBe(true);
     });

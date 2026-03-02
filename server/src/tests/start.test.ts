@@ -1,12 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
-import type {
-  EventStartError,
-  EventStartPayload,
-  EventStartSuccess,
-  GameSettings
-} from "@app/shared";
-import { EVENT_GAME_START } from "@app/shared";
+import type { EventStartError, EventStartPayload, EventStartSuccess } from "@app/shared";
+import { DEFAULT_GAME_SETTINGS, EVENT_GAME_START } from "@app/shared";
 
 import type { TestServerData } from "./types";
 import {
@@ -28,16 +23,12 @@ afterEach(async () => {
   await shutdownTestServer(ctx);
 });
 
-const GameSettings: GameSettings = {
-  tick: 300
-};
-
 describe("invalid start", () => {
   it("not in a room", async () => {
     await emitAsync<EventStartPayload, EventStartSuccess, EventStartError>(
       ctx.socket1.client,
       EVENT_GAME_START,
-      GameSettings
+      DEFAULT_GAME_SETTINGS
     ).then((response) => {
       expect(response.success).toBe(false);
     });
@@ -50,7 +41,7 @@ describe("invalid start", () => {
     await emitAsync<EventStartPayload, EventStartSuccess, EventStartError>(
       ctx.socket1.client,
       EVENT_GAME_START,
-      GameSettings
+      DEFAULT_GAME_SETTINGS
     ).then((response) => {
       expect(response.success).toBe(false);
     });
@@ -63,7 +54,7 @@ describe("invalid start", () => {
     await emitAsync<EventStartPayload, EventStartSuccess, EventStartError>(
       ctx.socket1.client,
       EVENT_GAME_START,
-      GameSettings
+      DEFAULT_GAME_SETTINGS
     ).then((response) => {
       expect(response.success).toBe(false);
     });
@@ -76,7 +67,7 @@ describe("invalid start", () => {
     await emitAsync<EventStartPayload, EventStartSuccess, EventStartError>(
       ctx.socket1.client,
       EVENT_GAME_START,
-      GameSettings
+      DEFAULT_GAME_SETTINGS
     ).then((response) => {
       expect(response.success).toBe(false);
     });

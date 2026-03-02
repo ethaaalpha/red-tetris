@@ -14,10 +14,11 @@ import { Room } from "@app/objects/Room";
 import type { ServerSocket } from "@app/types/socket";
 import type { ValidateError } from "@app/types/validate";
 
-import { formatSchemeError, tickValidation } from "./validation";
+import { destructiblePenalityValidation, formatSchemeError, tickValidation } from "./validation";
 
 const schema = z.object({
-  tick: tickValidation
+  tick: tickValidation,
+  destructiblePenality: destructiblePenalityValidation
 });
 
 type ValidateStartSuccess = {
@@ -51,9 +52,7 @@ export function validateStart(socket: ServerSocket, payload: EventStartPayload):
     return { status: false, error: { room: ERROR_GAME_NOT_ENOUGH_PLAYERS } };
   }
 
-  const GameSettings: GameSettings = {
-    tick: result.data.tick
-  };
+  const GameSettings: GameSettings = result.data;
 
   return { status: true, room, GameSettings: GameSettings };
 }
