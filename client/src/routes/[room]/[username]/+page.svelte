@@ -14,6 +14,7 @@
     EventMessagePayload,
     GameData,
     GameSettings,
+    PlayerInfo,
     UserColor,
     UserData
   } from "@app/shared";
@@ -23,6 +24,7 @@
     EVENT_GAME_COUNTDOWN,
     EVENT_GAME_FINISH,
     EVENT_GAME_INFO,
+    EVENT_GAME_SPECTRUM,
     EVENT_GAME_START,
     EVENT_JOIN_ROOM,
     EVENT_KICK,
@@ -224,6 +226,12 @@
     gameData = undefined;
   }
 
+  // spectrum
+  let spectrums = $state<PlayerInfo[]>([]);
+  function onSocketGameSpectrum(data: PlayerInfo[]) {
+    spectrums = data;
+  }
+
   // settings
   let showSettings = $state(false);
 
@@ -241,6 +249,7 @@
     socket.on(EVENT_GAME_INFO, onSocketGameInfo);
     socket.on(EVENT_GAME_COUNTDOWN, onSocketGameCountdown);
     socket.on(EVENT_GAME_FINISH, onSocketGameFinish);
+    socket.on(EVENT_GAME_SPECTRUM, onSocketGameSpectrum);
 
     return () => {
       socket.off(EVENT_KICK, onSocketKick);
@@ -251,6 +260,7 @@
       socket.off(EVENT_GAME_INFO, onSocketGameInfo);
       socket.off(EVENT_GAME_FINISH, onSocketGameFinish);
       socket.off(EVENT_GAME_COUNTDOWN, onSocketGameCountdown);
+      socket.off(EVENT_GAME_SPECTRUM, onSocketGameSpectrum);
 
       leaveRoom();
     };
@@ -282,11 +292,21 @@
     <!-- GAME & WARMUP-->
     <div class="relative border-4 border-red-secondary">
       <!-- BOARD -->
-      <Board {gameData} />
+      <Board matrix={gameData?.matrix} shadowPiece={gameData?.shadowPiece} />
 
       {#if gameData}
         <Score score={gameData.score} />
         <NextPieces nextPieces={gameData.nextPieces} />
+      {/if}
+
+      {#if game && spectrums}
+        <div class="absolute top-0 -left-32 space-y-8">
+          {#each spectrums as spectrum (spectrum.name)}
+            <div>
+              <Board matrix={spectrum.matrix} pieceSize={4} />
+            </div>
+          {/each}
+        </div>
       {/if}
 
       <!-- BOARD BOTTOM INFO / ACTION -->
