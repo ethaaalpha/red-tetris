@@ -422,16 +422,16 @@
 <Dialog icon={Swords} confirm="ok" bind:open={showFinalScore} title="Game Scoreboard">
   <div class="flex flex-col gap-4">
     {#each finalScore as score, index (score.name)}
-      <div class="flex justify-between">
-        <span class="space-x-2">
+      <div class="flex justify-between gap-8">
+        <span class="flex items-center justify-center gap-2">
           <span
             class="{index === 0
-              ? 'bg-[#E7B903]/42 text-[#E7B903]'
+              ? 'bg-[#E7B903]/20 text-[#E7B903]'
               : index === 1
-                ? 'bg-[#C0C0C0]/42 text-[#C0C0C0]'
+                ? 'bg-[#C0C0C0]/20 text-[#C0C0C0]'
                 : index === 2
-                  ? 'bg-[#CD7F32]/42 text-[#CD7F32]'
-                  : ''} rounded-xs w-5 h-5"
+                  ? 'bg-[#CD7F32]/20 text-[#CD7F32]'
+                  : ''} rounded-xs w-5 h-5 flex items-center justify-center"
           >
             {index + 1}
           </span>
