@@ -13,8 +13,8 @@ export function registerHandlers(socket: ServerSocket) {
       return;
     }
 
-    await applyMovement(result.game, result.player, result.action);
+    const { data } = await applyMovement(result.game, result.player, result.action);
 
-    callback({ success: true, data: result.game.getGameInfo(socket.id) });
+    callback({ success: true, data: data });
   });
 }

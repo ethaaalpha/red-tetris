@@ -1,4 +1,4 @@
-import { GameActions } from "@app/shared";
+import { GameActions, type GameData } from "@app/shared";
 
 import { MAX_ROTATIONS } from "@app/constants/core";
 import { PIECES } from "@app/constants/pieces";
@@ -47,26 +47,31 @@ const actions: Record<GameActions, (data: ActionData) => Piece> = {
   }
 };
 
-export async function applyMovement(game: Game, player: Player, key: keyof typeof actions) {
-  if (!player.alive) return 0;
-  if (!game.ongoing) return 0;
-  let result = 0;
+export async function applyMovement(
+  game: Game,
+  player: Player,
+  key: keyof typeof actions
+): Promise<{ nb: number; data: GameData }> {
+  let nb = 0;
+  const data = await player.mutex.runExclusive(() => {
+    if (player.alive && game.ongoing) {
+      const actionData: ActionData = { piece: player.actualPiece.clone(), board: player.board };
+      const movedPiece = actions[key](actionData);
 
-  await player.mutex.runExclusive(() => {
-    const actionData: ActionData = { piece: player.actualPiece.clone(), board: player.board };
-    const movedPiece = actions[key](actionData);
+      if (player.board.isValidPiece(movedPiece)) {
+        player.actualPiece = movedPiece;
 
-    if (player.board.isValidPiece(movedPiece)) {
-      player.actualPiece = movedPiece;
+        // hard drop
+        if (key === GameActions.SPACE) {
+          player.attachCurrentPiece(game);
 
-      // hard drop
-      if (key === GameActions.SPACE) {
-        player.attachCurrentPiece(game);
-
-        result = player.board.cleanLines(game.settings.destructiblePenality);
+          nb = player.board.cleanLines(game.settings.destructiblePenality);
+        }
       }
     }
+
+    return game.getGameInfo(player.user.id);
   });
 
-  return result;
+  return { nb: nb, data: data };
 }
