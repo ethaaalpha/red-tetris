@@ -64,7 +64,6 @@ export async function gameLoop(io: AppServer, room: Room) {
           io.to(id).emit(EVENT_GAME_INFO, game.getGameInfo(id));
         } else {
           game.addDeadPlayer(player);
-          console.log("player dead", player.user.name);
           io.to(id).emit(EVENT_GAME_DEAD);
         }
       } else {
