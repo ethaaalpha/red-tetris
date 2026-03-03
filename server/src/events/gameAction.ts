@@ -12,7 +12,7 @@ export function registerHandlers(socket: ServerSocket) {
       callback({ success: false });
       return;
     }
-    const { nb, data } = await applyMovement(result.game, result.player, result.action);
+    const { nb, gameData } = await applyMovement(result.game, result.player, result.action);
 
     if (nb > 0) {
       result.game.players.forEach(async (p) => {
@@ -23,6 +23,6 @@ export function registerHandlers(socket: ServerSocket) {
       });
     }
 
-    callback({ success: true, data: data });
+    callback({ success: true, data: gameData });
   });
 }

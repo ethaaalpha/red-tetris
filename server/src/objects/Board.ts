@@ -8,7 +8,6 @@ export class Board {
   public matrix: number[][]; // row, column
   public playableLines: number = BOARD_HEIGHT - 1;
   public placedPieces: number = 0;
-  public completedRowIndices: Set<number> = new Set();
 
   constructor() {
     this.matrix = Array.from({ length: BOARD_HEIGHT }, () =>
@@ -45,31 +44,23 @@ export class Board {
 
     placePieceOnMatrix(piece, this.matrix);
     this.placedPieces++;
-
-    // check lines to clear
-    piece.blocks.forEach(([x]) => {
-      const indice = piece.x + x;
-      const row = this.matrix[indice];
-      if (!row) return;
-      if (row.every((cell) => cell != PieceColor.EMPTY)) {
-        this.completedRowIndices.add(indice);
-      }
-    });
   }
 
   public cleanLines(destructible: boolean): number {
-    const size = this.completedRowIndices.size;
+    let count = 0;
 
-    this.completedRowIndices.forEach((row_i) => {
-      this.matrix.splice(row_i, 1);
-      this.matrix.unshift(Array(BOARD_WIDTH).fill(PieceColor.EMPTY));
+    this.matrix.forEach((row, i) => {
+      if (row.every((cell) => cell != PieceColor.EMPTY && cell != PieceColor.GREY)) {
+        this.matrix.splice(i, 1);
+        this.matrix.unshift(Array(BOARD_WIDTH).fill(PieceColor.EMPTY));
+        count++;
+      }
     });
-    this.completedRowIndices.clear();
 
     if (destructible) {
-      this.removeRestrictedLines(size);
+      this.removeRestrictedLines(count);
     }
-    return size;
+    return count;
   }
 
   public addRestrictedLines(nb: number) {

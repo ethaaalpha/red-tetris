@@ -51,9 +51,9 @@ export async function applyMovement(
   game: Game,
   player: Player,
   key: keyof typeof actions
-): Promise<{ nb: number; data: GameData }> {
+): Promise<{ nb: number; gameData: GameData }> {
   let nb = 0;
-  const data = await player.mutex.runExclusive(() => {
+  const gameData = await player.mutex.runExclusive(() => {
     if (player.alive && game.ongoing) {
       const actionData: ActionData = { piece: player.actualPiece.clone(), board: player.board };
       const movedPiece = actions[key](actionData);
@@ -73,5 +73,5 @@ export async function applyMovement(
     return game.getGameInfo(player.user.id);
   });
 
-  return { nb: nb, data: data };
+  return { nb: nb, gameData: gameData };
 }
