@@ -5,6 +5,7 @@ import {
   type PlayerInfo
 } from "@app/shared";
 
+import { SCORE_DICT } from "@app/constants/core";
 import { placePieceOnMatrix } from "@app/core/matrix";
 import { createBagOfPieces } from "@app/core/piece";
 
@@ -91,5 +92,9 @@ export class Game {
     const players = this.players.values();
 
     return players.map((p) => p.getInfo()).toArray();
+  }
+
+  public getScore(cleanedLines: number) {
+    return SCORE_DICT[cleanedLines] || 0;
   }
 }

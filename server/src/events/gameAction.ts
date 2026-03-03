@@ -16,6 +16,7 @@ export function registerHandlers(socket: ServerSocket) {
 
     if (nb > 0) {
       result.game.players.forEach(async (p) => {
+        result.player.score += result.game.getScore(nb);
         if (p != result.player) {
           await p.applyPenality(nb);
           socket.to(p.user.id).emit(EVENT_GAME_PENALITY, result.game.getGameInfo(p.user.id));

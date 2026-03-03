@@ -10,7 +10,7 @@ import {
   EVENT_WARMUP_INFO
 } from "@app/shared";
 
-import { GAME_START_DELAY, SCORE_DICT } from "@app/constants/core";
+import { GAME_START_DELAY } from "@app/constants/core";
 import type { Room } from "@app/objects/Room";
 import type { User } from "@app/objects/User";
 import type { AppServer } from "@app/types/socket";
@@ -45,6 +45,7 @@ export async function gameLoop(io: AppServer, room: Room) {
 
         if (nb > 0) {
           game.players.forEach(async (p) => {
+            player.score += game.getScore(nb);
             if (p != player) {
               await p.applyPenality(nb);
               io.to(p.user.id).emit(EVENT_GAME_PENALITY, game.getGameInfo(p.user.id));
@@ -91,10 +92,9 @@ export async function warmUpLoop(io: AppServer, user: User) {
       });
 
       const nbCleanedLines = player.board.cleanLines(game.settings.destructiblePenality);
-      const score = SCORE_DICT[nbCleanedLines];
-      player.score += score || 0;
-
+      player.score += game.getScore(nbCleanedLines);
       player.checkLost();
+
       io.to(id).emit(EVENT_WARMUP_INFO, game.getGameInfo(id));
     });
     game.checkFinished();
