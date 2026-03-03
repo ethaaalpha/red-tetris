@@ -213,13 +213,8 @@
   let showGo = $state(false);
 
   let gameScore = $state<GameScore>();
-  let finalScore = $state<PlayerScore[]>([
-    { name: "israel", color: 2, score: 2147483647 },
-    { name: "US", color: 4, score: 1337 },
-    { name: "pizzaclique", color: 3, score: 42 },
-    { name: "iran", color: 5, score: -1 }
-  ]);
-  let showFinalScore = $state(true);
+  let finalScore = $state<PlayerScore[]>([]);
+  let showFinalScore = $state(false);
 
   function emitStartGame() {
     const data: GameSettings = {
