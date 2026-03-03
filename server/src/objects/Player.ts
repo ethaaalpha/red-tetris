@@ -1,3 +1,5 @@
+import { Mutex } from "async-mutex";
+
 import type { PlayerInfo } from "@app/shared";
 
 import { Board } from "./Board";
@@ -10,6 +12,7 @@ export class Player {
   public score = 0;
   public alive = true;
   public actualPiece: Piece;
+  public mutex = new Mutex();
 
   constructor(
     public user: User,
@@ -44,9 +47,16 @@ export class Player {
     return this.board.isValidPiece(next);
   }
 
-  public applyPenality(nb: number) {
+  public async applyPenality(nb: number) {
     if (this.alive) {
-      this.board.addRestrictedLines(nb);
+      await this.mutex.runExclusive(() => {
+        const diff = this.board.addRestrictedLines(nb);
+
+        for (let i = 0; i < diff; i++) {
+          if (this.actualPiece.x === 0) break;
+          this.actualPiece.x--;
+        }
+      });
     }
   }
 
