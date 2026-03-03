@@ -423,7 +423,7 @@
   <div class="flex flex-col gap-4">
     {#each finalScore as score, index (score.name)}
       <div class="flex justify-between">
-        <span>
+        <span class="space-x-2">
           <span
             class="{index === 0
               ? 'bg-[#E7B903]/42 text-[#E7B903]'
@@ -431,7 +431,7 @@
                 ? 'bg-[#C0C0C0]/42 text-[#C0C0C0]'
                 : index === 2
                   ? 'bg-[#CD7F32]/42 text-[#CD7F32]'
-                  : ''} rounded-xs p-2"
+                  : ''} rounded-xs w-5 h-5"
           >
             {index + 1}
           </span>

@@ -80,6 +80,14 @@ export async function gameLoop(io: AppServer, room: Room) {
     await sleep(game.settings.tick);
   }
 
+  const lastPlayer = game.players.values().find((p) => p.alive);
+  if (lastPlayer) {
+    game.finalScore.unshift({
+      name: lastPlayer.user.name,
+      color: lastPlayer.user.color,
+      score: lastPlayer.score
+    });
+  }
   io.to(room.name).emit(EVENT_GAME_FINISH, game.finalScore);
   room.game = null;
   io.to(room.name).emit(EVENT_ROOM_UPDATE, room.asInfo());
