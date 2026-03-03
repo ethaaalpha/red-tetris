@@ -21,14 +21,12 @@ import type { ServerData } from "@app/types/server";
 import type { AppServer, ServerSocket } from "@app/types/socket";
 import { logger } from "@app/utils/log";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const frontendPath = path.join(__dirname, "../client/build");
+const frontendPath = path.join(import.meta.dirname, "../client/build");
 
 function configureHttp(app: Express) {
   app.use(express.static(frontendPath));
 
-  app.get("/", (req: express.Request, res: express.Response) => {
+  app.get("/{*splat}", (_req: express.Request, res: express.Response) => {
     res.sendFile(path.join(frontendPath, "index.html"));
   });
 }
