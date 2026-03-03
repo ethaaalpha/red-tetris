@@ -5,8 +5,7 @@ import { PieceShape } from "@app/shared";
 import { Piece } from "@app/objects/Piece";
 
 export function createBagOfPieces() {
-  // const values = Object.values(PieceShape);
-  const values = [PieceShape.O];
+  const values = Object.values(PieceShape);
   const bag: Piece[] = [];
 
   values.forEach((shape) => {
