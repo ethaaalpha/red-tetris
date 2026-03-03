@@ -34,15 +34,15 @@ export async function gameLoop(io: AppServer, room: Room) {
   while (game.ongoing) {
     game.players.forEach(async (player, id) => {
       if (player.alive) {
-        await player.mutex.runExclusive(() => {
+        const nb = await player.mutex.runExclusive(() => {
           if (player.isNextPositionValid()) {
             player.actualPiece.moveDown();
           } else {
             player.attachCurrentPiece(game);
           }
+          return player.board.cleanLines(game.settings.destructiblePenality);
         });
 
-        const nb = player.board.cleanLines(game.settings.destructiblePenality);
         if (nb > 0) {
           game.players.forEach(async (p) => {
             if (p != player) {
@@ -81,13 +81,15 @@ export async function warmUpLoop(io: AppServer, user: User) {
 
   while (game.ongoing) {
     await sleep(game.settings.tick);
-    game.players.forEach((player, id) => {
-      if (player.isNextPositionValid()) {
-        player.actualPiece.moveDown();
-      } else {
-        player.attachCurrentPiece(game);
-      }
-      player.board.cleanLines(game.settings.destructiblePenality);
+    game.players.forEach(async (player, id) => {
+      await player.mutex.runExclusive(() => {
+        if (player.isNextPositionValid()) {
+          player.actualPiece.moveDown();
+        } else {
+          player.attachCurrentPiece(game);
+        }
+        player.board.cleanLines(game.settings.destructiblePenality);
+      })
       player.checkLost();
 
       io.to(id).emit(EVENT_WARMUP_INFO, game.getGameInfo(id));
