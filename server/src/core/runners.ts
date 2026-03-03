@@ -63,6 +63,11 @@ export async function gameLoop(io: AppServer, room: Room) {
         if (player.checkLost()) {
           io.to(id).emit(EVENT_GAME_INFO, game.getGameInfo(id));
         } else {
+          game.finalScore.unshift({
+            name: player.user.name,
+            color: player.user.color,
+            score: player.score
+          });
           io.to(id).emit(EVENT_GAME_DEAD);
         }
       }
@@ -75,7 +80,7 @@ export async function gameLoop(io: AppServer, room: Room) {
     await sleep(game.settings.tick);
   }
 
-  io.to(room.name).emit(EVENT_GAME_FINISH);
+  io.to(room.name).emit(EVENT_GAME_FINISH, game.finalScore);
   room.game = null;
   io.to(room.name).emit(EVENT_ROOM_UPDATE, room.asInfo());
 }

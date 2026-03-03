@@ -3,7 +3,8 @@ import {
   type GameData,
   type GameScore,
   type GameSettings,
-  type PlayerInfo
+  type PlayerInfo,
+  type PlayerScore
 } from "@app/shared";
 
 import { SCORE_DICT } from "@app/constants/core";
@@ -16,6 +17,7 @@ import type { User } from "./User";
 
 export class Game {
   public players: Map<string, Player> = new Map();
+  public finalScore: PlayerScore[] = [];
   public pieces: Array<Piece> = [];
   public ongoing: boolean = false;
   public settings: GameSettings = DEFAULT_GAME_SETTINGS;

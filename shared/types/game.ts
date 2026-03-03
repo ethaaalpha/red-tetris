@@ -29,3 +29,9 @@ export type GameScore = {
   score: number;
   type: string;
 };
+
+export type PlayerScore = {
+  name: string;
+  color: UserColor;
+  score: number;
+};

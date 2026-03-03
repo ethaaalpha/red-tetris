@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { DoorOpen, Settings, UserX } from "@lucide/svelte";
+  import { DoorOpen, Settings, Swords, UserX } from "@lucide/svelte";
 
   import { goto } from "$app/navigation";
   import { resolve } from "$app/paths";
@@ -16,6 +16,7 @@
     GameScore,
     GameSettings,
     PlayerInfo,
+    PlayerScore,
     UserColor,
     UserData
   } from "@app/shared";
@@ -206,9 +207,13 @@
 
   // game
   let game = $state(false);
+
   let gameCountdown = $state(0);
   let showGo = $state(false);
+
   let gameScore = $state<GameScore>();
+  let finalScore = $state<PlayerScore[]>([]);
+  let showFinalScore = $state(false);
 
   function emitStartGame() {
     const data: GameSettings = {
@@ -231,10 +236,13 @@
     }
   }
 
-  function onSocketGameFinish() {
+  function onSocketGameFinish(data: PlayerScore[]) {
     game = false;
     gameData = undefined;
     spectrums = undefined;
+
+    showFinalScore = true;
+    finalScore = data;
   }
 
   // spectrum
@@ -408,5 +416,35 @@
         <Checkbox id="dynamic_clean" bind:checked={destructiblePenality} />
       </div>
     </div>
+  </div>
+</Dialog>
+
+<Dialog icon={Swords} confirm="ok" bind:open={showFinalScore} title="Game Scoreboard">
+  <div class="flex flex-col gap-4">
+    {#each finalScore as score, index (score.name)}
+      <div class="flex justify-between">
+        <span>
+          <span
+            class="{index === 0
+              ? 'bg-[#E7B903]/42 text-[#E7B903]'
+              : index === 1
+                ? 'bg-[#C0C0C0]/42 text-[#C0C0C0]'
+                : index === 2
+                  ? 'bg-[#CD7F32]/42 text-[#CD7F32]'
+                  : ''} rounded-xs p-2"
+          >
+            {index + 1}
+          </span>
+          {score.name}
+        </span>
+        <span
+          class={Math.max(...finalScore.map((s) => s.score)) === score.score
+            ? "text-red-accent"
+            : ""}
+        >
+          {score.score}
+        </span>
+      </div>
+    {/each}
   </div>
 </Dialog>
