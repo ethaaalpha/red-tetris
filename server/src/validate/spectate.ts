@@ -3,10 +3,10 @@ import z from "zod";
 import type { EventSpectatePayload } from "@app/shared";
 
 import {
+  ERROR_NOT_DEAD,
   ERROR_NOT_IN_A_ROOM,
   ERROR_NOT_IN_GAME,
   ERROR_PLAYER_DEAD,
-  ERROR_SELF_DEAD,
   ERROR_USER_NOT_FOUND
 } from "@app/constants/validateErrors";
 import { getRoomBySocket } from "@app/core/room";
@@ -56,8 +56,8 @@ export function validateSpectate(
 
   console.log("lol3");
   const currentPlayer = room.game.getPlayer(current.id);
-  if (!currentPlayer.alive) {
-    return { status: false, error: { user: ERROR_SELF_DEAD } };
+  if (currentPlayer.alive) {
+    return { status: false, error: { user: ERROR_NOT_DEAD } };
   }
 
   console.log("lol4");
