@@ -20,8 +20,7 @@ export function registerHandlers(_io: AppServer, socket: ServerSocket) {
     result.spectatedPlayer.spectators.add(result.currentPlayer);
 
     logger.info(
-      `User ${result.currentPlayer.user.name} (id: ${result.currentPlayer.user.id}) is spectating
-       user ${result.spectatedPlayer.user.name} (id: ${result.spectatedPlayer.user.id})`
+      `User ${result.currentPlayer.user.name} (id: ${result.currentPlayer.user.id}) is spectating user ${result.spectatedPlayer.user.name} (id: ${result.spectatedPlayer.user.id})`
     );
 
     callback({ success: true, data: { username: result.spectatedPlayer.user.name } });
