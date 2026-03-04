@@ -11,7 +11,7 @@ import { SCORE_DICT } from "@app/constants/core";
 import { placePieceOnMatrix } from "@app/core/matrix";
 import { createBagOfPieces } from "@app/core/piece";
 
-import type { Piece } from "./Piece";
+import { Piece } from "./Piece";
 import { Player } from "./Player";
 import type { User } from "./User";
 
@@ -101,13 +101,16 @@ export class Game {
     return SCORE_DICT[cleanedLines] || 0;
   }
 
-  public addDeadPlayer(player: Player): void {
+  public addDeadPlayer(player: Player) {
     if (!this.finalScore.some((p) => p.name === player.user.name)) {
       this.finalScore.unshift({
         name: player.user.name,
         color: player.user.color,
         score: player.score
       });
+      return true;
+    } else {
+      return false;
     }
   }
 

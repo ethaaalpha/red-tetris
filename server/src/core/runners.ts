@@ -19,8 +19,9 @@ import type { AppServer } from "@app/types/socket";
 import { sleep } from "@app/utils/sleep";
 
 function setDeadPlayer(io: AppServer, game: Game, player: Player) {
-  game.addDeadPlayer(player);
-  io.to(player.user.id).emit(EVENT_GAME_DEAD);
+  if (game.addDeadPlayer(player)) {
+    io.to(player.user.id).emit(EVENT_GAME_DEAD);
+  }
 }
 
 export async function gameLoop(io: AppServer, room: Room) {
