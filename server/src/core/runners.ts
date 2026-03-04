@@ -94,7 +94,6 @@ export async function warmUpLoop(io: AppServer, user: User) {
   io.to(user.id).emit(EVENT_WARMUP_INFO, game.getGameInfo(user.id));
 
   while (game.ongoing) {
-    await sleep(game.settings.tick);
     game.players.forEach(async (player, id) => {
       await player.mutex.runExclusive(() => {
         if (player.isNextPositionValid()) {
@@ -117,7 +116,9 @@ export async function warmUpLoop(io: AppServer, user: User) {
 
       io.to(id).emit(EVENT_WARMUP_INFO, gameInfo);
     });
+
     game.checkFinished();
+    await sleep(game.settings.tick);
   }
 
   io.to(user.id).emit(EVENT_WARMUP_FINISH);
