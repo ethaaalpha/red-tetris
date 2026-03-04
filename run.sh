@@ -2,15 +2,14 @@
 
 set -e
 
-HOST="0.0.0.0"
-PORT="8080"
+source .env
 
 case "$1" in
   build)
     docker build . -t red-tetris
     ;;
   terminal)
-    docker run --rm -e PUBLIC_SERVER_PORT=${PORT} -e PUBLIC_SERVER_ADDRESS=${HOST} -p ${PORT}:${PORT} -it red-tetris /bin/bash
+    docker run --rm -e PUBLIC_SERVER_PORT=${PUBLIC_SERVER_PORT} -e PUBLIC_SERVER_ADDRESS=${PUBLIC_SERVER_ADDRESS} -p ${PUBLIC_SERVER_PORT}:${PUBLIC_SERVER_PORT} -it red-tetris /bin/bash
     ;;
   *)
     echo "Usage: ./bash cli.sh <build/terminal>
