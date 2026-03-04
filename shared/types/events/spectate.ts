@@ -11,3 +11,5 @@ export type EventSpectateSuccess = {
 };
 
 export type EventSpectateError = void;
+
+export type EventSpectateData = number;
