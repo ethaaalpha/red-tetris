@@ -81,7 +81,7 @@ export async function gameLoop(io: AppServer, room: Room) {
     game.addDeadPlayer(lastPlayer);
   }
 
-  io.to(room.name).emit(EVENT_GAME_FINISH, game.finalScore);
+  io.to(room.name).emit(EVENT_GAME_FINISH, game.getFinalScore());
   room.game = null;
   io.to(room.name).emit(EVENT_ROOM_UPDATE, room.asInfo());
 }
