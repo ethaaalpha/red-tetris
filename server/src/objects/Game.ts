@@ -17,7 +17,7 @@ import type { User } from "./User";
 
 export class Game {
   public players: Map<string, Player> = new Map();
-  public finalScore: Set<PlayerScore> = new Set();
+  public finalScore: PlayerScore[] = [];
   public pieces: Array<Piece> = [];
   public ongoing: boolean = false;
   public settings: GameSettings = DEFAULT_GAME_SETTINGS;
@@ -102,14 +102,16 @@ export class Game {
   }
 
   public addDeadPlayer(player: Player): void {
-    this.finalScore.add({
-      name: player.user.name,
-      color: player.user.color,
-      score: player.score
-    });
+    if (!this.finalScore.some((p) => p.name === player.user.name)) {
+      this.finalScore.push({
+        name: player.user.name,
+        color: player.user.color,
+        score: player.score
+      });
+    }
   }
 
   public getFinalScore(): PlayerScore[] {
-    return Array.from(this.finalScore).reverse();
+    return this.finalScore;
   }
 }
