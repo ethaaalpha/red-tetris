@@ -12,13 +12,24 @@ export function registerHandlers(socket: ServerSocket) {
       callback({ success: false });
       return;
     }
-    const { nb, gameData } = await applyMovement(result.game, result.player, result.action);
+    const { nbCleanedLines, gameData } = await applyMovement(
+      result.game,
+      result.player,
+      result.action
+    );
 
-    if (nb > 0) {
+    if (nbCleanedLines > 0) {
       result.game.players.forEach(async (p) => {
+        const gameScore = result.game.getScore(nbCleanedLines);
+
+        if (gameScore) {
+          result.player.score += gameScore.score;
+          gameData.gameScore = gameScore;
+        }
+
         if (p != result.player) {
-          await p.applyPenality(nb);
-          socket.to(p.user.id).emit(EVENT_GAME_PENALITY, result.game.getGameInfo(p.user.id));
+          await p.applyPenality(nbCleanedLines);
+          socket.to(p.user.id).emit(EVENT_GAME_PENALITY, gameData);
         }
       });
     }

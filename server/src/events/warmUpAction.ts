@@ -13,7 +13,17 @@ export function registerHandlers(socket: ServerSocket) {
       return;
     }
 
-    const { gameData } = await applyMovement(result.game, result.player, result.action);
+    const { nbCleanedLines, gameData } = await applyMovement(
+      result.game,
+      result.player,
+      result.action
+    );
+
+    const gameScore = result.game.getScore(nbCleanedLines);
+    if (gameScore) {
+      result.player.score += gameScore.score;
+      gameData.gameScore = gameScore;
+    }
 
     callback({ success: true, data: gameData });
   });

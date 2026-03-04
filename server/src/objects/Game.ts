@@ -1,10 +1,13 @@
 import {
   DEFAULT_GAME_SETTINGS,
   type GameData,
+  type GameScore,
   type GameSettings,
-  type PlayerInfo
+  type PlayerInfo,
+  type PlayerScore
 } from "@app/shared";
 
+import { SCORE_DICT } from "@app/constants/core";
 import { placePieceOnMatrix } from "@app/core/matrix";
 import { createBagOfPieces } from "@app/core/piece";
 
@@ -14,6 +17,7 @@ import type { User } from "./User";
 
 export class Game {
   public players: Map<string, Player> = new Map();
+  public finalScore: PlayerScore[] = [];
   public pieces: Array<Piece> = [];
   public ongoing: boolean = false;
   public settings: GameSettings = DEFAULT_GAME_SETTINGS;
@@ -91,5 +95,23 @@ export class Game {
     const players = this.players.values();
 
     return players.map((p) => p.getInfo()).toArray();
+  }
+
+  public getScore(cleanedLines: number): GameScore | 0 {
+    return SCORE_DICT[cleanedLines] || 0;
+  }
+
+  public addDeadPlayer(player: Player): void {
+    if (!this.finalScore.some((p) => p.name === player.user.name)) {
+      this.finalScore.unshift({
+        name: player.user.name,
+        color: player.user.color,
+        score: player.score
+      });
+    }
+  }
+
+  public getFinalScore(): PlayerScore[] {
+    return this.finalScore;
   }
 }

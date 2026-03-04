@@ -12,6 +12,7 @@ import {
   PieceShape
 } from "@app/shared";
 
+import { SCORE_DICT } from "@app/constants/core";
 import type { Game } from "@app/objects/Game";
 import { Piece } from "@app/objects/Piece";
 import { Player } from "@app/objects/Player";
@@ -123,7 +124,9 @@ describe("game loop helpers", () => {
     expect(player2.board.playableLines).toBe(BOARD_HEIGHT - 1);
 
     await listener1.then((data) => {
-      expect(data).toStrictEqual(game.getGameInfo(player2.user.id));
+      const gameInfo = game.getGameInfo(player2.user.id);
+      gameInfo.gameScore = SCORE_DICT[1];
+      expect(data).toStrictEqual(gameInfo);
     });
   });
 

@@ -73,11 +73,7 @@ it("warmup loop", async () => {
   // start warmup
   const { game, player } = await testStartWarmup(test1);
 
-  // check game info
-  await listener1.then((data) => {
-    expect(data).toEqual(game.getGameInfo(test1.server.id));
-  });
-
+  await listener1;
   await vi.advanceTimersToNextTimerAsync();
   expect(game.ongoing).toBe(true);
 

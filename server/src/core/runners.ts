@@ -34,7 +34,7 @@ export async function gameLoop(io: AppServer, room: Room) {
   while (game.ongoing) {
     game.players.forEach(async (player, id) => {
       if (player.alive) {
-        const nb = await player.mutex.runExclusive(() => {
+        const nbCleanedLines = await player.mutex.runExclusive(() => {
           if (player.isNextPositionValid()) {
             player.actualPiece.moveDown();
           } else {
@@ -43,11 +43,17 @@ export async function gameLoop(io: AppServer, room: Room) {
           return player.board.cleanLines(game.settings.destructiblePenality);
         });
 
-        if (nb > 0) {
+        if (nbCleanedLines > 0) {
           game.players.forEach(async (p) => {
+            const gameScore = game.getScore(nbCleanedLines);
             if (p != player) {
-              await p.applyPenality(nb);
-              io.to(p.user.id).emit(EVENT_GAME_PENALITY, game.getGameInfo(p.user.id));
+              await p.applyPenality(nbCleanedLines);
+              const gameInfo = game.getGameInfo(p.user.id);
+              if (gameScore) {
+                gameInfo.gameScore = gameScore;
+                player.score += gameScore.score;
+              }
+              io.to(p.user.id).emit(EVENT_GAME_PENALITY, gameInfo);
             }
           });
         }
@@ -55,8 +61,11 @@ export async function gameLoop(io: AppServer, room: Room) {
         if (player.checkLost()) {
           io.to(id).emit(EVENT_GAME_INFO, game.getGameInfo(id));
         } else {
+          game.addDeadPlayer(player);
           io.to(id).emit(EVENT_GAME_DEAD);
         }
+      } else {
+        game.addDeadPlayer(player);
       }
 
       io.to(id).emit(EVENT_GAME_INFO, game.getGameInfo(id));
@@ -67,7 +76,12 @@ export async function gameLoop(io: AppServer, room: Room) {
     await sleep(game.settings.tick);
   }
 
-  io.to(room.name).emit(EVENT_GAME_FINISH);
+  const lastPlayer = game.players.values().find((p) => p.alive);
+  if (lastPlayer) {
+    game.addDeadPlayer(lastPlayer);
+  }
+
+  io.to(room.name).emit(EVENT_GAME_FINISH, game.getFinalScore());
   room.game = null;
   io.to(room.name).emit(EVENT_ROOM_UPDATE, room.asInfo());
 }
@@ -80,7 +94,6 @@ export async function warmUpLoop(io: AppServer, user: User) {
   io.to(user.id).emit(EVENT_WARMUP_INFO, game.getGameInfo(user.id));
 
   while (game.ongoing) {
-    await sleep(game.settings.tick);
     game.players.forEach(async (player, id) => {
       await player.mutex.runExclusive(() => {
         if (player.isNextPositionValid()) {
@@ -88,13 +101,24 @@ export async function warmUpLoop(io: AppServer, user: User) {
         } else {
           player.attachCurrentPiece(game);
         }
-        player.board.cleanLines(game.settings.destructiblePenality);
-      })
+      });
+
+      const nbCleanedLines = player.board.cleanLines(game.settings.destructiblePenality);
+      const gameScore = game.getScore(nbCleanedLines);
+
+      const gameInfo = game.getGameInfo(id);
       player.checkLost();
 
-      io.to(id).emit(EVENT_WARMUP_INFO, game.getGameInfo(id));
+      if (gameScore) {
+        player.score += gameScore.score;
+        gameInfo.gameScore = gameScore;
+      }
+
+      io.to(id).emit(EVENT_WARMUP_INFO, gameInfo);
     });
+
     game.checkFinished();
+    await sleep(game.settings.tick);
   }
 
   io.to(user.id).emit(EVENT_WARMUP_FINISH);
