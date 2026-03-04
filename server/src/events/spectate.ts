@@ -5,8 +5,8 @@ import { logger } from "@app/utils/log";
 import { validateSpectate } from "@app/validate/spectate";
 
 export function registerHandlers(_io: AppServer, socket: ServerSocket) {
-  socket.on(EVENT_GAME_SPECTATE, (callback) => {
-    const result = validateSpectate(socket);
+  socket.on(EVENT_GAME_SPECTATE, (payload, callback) => {
+    const result = validateSpectate(socket, payload);
     if (!result.status) {
       callback({ success: false });
       return;
