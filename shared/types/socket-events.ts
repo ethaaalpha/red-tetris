@@ -75,6 +75,11 @@ export interface ClientToServerEvents {
     shared.EventGameActionSuccess,
     shared.EventGameActionError
   >;
+  [shared.EVENT_GAME_SPECTATE]: SocketEvent<
+    shared.EventSpectatePayload,
+    shared.EventSpectateSuccess,
+    shared.EventSpectateError
+  >;
 }
 
 export interface ServerToClientEvents {

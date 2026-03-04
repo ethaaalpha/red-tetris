@@ -68,6 +68,9 @@ export async function gameLoop(io: AppServer, room: Room) {
         }
 
         if (player.checkLost()) {
+          player.spectators.forEach((spectator) => {
+            io.to(spectator.user.id).emit(EVENT_GAME_INFO, gameInfo);
+          });
           io.to(id).emit(EVENT_GAME_INFO, gameInfo);
         } else {
           declareFinalScore(io, game, player);

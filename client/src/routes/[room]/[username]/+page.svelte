@@ -12,6 +12,7 @@
     EventKickPayload,
     EventMessageData,
     EventMessagePayload,
+    EventSpectatePayload,
     GameData,
     GameScore,
     GameSettings,
@@ -26,6 +27,7 @@
     EVENT_GAME_COUNTDOWN,
     EVENT_GAME_FINISH,
     EVENT_GAME_INFO,
+    EVENT_GAME_SPECTATE,
     EVENT_GAME_SPECTRUM,
     EVENT_GAME_START,
     EVENT_JOIN_ROOM,
@@ -245,12 +247,24 @@
 
     showFinalScore = true;
     finalScore = data;
+    spectateUsername = undefined;
   }
 
   // spectrum
   let spectrums = $state<PlayerInfo[]>();
   function onSocketGameSpectrum(data: PlayerInfo[]) {
     spectrums = data.filter((spectrum) => spectrum.color !== roomState.color);
+  }
+
+  // spectate
+  let spectateUsername = $state<string>();
+  function handleSpectate(username: string) {
+    const data: EventSpectatePayload = { username };
+    socket.emit(EVENT_GAME_SPECTATE, data, (success) => {
+      if (success) {
+        spectateUsername = username;
+      }
+    });
   }
 
   // settings
@@ -326,9 +340,15 @@
       {#if game && spectrums}
         <div class="absolute top-0 -left-32 space-y-8">
           {#each spectrums as spectrum (spectrum.name)}
-            <div class="border border-border/42">
+            <button
+              disabled={!spectrum.alive}
+              onclick={() => handleSpectate(spectrum.name)}
+              class=" border-border/42 {!spectrum.alive ? 'opacity-42' : ''}
+              {spectateUsername === spectrum.name ? 'border-red-accent border-2' : 'border'}
+              hover:border-2"
+            >
               <Board matrix={spectrum.matrix} pieceSize={8} spectrumColor={spectrum.color} />
-            </div>
+            </button>
           {/each}
         </div>
       {/if}
