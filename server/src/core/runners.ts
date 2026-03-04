@@ -14,8 +14,8 @@ import { GAME_START_DELAY } from "@app/constants/core";
 import type { Room } from "@app/objects/Room";
 import type { User } from "@app/objects/User";
 import type { AppServer } from "@app/types/socket";
-import { sleep } from "@app/utils/sleep";
 import { logger } from "@app/utils/log";
+import { sleep } from "@app/utils/sleep";
 
 export async function gameLoop(io: AppServer, room: Room) {
   const game = room.game;
@@ -33,12 +33,12 @@ export async function gameLoop(io: AppServer, room: Room) {
   game.ongoing = true;
 
   while (game.ongoing) {
-    game.players.forEach(async (player, id) => {
+    for (const [id, player] of game.players) {
       if (player.alive) {
         const { nbCleanedLines, gameInfo } = await player.mutex.runExclusive(() => {
-          logger.debug(`LOOP user: ${player.user.name} acquire`)
+          logger.debug(`LOOP user: ${player.user.name} acquire`);
           if (player.isNextPositionValid()) {
-            logger.debug(`LOOP user: ${player.user.name} move down`)
+            logger.debug(`LOOP user: ${player.user.name} move down`);
             player.actualPiece.moveDown();
           } else {
             player.attachCurrentPiece(game);
@@ -46,12 +46,12 @@ export async function gameLoop(io: AppServer, room: Room) {
           const nbCleanedLines = player.board.cleanLines(game.settings.destructiblePenality);
           const gameInfo = game.getGameInfo(id);
 
-          logger.debug(`LOOP user: ${player.user.name} release`)
+          logger.debug(`LOOP user: ${player.user.name} release`);
           return { nbCleanedLines, gameInfo };
         });
 
         if (nbCleanedLines > 0) {
-          game.players.forEach(async (p) => {
+          for (const p of game.players.values()) {
             const gameScore = game.getScore(nbCleanedLines);
             if (p != player) {
               const targetGameInfo = await p.applyPenality(game, nbCleanedLines);
@@ -61,7 +61,7 @@ export async function gameLoop(io: AppServer, room: Room) {
               }
               io.to(p.user.id).emit(EVENT_GAME_PENALITY, targetGameInfo);
             }
-          });
+          }
         }
 
         if (player.checkLost()) {
@@ -73,7 +73,7 @@ export async function gameLoop(io: AppServer, room: Room) {
       } else {
         game.addDeadPlayer(player);
       }
-    });
+    }
 
     io.to(room.name).emit(EVENT_GAME_SPECTRUM, game.getGameSpectrums());
     game.checkFinished();
@@ -98,7 +98,7 @@ export async function warmUpLoop(io: AppServer, user: User) {
   io.to(user.id).emit(EVENT_WARMUP_INFO, game.getGameInfo(user.id));
 
   while (game.ongoing) {
-    game.players.forEach(async (player, id) => {
+    for (const [id, player] of game.players) {
       const { nbCleanedLines, gameInfo } = await player.mutex.runExclusive(() => {
         if (player.isNextPositionValid()) {
           player.actualPiece.moveDown();
@@ -120,7 +120,7 @@ export async function warmUpLoop(io: AppServer, user: User) {
       }
 
       io.to(id).emit(EVENT_WARMUP_INFO, gameInfo);
-    });
+    }
 
     game.checkFinished();
     await sleep(game.settings.tick);

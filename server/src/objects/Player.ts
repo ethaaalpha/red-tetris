@@ -3,12 +3,12 @@ import { Mutex } from "async-mutex";
 import type { PlayerInfo } from "@app/shared";
 
 import { SCORE_PIECE } from "@app/constants/core";
+import { logger } from "@app/utils/log";
 
 import { Board } from "./Board";
 import type { Game } from "./Game";
 import type { Piece } from "./Piece";
 import type { User } from "./User";
-import { logger } from "@app/utils/log";
 
 export class Player {
   public board = new Board();
@@ -52,7 +52,7 @@ export class Player {
 
   public async applyPenality(game: Game, nb: number) {
     return await this.mutex.runExclusive(() => {
-      logger.debug(`PENALITY user: ${this.user.name} acquire`)
+      logger.debug(`PENALITY user: ${this.user.name} acquire`);
       if (this.alive) {
         const diff = this.board.addRestrictedLines(nb);
 
@@ -61,7 +61,7 @@ export class Player {
           this.actualPiece.x--;
         }
       }
-      logger.debug(`PENALITY user: ${this.user.name} release`)
+      logger.debug(`PENALITY user: ${this.user.name} release`);
       return game.getGameInfo(this.user.id);
     });
   }

@@ -2,8 +2,8 @@ import { EVENT_GAME_ACTION, EVENT_GAME_PENALITY } from "@app/shared";
 
 import { applyMovement } from "@app/core/movements";
 import type { ServerSocket } from "@app/types/socket";
-import { validateGameAction } from "@app/validate/gameAction";
 import { logger } from "@app/utils/log";
+import { validateGameAction } from "@app/validate/gameAction";
 
 export function registerHandlers(socket: ServerSocket) {
   socket.on(EVENT_GAME_ACTION, async (payload, callback) => {
@@ -14,12 +14,12 @@ export function registerHandlers(socket: ServerSocket) {
       return;
     }
 
-    const gameData = await result.player.mutex.runExclusive(() => {
-      logger.debug(`MOVEMENT user: ${result.player.user.name} acquire`)
+    const gameData = await result.player.mutex.runExclusive(async () => {
+      logger.debug(`MOVEMENT user: ${result.player.user.name} acquire`);
       const { nbCleanedLines, gameData } = applyMovement(result.game, result.player, result.action);
 
       if (nbCleanedLines > 0) {
-        result.game.players.forEach(async (p) => {
+        for (const p of result.game.players.values()) {
           const gameScore = result.game.getScore(nbCleanedLines);
 
           if (gameScore) {
@@ -31,9 +31,9 @@ export function registerHandlers(socket: ServerSocket) {
             const targetGameData = await p.applyPenality(result.game, nbCleanedLines);
             socket.to(p.user.id).emit(EVENT_GAME_PENALITY, targetGameData);
           }
-        });
+        }
       }
-      logger.debug(`MOVEMENT user: ${result.player.user.name} release`)
+      logger.debug(`MOVEMENT user: ${result.player.user.name} release`);
       return gameData;
     });
 
