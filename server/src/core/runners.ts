@@ -18,8 +18,8 @@ import type { User } from "@app/objects/User";
 import type { AppServer } from "@app/types/socket";
 import { sleep } from "@app/utils/sleep";
 
-function setDeadPlayer(io: AppServer, game: Game, player: Player) {
-  if (game.addDeadPlayer(player)) {
+function declareFinalScore(io: AppServer, game: Game, player: Player) {
+  if (game.addFinalScore(player)) {
     io.to(player.user.id).emit(EVENT_GAME_DEAD);
   }
 }
@@ -70,10 +70,10 @@ export async function gameLoop(io: AppServer, room: Room) {
         if (player.checkLost()) {
           io.to(id).emit(EVENT_GAME_INFO, gameInfo);
         } else {
-          setDeadPlayer(io, game, player);
+          declareFinalScore(io, game, player);
         }
       } else {
-        setDeadPlayer(io, game, player);
+        declareFinalScore(io, game, player);
       }
     }
 
@@ -84,7 +84,7 @@ export async function gameLoop(io: AppServer, room: Room) {
 
   const lastPlayer = game.players.values().find((p) => p.alive);
   if (lastPlayer) {
-    setDeadPlayer(io, game, lastPlayer);
+    game.addFinalScore(lastPlayer);
   }
 
   io.to(room.name).emit(EVENT_GAME_FINISH, game.getFinalScore());

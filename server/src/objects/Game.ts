@@ -101,7 +101,7 @@ export class Game {
     return SCORE_DICT[cleanedLines] || 0;
   }
 
-  public addDeadPlayer(player: Player) {
+  public addFinalScore(player: Player) {
     if (!this.finalScore.some((p) => p.name === player.user.name)) {
       this.finalScore.unshift({
         name: player.user.name,
