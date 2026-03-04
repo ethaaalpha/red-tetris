@@ -29,6 +29,7 @@
     EVENT_GAME_DEAD,
     EVENT_GAME_FINISH,
     EVENT_GAME_INFO,
+    EVENT_GAME_RESET_SPECTATE,
     EVENT_GAME_SPECTATE,
     EVENT_GAME_SPECTRUM,
     EVENT_GAME_START,
@@ -80,6 +81,7 @@
 
   // game data
   let gameData = $state<GameData>();
+  let lastGameData = $state<GameData>();
 
   function setGameData(data: GameData) {
     gameData = data;
@@ -174,27 +176,6 @@
     messages.push({ from: data.from, message: data.message, color: data.color });
   }
 
-  // tetris events
-  function onSocketGameInfo(data: GameData) {
-    setGameData(data);
-  }
-
-  function emitGameAction(event: KeyboardEvent) {
-    if (!dead && (game || warmUp) && !messageInputFocused) {
-      const action = keyToAction[event.key.toLocaleUpperCase()];
-
-      if (action === undefined) return;
-
-      const eventType = game ? EVENT_GAME_ACTION : EVENT_WARMUP_ACTION;
-
-      socket.emit(eventType, { action }, (response) => {
-        if (response.success) {
-          setGameData(response.data);
-        }
-      });
-    }
-  }
-
   // warm-up
   let warmUp = $state(false);
 
@@ -244,19 +225,44 @@
     }
   }
 
+  function onSocketGameInfo(data: GameData) {
+    setGameData(data);
+  }
+
+  function emitGameAction(event: KeyboardEvent) {
+    if (!dead && (game || warmUp) && !messageInputFocused) {
+      const action = keyToAction[event.key.toLocaleUpperCase()];
+
+      if (action === undefined) return;
+
+      const eventType = game ? EVENT_GAME_ACTION : EVENT_WARMUP_ACTION;
+
+      socket.emit(eventType, { action }, (response) => {
+        if (response.success) {
+          setGameData(response.data);
+        }
+      });
+    }
+  }
+
   function onSocketGameFinish(data: PlayerScore[]) {
     game = false;
     gameData = undefined;
+    lastGameData = undefined;
     spectrums = undefined;
 
-    showFinalScore = true;
-    finalScore = data;
     spectatedPlayer = undefined;
     spectators = 0;
+
+    finalScore = data;
+    showFinalScore = true;
   }
 
-  function onSocketGameDead() {
+  function onSocketGameDead(data: GameData) {
     dead = true;
+    gameData = data;
+    gameData.shadowPiece = undefined;
+    lastGameData = gameData;
   }
 
   // spectrum
@@ -282,6 +288,12 @@
 
   function onSocketGameSpectate(nbSpectators: number) {
     spectators = nbSpectators;
+  }
+
+  function emitResetSpectate() {
+    socket.emit(EVENT_GAME_RESET_SPECTATE, () => {});
+    gameData = lastGameData;
+    spectatedPlayer = undefined;
   }
 
   // settings
@@ -370,7 +382,13 @@
       {/if}
 
       <!-- BOARD BOTTOM INFO / ACTION -->
-      <BoardActions {game} {warmUp} startWarmUp={emitStartWarmUp} {spectatedPlayer} />
+      <BoardActions
+        {game}
+        {warmUp}
+        startWarmUp={emitStartWarmUp}
+        bind:spectatedPlayer
+        {emitResetSpectate}
+      />
 
       <!-- GAME COUNTDOWN -->
       {#if gameCountdown > 0 || showGo}

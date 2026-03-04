@@ -14,12 +14,14 @@
     game,
     warmUp,
     startWarmUp,
-    spectatedPlayer
+    spectatedPlayer = $bindable(),
+    emitResetSpectate
   }: {
     game: boolean;
     warmUp: boolean;
     startWarmUp: () => void;
     spectatedPlayer?: UserData;
+    emitResetSpectate: () => void;
   } = $props();
 
   const userData = $derived.by(() => {
@@ -48,15 +50,23 @@
     {/if}
   </button>
 {:else}
-  <span
-    class="absolute right-1/2 translate-x-1/2 -bottom-12 flex gap-2 items-center text-nowrap text-lg"
-  >
-    {#if spectatedPlayer}
-      SPECTATING:
-    {/if}
-    <Piece color={userData.color} size={20} />
-    <span style="color: {userHexColor}">
-      {userData.username}
-    </span>
-  </span>
+  <div class="absolute right-1/2 translate-x-1/2 -bottom-12">
+    <div class="relative flex gap-2 items-center text-nowrap text-lg">
+      {#if spectatedPlayer}
+        SPECTATING:
+      {/if}
+      <Piece color={userData.color} size={20} />
+      <span style="color: {userHexColor}">
+        {userData.username}
+      </span>
+      {#if spectatedPlayer}
+        <button
+          class="absolute right-1/2 translate-x-1/2 -bottom-12 active:scale-95 duration-75 px-3 py-1 text-white/75 hover:bg-dark-accent/42 hover:text-white/90"
+          onclick={emitResetSpectate}
+        >
+          Go to my game
+        </button>
+      {/if}
+    </div>
+  </div>
 {/if}

@@ -20,7 +20,7 @@ import { sleep } from "@app/utils/sleep";
 
 function declareFinalScore(io: AppServer, game: Game, player: Player) {
   if (game.addFinalScore(player)) {
-    io.to(player.user.id).emit(EVENT_GAME_DEAD);
+    io.to(player.user.id).emit(EVENT_GAME_DEAD, game.getGameInfo(player.user.id));
   }
 }
 
