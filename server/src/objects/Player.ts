@@ -1,6 +1,6 @@
 import { Mutex } from "async-mutex";
 
-import type { PlayerInfo } from "@app/shared";
+import { PieceShape, type PlayerInfo } from "@app/shared";
 
 import { SCORE_PIECE } from "@app/constants/core";
 
@@ -49,17 +49,24 @@ export class Player {
     return this.board.isValidPiece(next);
   }
 
-  public async applyPenality(nb: number) {
-    if (this.alive) {
-      await this.mutex.runExclusive(() => {
+  public async applyPenality(game: Game, nb: number) {
+    return await this.mutex.runExclusive(() => {
+      if (this.alive) {
         const diff = this.board.addRestrictedLines(nb);
 
         for (let i = 0; i < diff; i++) {
-          if (this.actualPiece.x === 0) break;
+          if (
+            (this.actualPiece.type === PieceShape.I || this.actualPiece.type === PieceShape.O) &&
+            this.actualPiece.x === 0
+          )
+            break;
+          if (this.actualPiece.x === 1) break;
           this.actualPiece.x--;
         }
-      });
-    }
+      }
+
+      return game.getGameInfo(this.user.id);
+    });
   }
 
   public attachCurrentPiece(game: Game) {

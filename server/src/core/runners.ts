@@ -32,34 +32,36 @@ export async function gameLoop(io: AppServer, room: Room) {
   game.ongoing = true;
 
   while (game.ongoing) {
-    game.players.forEach(async (player, id) => {
+    for (const [id, player] of game.players) {
       if (player.alive) {
-        const nbCleanedLines = await player.mutex.runExclusive(() => {
+        const { nbCleanedLines, gameInfo } = await player.mutex.runExclusive(() => {
           if (player.isNextPositionValid()) {
             player.actualPiece.moveDown();
           } else {
             player.attachCurrentPiece(game);
           }
-          return player.board.cleanLines(game.settings.destructiblePenality);
+          const nbCleanedLines = player.board.cleanLines(game.settings.destructiblePenality);
+          const gameInfo = game.getGameInfo(id);
+
+          return { nbCleanedLines, gameInfo };
         });
 
         if (nbCleanedLines > 0) {
-          game.players.forEach(async (p) => {
+          for (const p of game.players.values()) {
             const gameScore = game.getScore(nbCleanedLines);
             if (p != player) {
-              await p.applyPenality(nbCleanedLines);
-              const gameInfo = game.getGameInfo(p.user.id);
+              const targetGameInfo = await p.applyPenality(game, nbCleanedLines);
               if (gameScore) {
-                gameInfo.gameScore = gameScore;
+                targetGameInfo.gameScore = gameScore;
                 player.score += gameScore.score;
               }
-              io.to(p.user.id).emit(EVENT_GAME_PENALITY, gameInfo);
+              io.to(p.user.id).emit(EVENT_GAME_PENALITY, targetGameInfo);
             }
-          });
+          }
         }
 
         if (player.checkLost()) {
-          io.to(id).emit(EVENT_GAME_INFO, game.getGameInfo(id));
+          io.to(id).emit(EVENT_GAME_INFO, gameInfo);
         } else {
           game.addDeadPlayer(player);
           io.to(id).emit(EVENT_GAME_DEAD);
@@ -67,9 +69,7 @@ export async function gameLoop(io: AppServer, room: Room) {
       } else {
         game.addDeadPlayer(player);
       }
-
-      io.to(id).emit(EVENT_GAME_INFO, game.getGameInfo(id));
-    });
+    }
 
     io.to(room.name).emit(EVENT_GAME_SPECTRUM, game.getGameSpectrums());
     game.checkFinished();
@@ -94,19 +94,20 @@ export async function warmUpLoop(io: AppServer, user: User) {
   io.to(user.id).emit(EVENT_WARMUP_INFO, game.getGameInfo(user.id));
 
   while (game.ongoing) {
-    game.players.forEach(async (player, id) => {
-      await player.mutex.runExclusive(() => {
+    for (const [id, player] of game.players) {
+      const { nbCleanedLines, gameInfo } = await player.mutex.runExclusive(() => {
         if (player.isNextPositionValid()) {
           player.actualPiece.moveDown();
         } else {
           player.attachCurrentPiece(game);
         }
+        const nbCleanedLines = player.board.cleanLines(game.settings.destructiblePenality);
+        const gameInfo = game.getGameInfo(id);
+
+        return { nbCleanedLines, gameInfo };
       });
 
-      const nbCleanedLines = player.board.cleanLines(game.settings.destructiblePenality);
       const gameScore = game.getScore(nbCleanedLines);
-
-      const gameInfo = game.getGameInfo(id);
       player.checkLost();
 
       if (gameScore) {
@@ -115,7 +116,7 @@ export async function warmUpLoop(io: AppServer, user: User) {
       }
 
       io.to(id).emit(EVENT_WARMUP_INFO, gameInfo);
-    });
+    }
 
     game.checkFinished();
     await sleep(game.settings.tick);
