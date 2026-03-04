@@ -12,27 +12,27 @@ export function registerHandlers(socket: ServerSocket) {
       callback({ success: false });
       return;
     }
-    const { nbCleanedLines, gameData } = await applyMovement(
-      result.game,
-      result.player,
-      result.action
-    );
 
-    if (nbCleanedLines > 0) {
-      result.game.players.forEach(async (p) => {
-        const gameScore = result.game.getScore(nbCleanedLines);
+    const gameData = await result.player.mutex.runExclusive(() => {
+      const { nbCleanedLines, gameData } = applyMovement(result.game, result.player, result.action);
 
-        if (gameScore) {
-          result.player.score += gameScore.score;
-          gameData.gameScore = gameScore;
-        }
+      if (nbCleanedLines > 0) {
+        result.game.players.forEach(async (p) => {
+          const gameScore = result.game.getScore(nbCleanedLines);
 
-        if (p != result.player) {
-          const targetGameData = await p.applyPenality(result.game, nbCleanedLines);
-          socket.to(p.user.id).emit(EVENT_GAME_PENALITY, targetGameData);
-        }
-      });
-    }
+          if (gameScore) {
+            result.player.score += gameScore.score;
+            gameData.gameScore = gameScore;
+          }
+
+          if (p != result.player) {
+            const targetGameData = await p.applyPenality(result.game, nbCleanedLines);
+            socket.to(p.user.id).emit(EVENT_GAME_PENALITY, targetGameData);
+          }
+        });
+      }
+      return gameData;
+    });
 
     callback({ success: true, data: gameData });
   });

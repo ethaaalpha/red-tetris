@@ -47,31 +47,28 @@ const actions: Record<GameActions, (data: ActionData) => Piece> = {
   }
 };
 
-export async function applyMovement(
+export function applyMovement(
   game: Game,
   player: Player,
   key: keyof typeof actions
-): Promise<{ nbCleanedLines: number; gameData: GameData }> {
+): { nbCleanedLines: number; gameData: GameData } {
   let nb = 0;
-  const gameData = await player.mutex.runExclusive(() => {
-    if (player.alive && game.ongoing) {
-      const actionData: ActionData = { piece: player.actualPiece.clone(), board: player.board };
-      const movedPiece = actions[key](actionData);
 
-      if (player.board.isValidPiece(movedPiece)) {
-        player.actualPiece = movedPiece;
+  if (player.alive && game.ongoing) {
+    const actionData: ActionData = { piece: player.actualPiece.clone(), board: player.board };
+    const movedPiece = actions[key](actionData);
 
-        // hard drop
-        if (key === GameActions.SPACE) {
-          player.attachCurrentPiece(game);
+    if (player.board.isValidPiece(movedPiece)) {
+      player.actualPiece = movedPiece;
 
-          nb = player.board.cleanLines(game.settings.destructiblePenality);
-        }
+      // hard drop
+      if (key === GameActions.SPACE) {
+        player.attachCurrentPiece(game);
+
+        nb = player.board.cleanLines(game.settings.destructiblePenality);
       }
     }
+  }
 
-    return game.getGameInfo(player.user.id);
-  });
-
-  return { nbCleanedLines: nb, gameData: gameData };
+  return { nbCleanedLines: nb, gameData: game.getGameInfo(player.user.id) };
 }

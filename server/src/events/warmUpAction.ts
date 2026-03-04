@@ -13,17 +13,16 @@ export function registerHandlers(socket: ServerSocket) {
       return;
     }
 
-    const { nbCleanedLines, gameData } = await applyMovement(
-      result.game,
-      result.player,
-      result.action
-    );
+    const gameData = await result.player.mutex.runExclusive(() => {
+      const { nbCleanedLines, gameData } = applyMovement(result.game, result.player, result.action);
 
-    const gameScore = result.game.getScore(nbCleanedLines);
-    if (gameScore) {
-      result.player.score += gameScore.score;
-      gameData.gameScore = gameScore;
-    }
+      const gameScore = result.game.getScore(nbCleanedLines);
+      if (gameScore) {
+        result.player.score += gameScore.score;
+        gameData.gameScore = gameScore;
+      }
+      return gameData;
+    });
 
     callback({ success: true, data: gameData });
   });
