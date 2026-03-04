@@ -15,6 +15,7 @@ import type { Room } from "@app/objects/Room";
 import type { User } from "@app/objects/User";
 import type { AppServer } from "@app/types/socket";
 import { sleep } from "@app/utils/sleep";
+import { logger } from "@app/utils/log";
 
 export async function gameLoop(io: AppServer, room: Room) {
   const game = room.game;
@@ -35,7 +36,9 @@ export async function gameLoop(io: AppServer, room: Room) {
     game.players.forEach(async (player, id) => {
       if (player.alive) {
         const { nbCleanedLines, gameInfo } = await player.mutex.runExclusive(() => {
+          logger.debug(`LOOP user: ${player.user.name} acquire`)
           if (player.isNextPositionValid()) {
+            logger.debug(`LOOP user: ${player.user.name} move down`)
             player.actualPiece.moveDown();
           } else {
             player.attachCurrentPiece(game);
@@ -43,6 +46,7 @@ export async function gameLoop(io: AppServer, room: Room) {
           const nbCleanedLines = player.board.cleanLines(game.settings.destructiblePenality);
           const gameInfo = game.getGameInfo(id);
 
+          logger.debug(`LOOP user: ${player.user.name} release`)
           return { nbCleanedLines, gameInfo };
         });
 
