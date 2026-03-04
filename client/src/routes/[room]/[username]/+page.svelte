@@ -266,9 +266,10 @@
   let spectateUsername = $state<string>();
   function handleSpectate(username: string) {
     const data: EventSpectatePayload = { username };
-    socket.emit(EVENT_GAME_SPECTATE, data, (success) => {
-      if (success) {
-        spectateUsername = username;
+    socket.emit(EVENT_GAME_SPECTATE, data, (response) => {
+      if (response.success) {
+        spectateUsername = response.data.username;
+        gameData = response.data.gameData;
       }
     });
   }
@@ -351,9 +352,9 @@
             <button
               disabled={!spectrum.alive}
               onclick={() => handleSpectate(spectrum.name)}
-              class=" border-border/42 {!spectrum.alive ? 'opacity-42' : ''}
-              {spectateUsername === spectrum.name ? 'border-red-accent border-2' : 'border'}
-              hover:border-2 block"
+              class="  {!spectrum.alive ? 'opacity-42 ' : 'hover:brightness-150'}
+              {spectateUsername === spectrum.name ? 'border-red-accent' : 'border border-border'}
+              border-2 block"
             >
               <Board matrix={spectrum.matrix} pieceSize={8} spectrumColor={spectrum.color} />
             </button>

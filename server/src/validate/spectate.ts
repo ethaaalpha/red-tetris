@@ -11,6 +11,7 @@ import {
 } from "@app/constants/validateErrors";
 import { getRoomBySocket } from "@app/core/room";
 import { getUser } from "@app/core/user";
+import type { Game } from "@app/objects/Game";
 import type { Player } from "@app/objects/Player";
 import type { ServerSocket } from "@app/types/socket";
 import type { ValidateError } from "@app/types/validate";
@@ -25,6 +26,7 @@ type ValidateSpectateSuccess = {
   status: true;
   currentPlayer: Player;
   spectatedPlayer: Player;
+  game: Game;
 };
 
 type ValidateSpectateResult = ValidateSpectateSuccess | ValidateError;
@@ -73,6 +75,7 @@ export function validateSpectate(
   return {
     status: true,
     currentPlayer,
-    spectatedPlayer: playerToSpectate
+    spectatedPlayer: playerToSpectate,
+    game: room.game
   };
 }
