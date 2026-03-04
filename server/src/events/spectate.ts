@@ -42,7 +42,7 @@ export function registerHandlers(io: AppServer, socket: ServerSocket) {
     });
   });
 
-  socket.on(EVENT_GAME_RESET_SPECTATE, () => {
+  socket.on(EVENT_GAME_RESET_SPECTATE, (callback) => {
     const room = getRoomBySocket(socket);
 
     if (room && room.game) {
@@ -59,5 +59,7 @@ export function registerHandlers(io: AppServer, socket: ServerSocket) {
         player.spectating = null;
       }
     }
+
+    callback({ success: true });
   });
 }

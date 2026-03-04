@@ -36,7 +36,6 @@ export function validateSpectate(
   payload: EventSpectatePayload
 ): ValidateSpectateResult {
   const result = schema.safeParse(payload);
-  console.log("lol0");
 
   if (!result.success) {
     return { status: false, error: formatSchemeError(result.error) };
