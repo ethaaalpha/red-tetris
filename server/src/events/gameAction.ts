@@ -28,8 +28,8 @@ export function registerHandlers(socket: ServerSocket) {
         }
 
         if (p != result.player) {
-          await p.applyPenality(nbCleanedLines);
-          socket.to(p.user.id).emit(EVENT_GAME_PENALITY, gameData);
+          const targetGameData = await p.applyPenality(result.game, nbCleanedLines);
+          socket.to(p.user.id).emit(EVENT_GAME_PENALITY, targetGameData);
         }
       });
     }

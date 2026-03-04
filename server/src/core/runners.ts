@@ -47,13 +47,12 @@ export async function gameLoop(io: AppServer, room: Room) {
           game.players.forEach(async (p) => {
             const gameScore = game.getScore(nbCleanedLines);
             if (p != player) {
-              await p.applyPenality(nbCleanedLines);
-              const gameInfo = game.getGameInfo(p.user.id);
+              const gameData = await p.applyPenality(game, nbCleanedLines);
               if (gameScore) {
-                gameInfo.gameScore = gameScore;
+                gameData.gameScore = gameScore;
                 player.score += gameScore.score;
               }
-              io.to(p.user.id).emit(EVENT_GAME_PENALITY, gameInfo);
+              io.to(p.user.id).emit(EVENT_GAME_PENALITY, gameData);
             }
           });
         }
@@ -95,17 +94,16 @@ export async function warmUpLoop(io: AppServer, user: User) {
 
   while (game.ongoing) {
     game.players.forEach(async (player, id) => {
-      await player.mutex.runExclusive(() => {
+      const nbCleanedLines = await player.mutex.runExclusive(() => {
         if (player.isNextPositionValid()) {
           player.actualPiece.moveDown();
         } else {
           player.attachCurrentPiece(game);
         }
+        return player.board.cleanLines(game.settings.destructiblePenality);
       });
 
-      const nbCleanedLines = player.board.cleanLines(game.settings.destructiblePenality);
       const gameScore = game.getScore(nbCleanedLines);
-
       const gameInfo = game.getGameInfo(id);
       player.checkLost();
 

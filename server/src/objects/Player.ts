@@ -49,17 +49,18 @@ export class Player {
     return this.board.isValidPiece(next);
   }
 
-  public async applyPenality(nb: number) {
-    if (this.alive) {
-      await this.mutex.runExclusive(() => {
+  public async applyPenality(game: Game, nb: number) {
+    return await this.mutex.runExclusive(() => {
+      if (this.alive) {
         const diff = this.board.addRestrictedLines(nb);
 
         for (let i = 0; i < diff; i++) {
           if (this.actualPiece.x === 0) break;
           this.actualPiece.x--;
         }
-      });
-    }
+      }
+      return game.getGameInfo(this.user.id);
+    });
   }
 
   public attachCurrentPiece(game: Game) {
