@@ -1,11 +1,12 @@
 import type { GameData } from "../game";
+import type { UserColor, UserData } from "../user";
 
 export type EventSpectatePayload = {
   username: string;
 };
 
 export type EventSpectateSuccess = {
-  username: string;
+  userData: UserData;
   gameData: GameData;
 };
 

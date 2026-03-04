@@ -249,7 +249,7 @@
 
     showFinalScore = true;
     finalScore = data;
-    spectateUsername = undefined;
+    spectatedPlayer = undefined;
   }
 
   function onSocketGameDead() {
@@ -263,12 +263,12 @@
   }
 
   // spectate
-  let spectateUsername = $state<string>();
+  let spectatedPlayer = $state<UserData>();
   function handleSpectate(username: string) {
     const data: EventSpectatePayload = { username };
     socket.emit(EVENT_GAME_SPECTATE, data, (response) => {
       if (response.success) {
-        spectateUsername = response.data.username;
+        spectatedPlayer = response.data.userData;
         gameData = response.data.gameData;
       }
     });
@@ -353,8 +353,10 @@
               disabled={!spectrum.alive}
               onclick={() => handleSpectate(spectrum.name)}
               class="{!spectrum.alive ? 'opacity-42 ' : ''}
-              {spectateUsername === spectrum.name ? 'border-red-accent' : 'border border-border'}
-              {dead && spectrum.alive ? 'hover:brightness-150' : ''}
+              {spectatedPlayer?.username === spectrum.name
+                ? 'border-red-accent'
+                : 'border border-border'}
+              {dead && spectrum.alive ? 'hover:brightness-125' : ''}
               border-2 block"
             >
               <Board matrix={spectrum.matrix} pieceSize={8} spectrumColor={spectrum.color} />
@@ -364,7 +366,7 @@
       {/if}
 
       <!-- BOARD BOTTOM INFO / ACTION -->
-      <BoardActions {game} {warmUp} startWarmUp={emitStartWarmUp} />
+      <BoardActions {game} {warmUp} startWarmUp={emitStartWarmUp} {spectatedPlayer} />
 
       <!-- GAME COUNTDOWN -->
       {#if gameCountdown > 0 || showGo}

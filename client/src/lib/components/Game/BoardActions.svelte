@@ -2,6 +2,8 @@
   import { fade } from "svelte/transition";
   import { GamepadDirectional, RotateCcw } from "@lucide/svelte";
 
+  import type { UserData } from "@app/shared";
+
   import Piece from "$lib/components/Piece.svelte";
 
   import { roomState } from "$lib/state/room.svelte";
@@ -11,14 +13,21 @@
   let {
     game,
     warmUp,
-    startWarmUp
+    startWarmUp,
+    spectatedPlayer
   }: {
     game: boolean;
     warmUp: boolean;
     startWarmUp: () => void;
+    spectatedPlayer?: UserData;
   } = $props();
 
-  let userHexColor = $derived(getLightColor(roomState.color));
+  const userData = $derived.by(() => {
+    if (spectatedPlayer) return spectatedPlayer;
+    return { username: roomState.username, color: roomState.color };
+  });
+
+  const userHexColor = $derived(getLightColor(userData.color));
 </script>
 
 {#if !game}
@@ -40,11 +49,14 @@
   </button>
 {:else}
   <span
-    class="absolute right-1/2 translate-x-1/2 -bottom-12 text-nowrap flex gap-2 items-center text-lg"
+    class="absolute right-1/2 translate-x-1/2 -bottom-12 flex gap-2 items-center text-nowrap text-lg"
   >
-    <Piece color={roomState.color} size={20} />
+    {#if spectatedPlayer}
+      SPECTATING:
+    {/if}
+    <Piece color={userData.color} size={20} />
     <span style="color: {userHexColor}">
-      {roomState.username}
+      {userData.username}
     </span>
   </span>
 {/if}

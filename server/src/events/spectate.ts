@@ -26,7 +26,7 @@ export function registerHandlers(_io: AppServer, socket: ServerSocket) {
     callback({
       success: true,
       data: {
-        username: result.spectatedPlayer.user.name,
+        userData: result.spectatedPlayer.user.getData(),
         gameData: result.game.getGameInfo(result.spectatedPlayer.user.id)
       }
     });
