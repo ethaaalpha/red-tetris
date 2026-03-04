@@ -103,7 +103,7 @@ export class Game {
 
   public addDeadPlayer(player: Player): void {
     if (!this.finalScore.some((p) => p.name === player.user.name)) {
-      this.finalScore.push({
+      this.finalScore.unshift({
         name: player.user.name,
         color: player.user.color,
         score: player.score
