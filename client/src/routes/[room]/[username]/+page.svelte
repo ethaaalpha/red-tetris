@@ -267,6 +267,7 @@
   // spectate
   let spectatedPlayer = $state<UserData>();
   function handleSpectate(username: string) {
+    if (spectatedPlayer?.username === username) return;
     const data: EventSpectatePayload = { username };
     socket.emit(EVENT_GAME_SPECTATE, data, (response) => {
       if (response.success) {
