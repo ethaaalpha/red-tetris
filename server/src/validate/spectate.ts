@@ -62,10 +62,6 @@ export function validateSpectate(
     return { status: false, error: { user: ERROR_USER_NOT_FOUND } };
   }
 
-  if (!room.userExists(userToSpectate)) {
-    return { status: false, error: { room: ERROR_USER_NOT_FOUND } };
-  }
-
   const playerToSpectate = room.game.getPlayer(userToSpectate.id);
   if (!playerToSpectate.alive) {
     return { status: false, error: { user: ERROR_PLAYER_DEAD } };

@@ -9,7 +9,8 @@ import type {
 import {
   EVENT_GAME_INFO,
   EVENT_GAME_RESET_SPECTATE,
-  EVENT_GAME_SPECTATE
+  EVENT_GAME_SPECTATE,
+  USERNAME_MAX_LENGTH
 } from "@app/shared";
 
 import type { TestServerData } from "./types";
@@ -37,6 +38,32 @@ afterEach(async () => {
 });
 
 describe("invalid spectate", () => {
+  it("invalid schemas", async () => {
+    await emitAsync<EventSpectatePayload, EventSpectateError, EventSpectateSuccess>(
+      ctx.socket1.client,
+      EVENT_GAME_SPECTATE,
+      { username: "" }
+    ).then((response) => {
+      expect(response.success).toBe(false);
+    });
+
+    await emitAsync<EventSpectatePayload, EventSpectateError, EventSpectateSuccess>(
+      ctx.socket1.client,
+      EVENT_GAME_SPECTATE,
+      { username: "a".repeat(USERNAME_MAX_LENGTH + 1) }
+    ).then((response) => {
+      expect(response.success).toBe(false);
+    });
+
+    await emitAsync<EventSpectatePayload, EventSpectateError, EventSpectateSuccess>(
+      ctx.socket1.client,
+      EVENT_GAME_SPECTATE,
+      { username: "/" }
+    ).then((response) => {
+      expect(response.success).toBe(false);
+    });
+  });
+
   it("not in a room", async () => {
     await emitAsync<EventSpectatePayload, EventSpectateError, EventSpectateSuccess>(
       ctx.socket1.client,
@@ -74,9 +101,10 @@ describe("invalid spectate", () => {
     });
   });
 
-  it("not a existing user", async () => {
+  it("not a existing user in the room", async () => {
     await testJoinRoom(ctx.socket1, "room", "test");
     await testJoinRoom(ctx.socket2, "room", "test2");
+    await testJoinRoom(ctx.socket3, "room2", "test3");
 
     const { player } = await testStartGame(ctx.socket1);
     await passGameCountdown();
