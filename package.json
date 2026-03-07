@@ -7,8 +7,8 @@
     "shared"
   ],
   "scripts": {
-    "build": "npm --workspace=client run build && npm --workspace=server run build",
-    "prod": "npm --workspace=server run prod",
-    "coverage": "npm --workspace=server run coverage"
+    "build": "bun --filter=client run build && bun --filter=server run build",
+    "prod": "bun --filter=server run prod",
+    "coverage": "bun --filter=server run coverage"
   }
 }

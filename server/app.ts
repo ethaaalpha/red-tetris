@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import express from "express";
-import { createServer } from "node:http";
-import path from "node:path";
+import { createServer } from "http";
+import path from "path";
 import { Server as IoServer } from "socket.io";
 
 import { SERVER_PORT } from "@app/constants/core";
