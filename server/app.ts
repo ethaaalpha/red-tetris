@@ -1,6 +1,7 @@
 import express from "express";
 import { createServer } from "http";
 import { Server as IoServer } from "socket.io";
+import { Server as BunEngine } from "@socket.io/bun-engine";
 
 import { SERVER_PORT } from "@app/constants/core";
 import { registerHandlers as changeColorHandler } from "@app/events/changeColor";
@@ -47,6 +48,9 @@ export function init(): ServerData {
 
   const server = createServer(app);
   const io: AppServer = new IoServer(server);
+  const bunEngine = new BunEngine();
+
+  io.bind(bunEngine);
 
   configureSocket(io);
   return { app, server, io };
