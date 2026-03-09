@@ -6,8 +6,10 @@
   "scripts": {
     "format": "prettier . --write"
   },
-  "devDependencies": {
-    "prettier": "^3.8.1",
+  "dependencies": {
     "socket.io-client": "^4.8.3"
+  },
+  "devDependencies": {
+    "prettier": "^3.8.1"
   }
 }

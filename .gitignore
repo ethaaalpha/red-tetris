@@ -10,6 +10,7 @@ dist
 .netlify
 .wrangler
 .svelte-kit
+sveltekit-build
 build
 
 # Code Coverage

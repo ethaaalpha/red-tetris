@@ -4,9 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "bun build --target=bun --outdir build/ app.ts",
-    "prod": "bun build/app.js",
-    "dev": "bun --hot app.ts",
+    "server": "bun --hot app.ts",
     "format": "prettier . --write",
     "lint": "eslint . --fix && tsc --noEmit",
     "coverage": "vitest run --coverage"
@@ -14,6 +12,7 @@
   "devDependencies": {
     "@eslint/js": "^9.39.4",
     "@types/bun": "latest",
+    "@types/lodash": "^4.17.24",
     "@types/express": "^5.0.6",
     "@vitest/coverage-v8": "4.0.18",
     "eslint": "^9.39.4",
@@ -29,7 +28,6 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@types/lodash": "^4.17.24",
     "async-mutex": "^0.5.0",
     "express": "^5.2.1",
     "lodash": "^4.17.23",
