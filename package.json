@@ -7,6 +7,7 @@
     "shared"
   ],
   "scripts": {
+    "build": "bun --filter=client run build && bun --filter=server run build",
     "server": "bun --filter=server run server"
   }
 }

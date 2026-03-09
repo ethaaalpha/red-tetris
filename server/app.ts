@@ -1,5 +1,7 @@
+import type { Express } from "express";
 import express from "express";
 import { createServer } from "http";
+import path from "path";
 import { Server as IoServer } from "socket.io";
 import { Server as BunEngine } from "@socket.io/bun-engine";
 
@@ -20,7 +22,15 @@ import type { ServerData } from "@app/types/server";
 import type { AppServer, ServerSocket } from "@app/types/socket";
 import { logger } from "@app/utils/log";
 
-import { handler } from "./sveltekit-build/handler.js";
+function configureHttp(app: Express) {
+  const frontendPath = path.join(import.meta.dirname, "./sveltekit-build");
+
+  app.use(express.static(frontendPath));
+
+  app.get("/{*splat}", (_req: express.Request, res: express.Response) => {
+    res.sendFile(path.join(frontendPath, "index.html"));
+  });
+}
 
 function configureSocket(io: AppServer) {
   io.on("connection", (socket: ServerSocket) => {
@@ -44,7 +54,6 @@ function configureSocket(io: AppServer) {
 
 export function init(): ServerData {
   const app = express();
-  app.use(handler);
 
   const server = createServer(app);
   const io: AppServer = new IoServer(server);
@@ -52,6 +61,7 @@ export function init(): ServerData {
 
   io.bind(bunEngine);
 
+  configureHttp(app);
   configureSocket(io);
   return { app, server, io };
 }
