@@ -94,10 +94,10 @@ export async function setupTestServer(): Promise<TestServerData> {
 }
 
 export async function shutdownTestServer(ctx: TestServerData): Promise<void> {
-  await ctx.socket1.client.close();
-  await ctx.socket2.client.close();
-  await ctx.socket3.client.close();
-  await ctx.socket4.client.close();
+  ctx.socket1.client.close();
+  ctx.socket2.client.close();
+  ctx.socket3.client.close();
+  ctx.socket4.client.close();
   await ctx.io.close();
   getRooms().clear();
   getUsers().clear();
