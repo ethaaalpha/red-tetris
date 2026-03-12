@@ -62,6 +62,11 @@
     name="description"
     content="Play Tetris for free with your friends. Chat, warm-up and play together with the settings you choose."
   />
+  <script
+    defer
+    src="https://analytics.red-tetris.fr/script.js"
+    data-website-id="568ff6d6-0ec7-4abe-b1bf-afa5179f4103"
+  ></script>
 </svelte:head>
 
 <Dialog
