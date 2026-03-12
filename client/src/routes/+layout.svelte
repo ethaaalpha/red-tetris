@@ -57,6 +57,7 @@
 
 <svelte:head>
   <link rel="icon" href={redPiece} />
+  <title>Red Tetris</title>
 </svelte:head>
 
 <Dialog
