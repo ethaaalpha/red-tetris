@@ -58,6 +58,10 @@
 <svelte:head>
   <link rel="icon" href={redPiece} />
   <title>Red Tetris</title>
+  <meta
+    name="description"
+    content="Play Tetris for free with your friends. Chat, warm-up and play together with the settings you choose."
+  />
 </svelte:head>
 
 <Dialog
